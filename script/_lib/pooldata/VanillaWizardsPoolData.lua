@@ -411,7 +411,7 @@ function GetVanillaWizardsPoolDataResources()
             Lore = "Nehekhara",
         },
         -- Vampire Coast
-        wh2_dlc11_cst_fleet_captain = {
+        --[[wh2_dlc11_cst_fleet_captain = {
             IsLord = false,
             DefaultWizardLevel = 0,
             Lore = "Vampires",
@@ -425,11 +425,11 @@ function GetVanillaWizardsPoolDataResources()
             IsLord = false,
             DefaultWizardLevel = 0,
             Lore = "Deep",
-        },
+        },--]]
         wh2_dlc11_cst_admiral = {
             IsLord = true,
             DefaultWizardLevel = 1,
-            Lore = "Vampires",
+            Lore = "VampiresDeeps",
         },
         wh2_dlc11_cst_admiral_death = {
             IsLord = true,
@@ -444,7 +444,7 @@ function GetVanillaWizardsPoolDataResources()
         wh2_dlc11_cst_admiral_fem = {
             IsLord = true,
             DefaultWizardLevel = 1,
-            Lore = "Vampires",
+            Lore = "VampiresDeeps",
         },
         wh2_dlc11_cst_admiral_fem_death = {
             IsLord = true,
@@ -459,7 +459,7 @@ function GetVanillaWizardsPoolDataResources()
         wh2_dlc11_cst_admiral_tech_01 = {
             IsLord = true,
             DefaultWizardLevel = 1,
-            Lore = "Vampires",
+            Lore = "VampiresDeeps",
         },
         wh2_dlc11_cst_admiral_tech_02 = {
             IsLord = true,
@@ -474,18 +474,18 @@ function GetVanillaWizardsPoolDataResources()
         wh2_dlc11_cst_admiral_tech_04 = {
             IsLord = true,
             DefaultWizardLevel = 1,
-            Lore = "Vampires",
+            Lore = "Deep",
         },
-        wh2_dlc11_cst_noctilus = {
+        --[[wh2_dlc11_cst_noctilus = {
             IsLord = true,
             DefaultWizardLevel = 3,
             Lore = "Vampires",
-        },
-        --[[wh2_dlc11_cst_cylostra = {
+        },--]]
+        wh2_dlc11_cst_cylostra = {
             IsLord = true,
             DefaultWizardLevel = 4,
             Lore = "Deep",
-        },--]]
+        },
         -- Vampire Counts
         vmp_necromancer = {
             IsLord = false,
@@ -494,12 +494,12 @@ function GetVanillaWizardsPoolDataResources()
         },
         vmp_vampire = {
             IsLord = false,
-            DefaultWizardLevel = 0,
+            DefaultWizardLevel = 1,
             Lore = "Death",
         },
         wh_dlc05_vmp_vampire_shadow = {
             IsLord = false,
-            DefaultWizardLevel = 0,
+            DefaultWizardLevel = 1,
             Lore = "Shadows",
         },
         vmp_master_necromancer = {

@@ -9,16 +9,24 @@ function WWL_SetupPostUIListeners(wwl)
         end,
         function(context)
             local faction = context:faction();
+            local factionKey = faction:name();
+            if factionKey == wwl.HumanFaction:name() then
+                wwl.Logger:Log_Start();
+            end
+            wwl.Logger:Log("Generating spells for characters in faction: "..factionKey);
+            cm:disable_event_feed_events(true, "wh_event_category_agent", "", "");
             local characters = faction:character_list();
             for i = 0, characters:num_items() - 1 do
                 local character = characters:item_at(i);
                 local characterSubtype = character:character_subtype_key();
                 local isSupportedCharacter = wwl:IsSupportedCharacterSubType(characterSubtype);
-                wwl.Logger:Log("Generating spells for character: "..character:command_queue_index());
                 if isSupportedCharacter == true then
+                    wwl.Logger:Log("Generating spells for character: "..character:command_queue_index().." subtype: "..characterSubtype);
                     wwl:SetSpellsForCharacter(character);
                 end
             end
+            cm:callback(function() cm:disable_event_feed_events(false, "wh_event_category_agent","",""); end, 1);
+            wwl.Logger:Log_Finished();
         end,
         true
     );
@@ -31,6 +39,7 @@ function WWL_SetupPostUIListeners(wwl)
             return true;
         end,
         function(context)
+            cm:disable_event_feed_events(true, "wh_event_category_agent", "", "");
             local num_defenders = cm:pending_battle_cache_num_defenders();
             local defenders = {};
             for i = 1, num_defenders do
@@ -67,6 +76,7 @@ function WWL_SetupPostUIListeners(wwl)
                     end
                 end
             end
+            cm:callback(function() cm:disable_event_feed_events(false, "wh_event_category_agent","",""); end, 1);
             wwl.Logger:Log_Finished();
         end,
         true
@@ -81,13 +91,35 @@ function WWL_SetupPostUIListeners(wwl)
             local character = context:character();
             local characterSubtype = character:character_subtype_key();
             local isSupportedCharacter = wwl:IsSupportedCharacterSubType(characterSubtype);
-            return context:skill_point_spent_on():find("wwl_skill_wizard_level_0")
-            or isSupportedCharacter;
+            return isSupportedCharacter and wwl:IsValidCharacterSkillKey(context:skill_point_spent_on());
         end,
         function(context)
+            local characterSkillKey = context:skill_point_spent_on();
             local character = context:character();
-            wwl.Logger:Log("Skill point is: "..context:skill_point_spent_on());
-            -- Update character data
+            local characterSubtype = character:character_subtype_key();
+            local defaultWizardData = wwl:GetDefaultWizardDataForCharacterSubtype(characterSubtype);
+            local wizardData = wwl:GetWizardData(character);
+            if string.match(characterSkillKey,  "wwl_skill_wizard_level_0") then
+                wwl.Logger:Log("Wizard level skill is: "..characterSkillKey);
+                local unlockedWizardLevel = string.match(characterSkillKey, "wwl_skill_wizard_level_0(.*)");
+                wizardData.NumberOfSpells = tonumber(unlockedWizardLevel);
+            elseif defaultWizardData.IsLoremaster == true and characterSkillKey == defaultWizardData.LoremasterCharacterSkillKey then
+                wwl.Logger:Log("Loremaster skill unlocked: "..characterSkillKey);
+                local characterCqi = character:command_queue_index();
+                local characterLookupString = "character_cqi:"..characterCqi;
+                -- Remove all disable spell skills. We don't need these anymore
+                for index, spellKey in pairs(wizardData.UnlockedSpells) do
+                    if defaultWizardData.IsLord == true then
+                        cm:remove_effect_bundle_from_characters_force(spellKey.."_disable", characterCqi);
+                    else
+                        cm:force_remove_trait(characterLookupString, spellKey.."_disable");
+                    end
+                end
+            elseif Contains(wizardData.UnlockedSpells, characterSkillKey) == false then
+                wwl.Logger:Log("Unlocked skill is: "..characterSkillKey);
+                wizardData.UnlockedSpells[#wizardData.UnlockedSpells + 1] = characterSkillKey;
+            end
+            wwl.Logger:Log_Finished();
         end,
         true
     );

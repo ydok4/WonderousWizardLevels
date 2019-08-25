@@ -62,28 +62,37 @@ end
 
 function WWLController:SetupNewWizard(character)
     local characterCqi = character:command_queue_index();
+    local characterLookupString = "character_cqi:"..characterCqi;
     local characterSubtype = character:character_subtype_key();
     local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype);
-    local defaultSpells = self:GetDefaultSpellsForWizard(defaultWizardData.Lore, defaultWizardData.DefaultWizardLevel);
-    self.WizardData[characterCqi] = {
-        WizardLevel = defaultWizardData.DefaultWizardLevel,
+    local defaultSpells = self:GetDefaultSpellsForWizard(defaultWizardData);
+    self.WizardData[characterLookupString] = {
+        NumberOfSpells = defaultWizardData.DefaultWizardLevel,
         UnlockedSpells = defaultSpells,
         LastGeneratedSpellTurn = 0,
     };
-    return self.WizardData[characterCqi];
+    return self.WizardData[characterLookupString];
 end
 
 function WWLController:GetDefaultWizardDataForCharacterSubtype(characterSubtype)
     return _G.WWLResources.WizardData[characterSubtype];
 end
 
-function WWLController:GetDefaultSpellsForWizard(lore, wizardLevel)
-    local magicLore = _G.WWLResources.MagicLores[lore];
-    local defaultSpells = magicLore.Level1DefaultSpells;
-    if wizardLevel >= 3 then
-        ConcatTable(defaultSpells, magicLore.Level3DefaultSpells);
+function WWLController:GetDefaultSpellsForWizard(wizardData)
+    local magicLore = _G.WWLResources.MagicLores[wizardData.Lore];
+    if wizardData.IsLord == true then
+        local defaultSpells = magicLore.Level1DefaultSpellsLord;
+        if wizardData.DefaultWizardLevel >= 3 then
+            ConcatTable(defaultSpells, magicLore.Level3DefaultSpellsLord);
+        end
+        return defaultSpells;
+    else
+        local defaultSpells = magicLore.Level1DefaultSpells;
+        if wizardData.DefaultWizardLevel >= 3 then
+            ConcatTable(defaultSpells, magicLore.Level3DefaultSpells);
+        end
+        return defaultSpells;
     end
-    return defaultSpells;
 end
 
 function WWLController:SetSpellsForCharacter(character)
@@ -92,49 +101,60 @@ function WWLController:SetSpellsForCharacter(character)
     local wizard = {};
     -- Check if we have any existing character data
     -- Set them up if required
-    if self.WizardData[characterCqi] == nil then
+    if self.WizardData[characterLookupString] == nil then
+        self.Logger:Log("New character found!");
         wizard = self:SetupNewWizard(character);
     else
-        wizard = self.WizardData[characterCqi];
+        self.Logger:Log("Using existing data");
+        wizard = self:GetWizardData(character);
     end
     local turnNumber = cm:model():turn_number();
     -- We don't regenerate spells more than once per turn
     -- and there is no point to generating spells for loremasters
     -- since they have them
-    if wizard.LastGeneratedSpellTurn == turnNumber
-    or wizard.IsLoremaster == true then
+    if wizard.LastGeneratedSpellTurn == turnNumber then
+        self.Logger:Log("Character has already generated spells this turn. Not generating spells.");
+        return;
+    elseif wizard.IsLoremaster == true and character:has_skill(wizard.LoremasterCharacterSkillKey) then
+        self.Logger:Log("Character has loremaster skill. Not generating spells.");
         return;
     end
     local characterSubtype = character:character_subtype_key();
     local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype);
     -- Remap the characters unlocked spells for easier manipulation
     local remappedWizardData = self:GetWizardDataCopy(wizard);
-    cm:disable_event_feed_events(true, "wh_event_category_agent", "", "");
-    -- Remove all spell skills
-    for index, spellKey in pairs(remappedWizardData.CharacterSpells) do
-        if defaultWizardData.IsLord == false then
-            cm:force_remove_trait(characterLookupString, spellKey.."_enable");
-            cm:force_add_trait(characterLookupString, spellKey.."_disable");
+    -- Remove all disable spell skills
+    for index, spellKey in pairs(remappedWizardData.UnlockedSpells) do
+        if defaultWizardData.IsLord == true then
+            cm:remove_effect_bundle_from_characters_force(spellKey.."_disable", characterCqi);
         else
-            cm:remove_effect_bundle_from_characters_force(spellKey.."_enable", characterCqi);
-            cm:apply_effect_bundle_to_characters_force(spellKey.."_disable", characterCqi, -1, false);
+            cm:force_remove_trait(characterLookupString, spellKey.."_disable");
         end
     end
 
-    -- Then add the spells we've generated
-    for i = 1, remappedWizardData.NumberOfSpells do
-        local spellKey = GetAndRemoveRandomObjectFromList(remappedWizardData.CharacterSpells);
-        self.Logger:Log("Adding spell: "..spellKey);
-        if defaultWizardData.IsLord == false then
-            cm:force_add_trait(characterLookupString, spellKey.."_enable");
-            cm:force_remove_trait(characterLookupString, spellKey.."_disable");
+    -- Then we disable spells required for our wizard level
+    -- The remaining spells will equal our wizard level
+    for i = 1, #remappedWizardData.UnlockedSpells - remappedWizardData.NumberOfSpells do
+        local spellKey = GetAndRemoveRandomObjectFromList(remappedWizardData.UnlockedSpells);
+        self.Logger:Log("Disabling spell: "..spellKey);
+        if defaultWizardData.IsLord == true then
+            cm:apply_effect_bundle_to_characters_force(spellKey.."_disable", characterCqi, -1, false);
         else
-            cm:apply_effect_bundle_to_characters_force(spellKey.."_enable", characterCqi, -1, false);
-            cm:remove_effect_bundle_from_characters_force(spellKey.."_disable", characterCqi);
+            cm:force_add_trait(characterLookupString, spellKey.."_disable");
         end
     end
-    cm:callback(function() cm:disable_event_feed_events(false, "wh_event_category_agent","",""); end, 1);
+    self.Logger:Log("Last turn number "..turnNumber);
     wizard.LastGeneratedSpellTurn = turnNumber;
+end
+
+function WWLController:GetWizardData(character)
+    local characterCqi = character:command_queue_index();
+    local characterLookupString = "character_cqi:"..characterCqi;
+    local wizardData =  self.WizardData[characterLookupString];
+    if wizardData == nil then
+        wizardData = self:SetupNewWizard(character);
+    end
+    return wizardData;
 end
 
 function WWLController:GetWizardDataCopy(wizardData)
@@ -144,15 +164,35 @@ function WWLController:GetWizardDataCopy(wizardData)
     end
     -- Figure out how many spells we need to generate
     local numberOfSpellsToGenerate = 0;
-    if #characterSpells < wizardData.WizardLevel then
+    if #characterSpells < wizardData.NumberOfSpells then
         numberOfSpellsToGenerate = #characterSpells;
     else
-        numberOfSpellsToGenerate = wizardData.WizardLevel;
+        numberOfSpellsToGenerate = wizardData.NumberOfSpells;
     end
     local remappedData = {
         NumberOfSpells = numberOfSpellsToGenerate,
-        CharacterSpells = characterSpells,
+        UnlockedSpells = characterSpells,
         LastGeneratedSpellTurn = wizardData.LastGeneratedSpellTurn,
     };
     return remappedData;
+end
+
+function WWLController:IsValidCharacterSkillKey(skillKey)
+    if
+    -- This first case is used be some of the Tomb Kings casters
+    (string.match(skillKey,  "_lore_") and not string.match(skillKey, "_loremaster_"))
+    -- Second case is standard magic for everyone else with some blacklisted skills
+    or (string.match(skillKey,  "_magic_")
+        and skillKey ~= "wh2_main_skill_skv_generic_magic_ward"
+        and skillKey ~= "wh_dlc06_skill_grn_wurrzag_grants_magic_attacks"
+        and skillKey ~= "wh_main_skill_grn_wizard_unique_night_goblin_shaman_magic_mushrooms"
+    )
+    -- Third case is the wizard level skills we are listening for
+    or string.match(skillKey,  "wwl_skill_wizard_level_0")
+    -- Fourth case is the loremaster skills
+    or (skillKey == "" or skillKey == "")
+    then
+        return true;
+    end
+    return false;
 end

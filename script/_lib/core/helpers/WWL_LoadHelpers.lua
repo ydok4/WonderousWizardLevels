@@ -19,7 +19,7 @@ function WWL_LoadExistingWizardData(wwl)
     end
 
     local serialised_save_table_wizards = {};
-    wwl.wizardData = {};
+    wwl.WizardData = {};
     local tableCount = math.ceil(wwl_existing_wizards_header["TotalCharacters"] / MAX_NUM_SAVE_TABLE_KEYS);
     for n = 1, tableCount do
         out("WWL: Loading table "..tostring(n));
@@ -28,12 +28,12 @@ function WWL_LoadExistingWizardData(wwl)
     end
     out("WWL: Concatted serialised save data");
 
-    for cqi, wizardData in pairs(serialised_save_table_wizards) do
-        out("WWL: Loading wizard cqi: "..cqi);
-        if wwl.wizardData[cqi] == nil then
-            wwl.wizardData[cqi] = {};
+    for characterLookupString, wizardData in pairs(serialised_save_table_wizards) do
+        out("WWL: Loading wizard: "..characterLookupString);
+        if wwl.WizardData[characterLookupString] == nil then
+            wwl.WizardData[characterLookupString] = {};
         end
-        wwl.wizardData[cqi] = {
+        wwl.WizardData[characterLookupString] = {
             NumberOfSpells = wizardData[1],
             LastGeneratedSpellTurn = wizardData[2],
         };
@@ -51,22 +51,24 @@ function WWL_LoadExistingWizardSpells(wwl)
         out("WWL: Loading "..wwl_existing_wizard_spells_header["TotalSpells"].." other characters");
     end
 
-    local serialised_save_table_wizards = {};
-    wwl.wizardData = {};
+    local serialised_save_table_wizard_spells = {};
     local tableCount = math.ceil(wwl_existing_wizard_spells_header["TotalSpells"] / MAX_NUM_SAVE_TABLE_KEYS);
     for n = 1, tableCount do
         out("WWL: Loading table "..tostring(n));
-        local nthTable = cm:load_named_value("wwl_existing_wizards_"..tostring(n), {}, context);
-        ConcatTableWithKeys(serialised_save_table_wizards, nthTable);
+        local nthTable = cm:load_named_value("wwl_existing_wizard_spells_"..tostring(n), {}, context);
+        ConcatTableWithKeys(serialised_save_table_wizard_spells, nthTable);
     end
     out("WWL: Concatted serialised save data");
 
-    for cqi, wizardSpells in pairs(serialised_save_table_wizards) do
-        out("WWL: Loading wizard cqi: "..cqi);
-        if wwl.wizardData[cqi] == nil then
-            wwl.wizardData[cqi] = {};
+    for characterLookupString, wizardSpells in pairs(serialised_save_table_wizard_spells) do
+        out("WWL: Loading wizard spells for wizard: "..characterLookupString);
+        if wwl.WizardData[characterLookupString].UnlockedSpells == nil then
+            wwl.WizardData[characterLookupString].UnlockedSpells = {};
         end
-        wwl.wizardData[cqi].CharacterSpells = wizardSpells;
+        local unlockedSpellsForCharacter = wwl.WizardData[characterLookupString].UnlockedSpells;
+        for index, spellKey in pairs(wizardSpells) do
+            unlockedSpellsForCharacter[#unlockedSpellsForCharacter + 1] = spellKey;
+        end
     end
 
     out("WWL: Finished loading wizard spells");

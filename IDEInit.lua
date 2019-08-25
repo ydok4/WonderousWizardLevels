@@ -517,7 +517,6 @@ math.randomseed(os.time())
 z_wonderous_wizard_levels();
 
 local WWL = _G.WWL;
-
 local MockContext_WWL_PendingBattle = {
     Key = "WWL_PendingBattle",
     Context = {
@@ -538,10 +537,13 @@ mock_listeners:trigger_listener(MockContext_WWL_CharacterSkillPointAllocated);
 WWL_InitialiseSaveHelpers(cm, context);
 WWL_SaveExistingWizardData(WWL);
 WWL_SaveExistingWizardSpells(WWL);
-
+WWL = {};
 WWL_InitialiseLoadHelpers(cm, context);
 WWL_LoadExistingWizardData(WWL);
 WWL_LoadExistingWizardSpells(WWL);
+z_wonderous_wizard_levels();
+
+mock_listeners:trigger_listener(MockContext_WWL_PendingBattle);
 
 --[[ER_InitialiseSaveHelpers(cm, context);
 ER_SaveActiveRebellions(ER);

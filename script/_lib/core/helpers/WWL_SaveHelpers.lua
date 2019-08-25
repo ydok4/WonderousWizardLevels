@@ -22,8 +22,8 @@ function WWL_SaveExistingWizardData(wwl)
     local tableCount = 1;
     local nthTable = {};
 
-    for cqi, wizardData in pairs(wwl.WizardData) do
-        nthTable[cqi] = { wizardData.NumberOfSpells, wizardData.LastGeneratedSpellTurn };
+    for characterLookupString, wizardData in pairs(wwl.WizardData) do
+        nthTable[characterLookupString] = { wizardData.NumberOfSpells, wizardData.LastGeneratedSpellTurn };
         numberOfCurrentWizards = numberOfCurrentWizards + 1;
         if numberOfCurrentWizards % MAX_NUM_SAVE_TABLE_KEYS == 0 then
             out("WWL: Saving table number "..(tableCount + 1));
@@ -53,8 +53,8 @@ function WWL_SaveExistingWizardSpells(wwl)
     local tableCount = 1;
     local nthTable = {};
 
-    for cqi, wizardData in pairs(wwl.WizardData) do
-        nthTable[cqi] = wizardData.CharacterSpells;
+    for characterLookupString, wizardData in pairs(wwl.WizardData) do
+        nthTable[characterLookupString] = wizardData.UnlockedSpells;
         numberOfCurrentWizardSpells = numberOfCurrentWizardSpells + 1;
         if numberOfCurrentWizardSpells % MAX_NUM_SAVE_TABLE_KEYS == 0 then
             out("WWL: Saving table number "..(tableCount + 1));

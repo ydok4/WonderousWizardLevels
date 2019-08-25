@@ -29,6 +29,8 @@ cm:add_saving_game_callback(
     function(context)
         out("WWL: Saving callback");
         WWL_InitialiseSaveHelpers(cm, context);
+        WWL_SaveExistingWizardData(WWL);
+        WWL_SaveExistingWizardSpells(WWL);
         out("WWL: Finished saving");
     end
 );
@@ -37,6 +39,8 @@ cm:add_loading_game_callback(
     function(context)
         out("WWL: Loading callback");
         WWL_InitialiseLoadHelpers(cm, context);
+        WWL_LoadExistingWizardData(WWL);
+        WWL_LoadExistingWizardSpells(WWL);
         out("WWL: Finished loading");
 	end
 );
