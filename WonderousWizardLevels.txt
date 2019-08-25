@@ -1,0 +1,16 @@
+Initialised   : [25, 08 2019 10:03:26]
+FINISHED
+
+Defender cqi: 10 Defender faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 10:03:26]
+Found supported subtype: brt_damsel with cqi: 10   : [25, 08 2019 10:03:26]
+Adding spell: wh_main_spell_heavens_curse_of_the_midnight_wind   : [25, 08 2019 10:03:26]
+Defender cqi: 10 Defender faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 10:03:26]
+Found supported subtype: brt_damsel with cqi: 10   : [25, 08 2019 10:03:26]
+FINISHED
+
+Attacker cqi: 10 Attacker faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 10:03:26]
+Found supported subtype: brt_damsel with cqi: 10   : [25, 08 2019 10:03:26]
+Attacker cqi: 10 Attacker faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 10:03:26]
+Found supported subtype: brt_damsel with cqi: 10   : [25, 08 2019 10:03:26]
+FINISHED
+
