@@ -3,7 +3,7 @@ testCharacter = {
     cqi = function() return 123 end,
     get_forename = function() return "Direfan"; end,
     get_surname = function() return "Cylostra"; end,
-    character_subtype_key = function() return "brt_damsel"; end,
+    character_subtype_key = function() return "vmp_vampire"; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -378,6 +378,7 @@ function get_cm()
         trigger_incident_with_targets = function() end,
         remove_skill_point = function() end,
         force_add_skill = function() return true; end,
+        remove_effect_bundle_from_characters_force = function() end,
         pending_battle_cache_num_defenders = function() return 2; end,
         pending_battle_cache_num_attackers = function() return 2; end,
         pending_battle_cache_get_defender = function(self, index)
@@ -517,6 +518,14 @@ math.randomseed(os.time())
 z_wonderous_wizard_levels();
 
 local WWL = _G.WWL;
+local MockContext_WWL_FactionTurnStart = {
+    Key = "WWL_FactionTurnStart",
+    Context = {
+        faction = function() return humanFaction; end,
+    },
+}
+mock_listeners:trigger_listener(MockContext_WWL_FactionTurnStart);
+
 local MockContext_WWL_PendingBattle = {
     Key = "WWL_PendingBattle",
     Context = {
@@ -542,9 +551,21 @@ WWL_InitialiseLoadHelpers(cm, context);
 WWL_LoadExistingWizardData(WWL);
 WWL_LoadExistingWizardSpells(WWL);
 z_wonderous_wizard_levels();
-
+turn_number = 2;
+mock_listeners:trigger_listener(MockContext_WWL_FactionTurnStart);
+mock_listeners:trigger_listener(MockContext_WWL_CharacterSkillPointAllocated);
+mock_listeners:trigger_listener(MockContext_WWL_CharacterSkillPointAllocated);
 mock_listeners:trigger_listener(MockContext_WWL_PendingBattle);
-
+WWL_InitialiseSaveHelpers(cm, context);
+WWL_SaveExistingWizardData(WWL);
+WWL_SaveExistingWizardSpells(WWL);
+turn_number = 3;
+mock_listeners:trigger_listener(MockContext_WWL_FactionTurnStart);
+mock_listeners:trigger_listener(MockContext_WWL_CharacterSkillPointAllocated);
+mock_listeners:trigger_listener(MockContext_WWL_PendingBattle);
+WWL_InitialiseSaveHelpers(cm, context);
+WWL_SaveExistingWizardData(WWL);
+WWL_SaveExistingWizardSpells(WWL);
 --[[ER_InitialiseSaveHelpers(cm, context);
 ER_SaveActiveRebellions(ER);
 ER_SaveActiveRebelForces(ER);

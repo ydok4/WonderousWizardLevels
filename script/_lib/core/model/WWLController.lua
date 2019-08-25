@@ -56,7 +56,11 @@ function WWLController:IsExcludedFaction(faction)
     return false;
 end
 
-function WWLController:IsSupportedCharacterSubType(characterSubtype)
+function WWLController:IsSupportedCharacter(character)
+    if character:character_type("colonel") == true then
+        return false;
+    end
+    local characterSubtype = character:character_subtype_key();
     return _G.WWLResources.WizardData[characterSubtype] ~= nil;
 end
 
@@ -78,18 +82,57 @@ function WWLController:GetDefaultWizardDataForCharacterSubtype(characterSubtype)
     return _G.WWLResources.WizardData[characterSubtype];
 end
 
-function WWLController:GetDefaultSpellsForWizard(wizardData)
-    local magicLore = _G.WWLResources.MagicLores[wizardData.Lore];
+function WWLController:IsSignatureSpell(magicLore, skillKey)
+    return Contains(magicLore.SignatureSpell, skillKey);
+end
+
+function WWLController:IsInnateSpell(magicLore, skillKey)
+    return Contains(magicLore.InnateSkill, skillKey);
+end
+
+function WWLController:IsLevel1Spell(wizardData, skillKey)
+    local magicLore = self:GetMagicLoreData(wizardData);
     if wizardData.IsLord == true then
-        local defaultSpells = magicLore.Level1DefaultSpellsLord;
+        return Contains(magicLore.Level1DefaultSpellsLord, skillKey);
+    else
+        return Contains(magicLore.Level1DefaultSpells, skillKey);
+    end
+end
+
+function WWLController:IsLevel3Spell(wizardData, skillKey)
+    local magicLore = self:GetMagicLoreData(wizardData);
+    if wizardData.IsLord == true then
+        return Contains(magicLore.Level3DefaultSpellsLord, skillKey);
+    else
+        return Contains(magicLore.Level3DefaultSpells, skillKey);
+    end
+end
+
+function WWLController:GetMagicLoreData(wizardData)
+    return _G.WWLResources.MagicLores[wizardData.Lore]
+end
+function WWLController:GetDefaultSpellsForWizard(wizardData)
+    local magicLore = self:GetMagicLoreData(wizardData);
+    if wizardData.IsLord == true then
+        local defaultSpells = {};
+        for index, spellKey in pairs(magicLore.Level1DefaultSpellsLord) do
+            defaultSpells[#defaultSpells + 1] = tostring(spellKey);
+        end
         if wizardData.DefaultWizardLevel >= 3 then
-            ConcatTable(defaultSpells, magicLore.Level3DefaultSpellsLord);
+            for index, spellKey in pairs(magicLore.Level3DefaultSpellsLord) do
+                defaultSpells[#defaultSpells + 1] = tostring(spellKey);
+            end
         end
         return defaultSpells;
     else
-        local defaultSpells = magicLore.Level1DefaultSpells;
+        local defaultSpells = {};
+        for index, spellKey in pairs(magicLore.Level1DefaultSpells) do
+            defaultSpells[#defaultSpells + 1] = tostring(spellKey);
+        end
         if wizardData.DefaultWizardLevel >= 3 then
-            ConcatTable(defaultSpells, magicLore.Level3DefaultSpells);
+            for index, spellKey in pairs(magicLore.Level3DefaultSpells) do
+                defaultSpells[#defaultSpells + 1] = tostring(spellKey);
+            end
         end
         return defaultSpells;
     end
@@ -125,6 +168,7 @@ function WWLController:SetSpellsForCharacter(character)
     local remappedWizardData = self:GetWizardDataCopy(wizard);
     -- Remove all disable spell skills
     for index, spellKey in pairs(remappedWizardData.UnlockedSpells) do
+        --self.Logger:Log("Removing : "..spellKey);
         if defaultWizardData.IsLord == true then
             cm:remove_effect_bundle_from_characters_force(spellKey.."_disable", characterCqi);
         else
@@ -132,28 +176,27 @@ function WWLController:SetSpellsForCharacter(character)
         end
     end
 
+    local numberOfUnlockedSpells = #remappedWizardData.UnlockedSpells;
+    --self.Logger:Log("numberOfUnlockedSpells: "..numberOfUnlockedSpells);
     -- Then we disable spells required for our wizard level
     -- The remaining spells will equal our wizard level
-    for i = 1, #remappedWizardData.UnlockedSpells - remappedWizardData.NumberOfSpells do
+    for i = 1, numberOfUnlockedSpells - remappedWizardData.NumberOfSpells do
         local spellKey = GetAndRemoveRandomObjectFromList(remappedWizardData.UnlockedSpells);
-        self.Logger:Log("Disabling spell: "..spellKey);
+        --self.Logger:Log("Disabling spell: "..spellKey);
         if defaultWizardData.IsLord == true then
             cm:apply_effect_bundle_to_characters_force(spellKey.."_disable", characterCqi, -1, false);
         else
             cm:force_add_trait(characterLookupString, spellKey.."_disable");
         end
     end
-    self.Logger:Log("Last turn number "..turnNumber);
+    --self.Logger:Log("Last turn number "..turnNumber);
     wizard.LastGeneratedSpellTurn = turnNumber;
 end
 
 function WWLController:GetWizardData(character)
     local characterCqi = character:command_queue_index();
     local characterLookupString = "character_cqi:"..characterCqi;
-    local wizardData =  self.WizardData[characterLookupString];
-    if wizardData == nil then
-        wizardData = self:SetupNewWizard(character);
-    end
+    local wizardData = self.WizardData[characterLookupString];
     return wizardData;
 end
 

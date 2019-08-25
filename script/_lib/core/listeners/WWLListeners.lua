@@ -1,4 +1,17 @@
 function WWL_SetupPostUIListeners(wwl)
+    -- Log cleanup event
+    core:add_listener(
+        "WWL_FactionTurnEnd",
+        "FactionTurnEnd",
+        function(context)
+            return context:faction():name() == wwl.HumanFaction:name();
+        end,
+        function(context)
+            wwl.Logger:Log_Start();
+        end,
+        true
+    );
+
     -- Each turn we generate spells for all existing, supported characters
     core:add_listener(
         "WWL_FactionTurnStart",
@@ -10,18 +23,14 @@ function WWL_SetupPostUIListeners(wwl)
         function(context)
             local faction = context:faction();
             local factionKey = faction:name();
-            if factionKey == wwl.HumanFaction:name() then
-                wwl.Logger:Log_Start();
-            end
             wwl.Logger:Log("Generating spells for characters in faction: "..factionKey);
             cm:disable_event_feed_events(true, "wh_event_category_agent", "", "");
             local characters = faction:character_list();
             for i = 0, characters:num_items() - 1 do
                 local character = characters:item_at(i);
-                local characterSubtype = character:character_subtype_key();
-                local isSupportedCharacter = wwl:IsSupportedCharacterSubType(characterSubtype);
+                local isSupportedCharacter = wwl:IsSupportedCharacter(character);
                 if isSupportedCharacter == true then
-                    wwl.Logger:Log("Generating spells for character: "..character:command_queue_index().." subtype: "..characterSubtype);
+                    wwl.Logger:Log("Generating spells for character: "..character:command_queue_index().." subtype: "..character:character_subtype_key());
                     wwl:SetSpellsForCharacter(character);
                 end
             end
@@ -49,9 +58,9 @@ function WWL_SetupPostUIListeners(wwl)
                 local charactersInMilitaryForce = militaryForce:character_list();
                 for i = 0, charactersInMilitaryForce:num_items() - 1 do
                     local character = charactersInMilitaryForce:item_at(i);
-                    local characterSubtype = character:character_subtype_key();
-                    if wwl:IsSupportedCharacterSubType(characterSubtype) == true then
+                    if wwl:IsSupportedCharacter(character) == true then
                         local characterCqi = character:command_queue_index();
+                        local characterSubtype = character:character_subtype_key();
                         wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
                         wwl:SetSpellsForCharacter(character);
                     end
@@ -68,9 +77,9 @@ function WWL_SetupPostUIListeners(wwl)
                 local charactersInMilitaryForce = militaryForce:character_list();
                 for i = 0, charactersInMilitaryForce:num_items() - 1 do
                     local character = charactersInMilitaryForce:item_at(i);
-                    local characterSubtype = character:character_subtype_key();
-                    if wwl:IsSupportedCharacterSubType(characterSubtype) == true then
+                    if wwl:IsSupportedCharacter(character) == true then
                         local characterCqi = character:command_queue_index();
+                        local characterSubtype = character:character_subtype_key();
                         wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
                         wwl:SetSpellsForCharacter(character);
                     end
@@ -89,16 +98,17 @@ function WWL_SetupPostUIListeners(wwl)
         "CharacterSkillPointAllocated",
         function(context)
             local character = context:character();
-            local characterSubtype = character:character_subtype_key();
-            local isSupportedCharacter = wwl:IsSupportedCharacterSubType(characterSubtype);
+            local isSupportedCharacter = wwl:IsSupportedCharacter(character);
             return isSupportedCharacter and wwl:IsValidCharacterSkillKey(context:skill_point_spent_on());
         end,
         function(context)
             local characterSkillKey = context:skill_point_spent_on();
+            wwl.Logger:Log("Unlocked skill is: "..characterSkillKey);
             local character = context:character();
             local characterSubtype = character:character_subtype_key();
             local defaultWizardData = wwl:GetDefaultWizardDataForCharacterSubtype(characterSubtype);
             local wizardData = wwl:GetWizardData(character);
+            local loreData = wwl:GetMagicLoreData(defaultWizardData);
             if string.match(characterSkillKey,  "wwl_skill_wizard_level_0") then
                 wwl.Logger:Log("Wizard level skill is: "..characterSkillKey);
                 local unlockedWizardLevel = string.match(characterSkillKey, "wwl_skill_wizard_level_0(.*)");
@@ -115,7 +125,10 @@ function WWL_SetupPostUIListeners(wwl)
                         cm:force_remove_trait(characterLookupString, spellKey.."_disable");
                     end
                 end
-            elseif Contains(wizardData.UnlockedSpells, characterSkillKey) == false then
+            elseif wwl:IsSignatureSpell(loreData, characterSkillKey) == false
+                and wwl:IsInnateSpell(loreData, characterSkillKey) == false
+                and Contains(wizardData.UnlockedSpells, characterSkillKey) == false
+                and (wwl:IsLevel1Spell(defaultWizardData, characterSkillKey) or wwl:IsLevel3Spell(defaultWizardData, characterSkillKey)) then
                 wwl.Logger:Log("Unlocked skill is: "..characterSkillKey);
                 wizardData.UnlockedSpells[#wizardData.UnlockedSpells + 1] = characterSkillKey;
             end
