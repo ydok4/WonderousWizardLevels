@@ -3,7 +3,7 @@ testCharacter = {
     cqi = function() return 123 end,
     get_forename = function() return "Direfan"; end,
     get_surname = function() return "Cylostra"; end,
-    character_subtype_key = function() return "vmp_vampire"; end,
+    character_subtype_key = function() return "wh2_main_hef_loremaster_of_hoeth"; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -15,6 +15,8 @@ testCharacter = {
     character_type = function() return false; end,
     is_null_interface = function() return false; end,
     is_wounded = function() return false; end,
+    has_skill = function() return true; end,
+    has_ancillary = function() return true; end,
 }
 
 testMilitaryForce = {

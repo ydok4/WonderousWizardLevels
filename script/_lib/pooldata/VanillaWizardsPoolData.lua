@@ -32,11 +32,14 @@ function GetVanillaWizardsPoolDataResources()
             Lore = "Life",
         },
         -- Fay enchantress
-        --[[dlc07_brt_fay_enchantress = {
+        dlc07_brt_fay_enchantress = {
             IsLord = true,
             DefaultWizardLevel = 4,
+            IsLoremaster = true,
+            LoremasterCharacterSkillKey = "wh_dlc07_skill_brt_lord_unique_fay_enchantress_loremaster_lore_of_life",
+            LoremasterCharacterNodeSkillKey = "wh_dlc07_skill_node_brt_fay_enchantress_unique_05",
             Lore = {"Life", "Beasts", "Heavens", },
-        },--]]
+        },
         -- Beastmen
         dlc03_bst_bray_shaman_beasts = {
             IsLord = false,
@@ -160,11 +163,14 @@ function GetVanillaWizardsPoolDataResources()
             DefaultWizardLevel = 3,
             Lore = "Shadows",
         },
-        --[[wh2_main_def_morathi = {
+        wh2_main_def_morathi = {
             IsLord = true,
             DefaultWizardLevel = 4,
-            Lore = {"Dark", "Shadows"},
-        },--]]
+            IsLoremaster = true,
+            LoremasterCharacterSkillKey = "wh2_main_def_morathi_loremaster_lore_of_dark_magic",
+            LoremasterCharacterNodeSkillKey = "wwl_upgraded_wizard_level_wh2_main_def_morathi",
+            Lore = {"Dark", "Shadows", "Death"},
+        },
         wh2_main_def_malekith = {
             IsLord = true,
             DefaultWizardLevel = 4,
@@ -235,17 +241,17 @@ function GetVanillaWizardsPoolDataResources()
             DefaultWizardLevel = 3,
             Lore = "BigWaaagh",
         },
-        --[[grn_azhag_the_slaughterer = {
+        grn_azhag_the_slaughterer = {
             IsLord = true,
             DefaultWizardLevel = 3,
-            Lore = "Death",
-        },--]]
+            Lore = "Azhag",
+        },
         -- High Elves
-        --[[wh2_main_hef_loremaster_of_hoeth = {
+        wh2_main_hef_loremaster_of_hoeth = {
             IsLord = false,
-            DefaultWizardLevel = 1,
-            Lore = "LilWaaagh",
-        },--]]
+            DefaultWizardLevel = 2,
+            Lore = "LoremasterOfHoeth",
+        },
         wh2_main_hef_mage_high = {
             IsLord = false,
             DefaultWizardLevel = 1,
@@ -271,16 +277,19 @@ function GetVanillaWizardsPoolDataResources()
             DefaultWizardLevel = 1,
             Lore = "Shadows",
         },
-        --[[wh2_main_hef_teclis = {
-            IsLord = false,
-            DefaultWizardLevel = 1,
-            Lore = "Teclis",
-        },--]]
-        --[[wh2_dlc10_hef_alarielle = {
+        wh2_main_hef_teclis = {
             IsLord = true,
             DefaultWizardLevel = 4,
+            Lore = "Teclis",
+        },
+        wh2_dlc10_hef_alarielle = {
+            IsLord = true,
+            DefaultWizardLevel = 4,
+            IsLoremaster = true,
+            LoremasterCharacterSkillKey = "wh2_dlc10_hef_alarielle_loremaster_lore_of_light_magic",
+            LoremasterCharacterNodeSkillKey = "wwl_upgraded_wizard_level_wh2_dlc10_skill_node_hef_alarielle",
             Lore = {"Light", "Life", "High"},
-        },--]]
+        },
         -- Lizardmen
         wh2_dlc12_lzd_tlaqua_skink_priest_beasts = {
             IsLord = false,
@@ -307,11 +316,16 @@ function GetVanillaWizardsPoolDataResources()
             DefaultWizardLevel = 3,
             Lore = "Beasts",
         },
-        --[[wh2_main_lzd_slann_mage_priest = {
+        wh2_main_lzd_lord_mazdamundi = {
             IsLord = true,
             DefaultWizardLevel = 5,
-            Lore = "Beasts",
-        },--]]
+            Lore = "Slann",
+        },
+        wh2_main_lzd_slann_mage_priest = {
+            IsLord = true,
+            DefaultWizardLevel = 5,
+            Lore = "Slann",
+        },
         -- Norsca
         wh_dlc08_nor_fimir_balefiend_fire = {
             IsLord = false,
@@ -411,76 +425,76 @@ function GetVanillaWizardsPoolDataResources()
             Lore = "Nehekhara",
         },
         -- Vampire Coast
-        --[[wh2_dlc11_cst_fleet_captain = {
+        wh2_dlc11_cst_fleet_captain = {
             IsLord = false,
-            DefaultWizardLevel = 0,
-            Lore = "Vampires",
+            DefaultWizardLevel = 1,
+            Lore = "VampiresDeeps",
         },
         wh2_dlc11_cst_fleet_captain_death = {
             IsLord = false,
-            DefaultWizardLevel = 0,
+            DefaultWizardLevel = 1,
             Lore = "Death",
         },
         wh2_dlc11_cst_fleet_captain_deep = {
             IsLord = false,
-            DefaultWizardLevel = 0,
+            DefaultWizardLevel = 1,
             Lore = "Deep",
-        },--]]
+        },
         wh2_dlc11_cst_admiral = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 2,
             Lore = "VampiresDeeps",
         },
         wh2_dlc11_cst_admiral_death = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 2,
             Lore = "Death",
         },
         wh2_dlc11_cst_admiral_deep = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 2,
             Lore = "Deep",
         },
         wh2_dlc11_cst_admiral_fem = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 2,
             Lore = "VampiresDeeps",
         },
         wh2_dlc11_cst_admiral_fem_death = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 2,
             Lore = "Death",
         },
         wh2_dlc11_cst_admiral_fem_deep = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 2,
             Lore = "Deep",
         },
         wh2_dlc11_cst_admiral_tech_01 = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 2,
             Lore = "VampiresDeeps",
         },
         wh2_dlc11_cst_admiral_tech_02 = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 2,
             Lore = "Deep",
         },
         wh2_dlc11_cst_admiral_tech_03 = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 2,
             Lore = "Death",
         },
         wh2_dlc11_cst_admiral_tech_04 = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 2,
             Lore = "Deep",
         },
-        --[[wh2_dlc11_cst_noctilus = {
+        wh2_dlc11_cst_noctilus = {
             IsLord = true,
             DefaultWizardLevel = 3,
-            Lore = "Vampires",
-        },--]]
+            Lore = {"VampiresDeeps", "Shadows", },
+        },
         wh2_dlc11_cst_cylostra = {
             IsLord = true,
             DefaultWizardLevel = 4,
@@ -512,7 +526,6 @@ function GetVanillaWizardsPoolDataResources()
             DefaultWizardLevel = 1,
             Lore = "Vampires",
         },
-        --[[
         dlc04_vmp_strigoi_ghoul_king = {
             IsLord = true,
             DefaultWizardLevel = 1,
@@ -520,12 +533,12 @@ function GetVanillaWizardsPoolDataResources()
         },
         wh2_dlc11_vmp_bloodline_blood_dragon = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 2,
             Lore = "Vampires",
         },
         wh2_dlc11_vmp_bloodline_lahmian = {
             IsLord = true,
-            DefaultWizardLevel = 1,
+            DefaultWizardLevel = 3,
             Lore = "Vampires",
         },
         wh2_dlc11_vmp_bloodline_necrarch = {
@@ -542,12 +555,20 @@ function GetVanillaWizardsPoolDataResources()
             IsLord = true,
             DefaultWizardLevel = 2,
             Lore = "Vampires",
-        },--]]
-        --[[vmp_mannfred_von_carstein = {
+        },
+        dlc04_vmp_helman_ghorst = {
             IsLord = true,
-            DefaultWizardLevel = 1,
-            Lore = {"Vampires", "Death"},
-        },--]]
+            DefaultWizardLevel = 2,
+            Lore = "GhorstLoreVampires",
+        },
+        vmp_mannfred_von_carstein = {
+            IsLord = true,
+            DefaultWizardLevel = 4,
+            IsLoremaster = true,
+            LoremasterCharacterSkillKey = "wwl_skill_mannfred_dual_loremaster",
+            LoremasterCharacterNodeSkillKey = "wwl_upgraded_wizard_level_vmp_mannfred",
+            Lore = "Mannfred",
+        },
         vmp_heinrich_kemmler = {
             IsLord = true,
             IsLoremaster = true,
@@ -556,11 +577,6 @@ function GetVanillaWizardsPoolDataResources()
             DefaultWizardLevel = 4,
             Lore = "Vampires",
         },
-        --[[dlc04_vmp_helman_ghorst = {
-            IsLord = true,
-            DefaultWizardLevel = 2,
-            Lore = "GhorstLoreVampires",
-        },--]]
         dlc04_vmp_vlad_con_carstein = {
             IsLord = true,
             DefaultWizardLevel = 3,
@@ -597,10 +613,10 @@ function GetVanillaWizardsPoolDataResources()
             DefaultWizardLevel = 2,
             Lore = "Life",
         },
-        --[[wh_dlc05_wef_branchwraith = {
+        wh_dlc05_wef_branchwraith = {
             IsLord = false,
             DefaultWizardLevel = 1,
             Lore = "BranchWraith",
-        },--]]
+        },
     };
 end

@@ -1,62 +1,66 @@
-Initialised   : [25, 08 2019 14:59:23]
+Initialised   : [01, 09 2019 15:33:30]
 FINISHED
 
-Generating spells for characters in faction: wh2_main_hef_nagarythe   : [25, 08 2019 14:59:23]
-Generating spells for character: 10 subtype: vmp_vampire   : [25, 08 2019 14:59:24]
-Using existing data   : [25, 08 2019 14:59:24]
+Generating spells for characters in faction: wh2_main_hef_nagarythe   : [01, 09 2019 15:33:30]
+Generating spells for character: 10 subtype: wh2_main_hef_loremaster_of_hoeth   : [01, 09 2019 15:33:30]
+Using existing data   : [01, 09 2019 15:33:30]
+Disabling Loremaster level signature spell: wh_dlc05_skill_magic_life_wizard_earth_blood   : [01, 09 2019 15:33:31]
+Disabling Loremaster level signature spell: wh_main_skill_all_magic_fire_01_fireball   : [01, 09 2019 15:33:31]
 FINISHED
 
-Unlocked skill is: wh_main_skill_all_magic_heavens_09_comet_of_casandora   : [25, 08 2019 14:59:24]
+Unlocked skill is: wh_main_skill_all_magic_heavens_09_comet_of_casandora   : [01, 09 2019 15:33:31]
 FINISHED
 
-Unlocked skill is: wh_main_skill_all_magic_heavens_09_comet_of_casandora   : [25, 08 2019 14:59:24]
+Unlocked skill is: wh_main_skill_all_magic_heavens_09_comet_of_casandora   : [01, 09 2019 15:33:31]
 FINISHED
 
-Defender cqi: 10 Defender faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 14:59:24]
-Found supported subtype: vmp_vampire with cqi: 10   : [25, 08 2019 14:59:24]
-Using existing data   : [25, 08 2019 14:59:24]
-Character has already generated spells this turn. Not generating spells.   : [25, 08 2019 14:59:24]
-Defender cqi: 10 Defender faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 14:59:24]
-Found supported subtype: vmp_vampire with cqi: 10   : [25, 08 2019 14:59:24]
-Using existing data   : [25, 08 2019 14:59:24]
-Character has already generated spells this turn. Not generating spells.   : [25, 08 2019 14:59:24]
+Defender cqi: 10 Defender faction name wh2_main_def_dark_elves_qb1   : [01, 09 2019 15:33:31]
+Found supported subtype: wh2_main_hef_loremaster_of_hoeth with cqi: 10   : [01, 09 2019 15:33:31]
+Using existing data   : [01, 09 2019 15:33:31]
+Character has already generated spells this turn. Not generating spells.   : [01, 09 2019 15:33:31]
+Defender cqi: 10 Defender faction name wh2_main_def_dark_elves_qb1   : [01, 09 2019 15:33:31]
+Found supported subtype: wh2_main_hef_loremaster_of_hoeth with cqi: 10   : [01, 09 2019 15:33:31]
+Using existing data   : [01, 09 2019 15:33:31]
+Character has already generated spells this turn. Not generating spells.   : [01, 09 2019 15:33:31]
 FINISHED
 
-Attacker cqi: 10 Attacker faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 14:59:24]
-Found supported subtype: vmp_vampire with cqi: 10   : [25, 08 2019 14:59:24]
-Using existing data   : [25, 08 2019 14:59:24]
-Character has already generated spells this turn. Not generating spells.   : [25, 08 2019 14:59:24]
-Attacker cqi: 10 Attacker faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 14:59:24]
-Found supported subtype: vmp_vampire with cqi: 10   : [25, 08 2019 14:59:24]
-Using existing data   : [25, 08 2019 14:59:24]
-Character has already generated spells this turn. Not generating spells.   : [25, 08 2019 14:59:24]
+Attacker cqi: 10 Attacker faction name wh2_main_def_dark_elves_qb1   : [01, 09 2019 15:33:31]
+Found supported subtype: wh2_main_hef_loremaster_of_hoeth with cqi: 10   : [01, 09 2019 15:33:31]
+Using existing data   : [01, 09 2019 15:33:31]
+Character has already generated spells this turn. Not generating spells.   : [01, 09 2019 15:33:31]
+Attacker cqi: 10 Attacker faction name wh2_main_def_dark_elves_qb1   : [01, 09 2019 15:33:31]
+Found supported subtype: wh2_main_hef_loremaster_of_hoeth with cqi: 10   : [01, 09 2019 15:33:31]
+Using existing data   : [01, 09 2019 15:33:31]
+Character has already generated spells this turn. Not generating spells.   : [01, 09 2019 15:33:31]
 FINISHED
 
-Generating spells for characters in faction: wh2_main_hef_nagarythe   : [25, 08 2019 14:59:24]
-Generating spells for character: 10 subtype: vmp_vampire   : [25, 08 2019 14:59:24]
-Using existing data   : [25, 08 2019 14:59:24]
+Generating spells for characters in faction: wh2_main_hef_nagarythe   : [01, 09 2019 15:33:31]
+Generating spells for character: 10 subtype: wh2_main_hef_loremaster_of_hoeth   : [01, 09 2019 15:33:31]
+Using existing data   : [01, 09 2019 15:33:31]
+Disabling Loremaster level signature spell: wh2_main_skill_magic_heavens_01_harmonic_convergence_loremaster   : [01, 09 2019 15:33:33]
+Disabling Loremaster level signature spell: wh_dlc05_skill_magic_life_wizard_earth_blood   : [01, 09 2019 15:33:33]
 FINISHED
 
-Unlocked skill is: wh_main_skill_all_magic_heavens_09_comet_of_casandora   : [25, 08 2019 14:59:24]
+Unlocked skill is: wh_main_skill_all_magic_heavens_09_comet_of_casandora   : [01, 09 2019 15:33:33]
 FINISHED
 
-Defender cqi: 10 Defender faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 14:59:24]
-Found supported subtype: vmp_vampire with cqi: 10   : [25, 08 2019 14:59:24]
-Using existing data   : [25, 08 2019 14:59:24]
-Character has already generated spells this turn. Not generating spells.   : [25, 08 2019 14:59:24]
-Defender cqi: 10 Defender faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 14:59:24]
-Found supported subtype: vmp_vampire with cqi: 10   : [25, 08 2019 14:59:24]
-Using existing data   : [25, 08 2019 14:59:24]
-Character has already generated spells this turn. Not generating spells.   : [25, 08 2019 14:59:24]
+Defender cqi: 10 Defender faction name wh2_main_def_dark_elves_qb1   : [01, 09 2019 15:33:33]
+Found supported subtype: wh2_main_hef_loremaster_of_hoeth with cqi: 10   : [01, 09 2019 15:33:33]
+Using existing data   : [01, 09 2019 15:33:33]
+Character has already generated spells this turn. Not generating spells.   : [01, 09 2019 15:33:33]
+Defender cqi: 10 Defender faction name wh2_main_def_dark_elves_qb1   : [01, 09 2019 15:33:33]
+Found supported subtype: wh2_main_hef_loremaster_of_hoeth with cqi: 10   : [01, 09 2019 15:33:33]
+Using existing data   : [01, 09 2019 15:33:33]
+Character has already generated spells this turn. Not generating spells.   : [01, 09 2019 15:33:33]
 FINISHED
 
-Attacker cqi: 10 Attacker faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 14:59:24]
-Found supported subtype: vmp_vampire with cqi: 10   : [25, 08 2019 14:59:24]
-Using existing data   : [25, 08 2019 14:59:24]
-Character has already generated spells this turn. Not generating spells.   : [25, 08 2019 14:59:24]
-Attacker cqi: 10 Attacker faction name wh2_main_def_dark_elves_qb1   : [25, 08 2019 14:59:24]
-Found supported subtype: vmp_vampire with cqi: 10   : [25, 08 2019 14:59:24]
-Using existing data   : [25, 08 2019 14:59:24]
-Character has already generated spells this turn. Not generating spells.   : [25, 08 2019 14:59:24]
+Attacker cqi: 10 Attacker faction name wh2_main_def_dark_elves_qb1   : [01, 09 2019 15:33:33]
+Found supported subtype: wh2_main_hef_loremaster_of_hoeth with cqi: 10   : [01, 09 2019 15:33:33]
+Using existing data   : [01, 09 2019 15:33:33]
+Character has already generated spells this turn. Not generating spells.   : [01, 09 2019 15:33:33]
+Attacker cqi: 10 Attacker faction name wh2_main_def_dark_elves_qb1   : [01, 09 2019 15:33:33]
+Found supported subtype: wh2_main_hef_loremaster_of_hoeth with cqi: 10   : [01, 09 2019 15:33:34]
+Using existing data   : [01, 09 2019 15:33:34]
+Character has already generated spells this turn. Not generating spells.   : [01, 09 2019 15:33:34]
 FINISHED
 
