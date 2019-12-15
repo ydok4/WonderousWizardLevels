@@ -19,7 +19,7 @@ function z_wonderous_wizard_levels()
     });
     WWL:Initialise(random_army_manager, false);
     WWL.Logger:Log("Initialised");
-    WWL_SetupPostUIListeners(WWL);
+    WWL_SetupPostUIListeners(WWL, core);
     WWL.Logger:Log_Finished();
     out("WWL: Finished setup");
 end

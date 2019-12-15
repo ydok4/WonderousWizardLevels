@@ -3,7 +3,7 @@ testCharacter = {
     cqi = function() return 123 end,
     get_forename = function() return "Direfan"; end,
     get_surname = function() return "Cylostra"; end,
-    character_subtype_key = function() return "wh2_main_hef_loremaster_of_hoeth"; end,
+    character_subtype_key = function() return "wh2_dlc11_cst_admiral_fem_deep"; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -48,10 +48,10 @@ humanFaction = {
         return "wh2_main_hef_nagarythe";
     end,
     culture = function()
-        return "wh2_main_hef_high_elves";
+        return "wh2_dlc11_cst_vampire_coast";
     end,
     subculture = function()
-        return "wh2_main_sc_hef_high_elves";
+        return "wh2_dlc11_sc_cst_vampire_coast";
     end,
     character_list = function()
         return {
@@ -94,13 +94,13 @@ humanFaction = {
 
 testFaction = {
     name = function()
-        return "wh2_main_def_dark_elves_qb1";
+        return "wh2_main_skv_clan_eshin";
     end,
     culture = function()
-        return "wh2_main_def_dark_elves";
+        return "wh2_dlc11_cst_vampire_coast";
     end,
     subculture = function()
-        return "wh2_main_sc_def_dark_elves";
+        return "wh2_dlc11_sc_cst_vampire_coast";
     end,
     character_list = function()
         return {
@@ -380,6 +380,8 @@ function get_cm()
         trigger_incident_with_targets = function() end,
         remove_skill_point = function() end,
         force_add_skill = function() return true; end,
+        apply_effect_bundle_to_character = function() end,
+        remove_effect_bundle_from_character = function() end,
         remove_effect_bundle_from_characters_force = function() end,
         pending_battle_cache_num_defenders = function() return 2; end,
         pending_battle_cache_num_attackers = function() return 2; end,
@@ -509,8 +511,7 @@ out = function(text)
 end
 
 require 'script/campaign/mod/a_wwl_core_resource_loader'
---require 'script/campaign/mod/wwl_mixu_patch'
---require 'script/campaign/mod/ww_wez_speshul_patch'
+require 'script/campaign/mod/z_wwl_mixu_resource_loader'
 require 'script/campaign/mod/z_wonderous_wizard_levels'
 
 math.randomseed(os.time())
@@ -540,7 +541,7 @@ local MockContext_WWL_CharacterSkillPointAllocated = {
     Key = "WWL_CharacterSkillPointAllocated",
     Context = {
         character = function() return testCharacter end,
-        skill_point_spent_on = function() return "wh_main_skill_all_magic_heavens_09_comet_of_casandora"; end,
+        skill_point_spent_on = function() return "wh2_dlc11_skill_all_magic_deep_02_tidecall_lord"; end,
     },
 }
 mock_listeners:trigger_listener(MockContext_WWL_CharacterSkillPointAllocated);

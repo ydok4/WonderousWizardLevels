@@ -19,7 +19,7 @@ function WWLController:Initialise(random_army_manager, enableLogging)
     self.CampaignName = cm:get_campaign_name();
     self.HumanFaction = self:GetHumanFaction();
     self.Logger = Logger:new({});
-    self.Logger:Initialise("WonderousWizardLevels.txt", true);
+    self.Logger:Initialise("WonderousWizardLevels.txt", enableLogging);
     self.Logger:Log_Start();
 end
 
@@ -63,14 +63,20 @@ function WWLController:IsSupportedCharacter(character)
         return false;
     end
     local characterSubtype = character:character_subtype_key();
-    return _G.WWLResources.WizardData[characterSubtype] ~= nil;
+    local characterSubculture = character:faction():subculture();
+    local equivalentSubculture = self:GetEquivalentSubculture(characterSubculture);
+    if _G.WWLResources.WizardData[equivalentSubculture] == nil then
+        return false;
+    end
+    return _G.WWLResources.WizardData[equivalentSubculture][characterSubtype] ~= nil;
 end
 
 function WWLController:SetupNewWizard(character)
     local characterCqi = character:command_queue_index();
     local characterLookupString = "character_cqi:"..characterCqi;
     local characterSubtype = character:character_subtype_key();
-    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype);
+    local characterSubculture = character:faction():subculture()
+    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype, characterSubculture);
     local defaultSpells = self:GetDefaultSpellsForWizard(defaultWizardData);
     self.WizardData[characterLookupString] = {
         NumberOfSpells = defaultWizardData.DefaultWizardLevel,
@@ -80,8 +86,32 @@ function WWLController:SetupNewWizard(character)
     return self.WizardData[characterLookupString];
 end
 
-function WWLController:GetDefaultWizardDataForCharacterSubtype(characterSubtype)
-    return _G.WWLResources.WizardData[characterSubtype];
+function WWLController:GetLegendaryLordNameKeysForSubculture(subcultureKey)
+    local equivalentSubculture = self:GetEquivalentSubculture(subcultureKey);
+    return _G.WWLResources.LegendaryLordNameKeys[equivalentSubculture];
+end
+function WWLController:GetSuppportedSubtypesForSubculture(characterSubculture)
+    local equivalentSubculture = self:GetEquivalentSubculture(characterSubculture);
+    return _G.WWLResources.WizardData[equivalentSubculture];
+end
+
+function WWLController:GetDefaultWizardDataForCharacterSubtype(characterSubtype, characterSubculture)
+    local equivalentSubculture = self:GetEquivalentSubculture(characterSubculture);
+    if equivalentSubculture == nil then
+        return false;
+    end
+    return _G.WWLResources.WizardData[equivalentSubculture][characterSubtype];
+end
+
+function WWLController:GetEquivalentSubculture(subculture)
+    local equivalentSubculture = subculture;
+    if subculture == "wh_main_sc_ksl_kislev"
+    or subculture == "wh_main_sc_teb_teb" then
+        equivalentSubculture = "wh_main_sc_emp_empire";
+    elseif subculture == "wh_main_sc_grn_greenskins" then
+        equivalentSubculture = "wh_main_sc_grn_savage_orcs";
+    end
+    return equivalentSubculture;
 end
 
 function WWLController:IsSignatureSpell(magicLore, skillKey)
@@ -93,7 +123,7 @@ function WWLController:IsInnateSpell(magicLore, skillKey)
 end
 
 function WWLController:IsLevel1Spell(wizardData, skillKey)
-    local magicLore = self:GetMagicLoreData(wizardData);
+    local magicLore = self:GetMagicLoreData(wizardData.Lore);
     if magicLore == nil then
         return false;
     elseif wizardData.IsLord == true then
@@ -104,11 +134,9 @@ function WWLController:IsLevel1Spell(wizardData, skillKey)
 end
 
 function WWLController:IsLevel3Spell(wizardData, skillKey)
-    local magicLore = self:GetMagicLoreData(wizardData);
+    local magicLore = self:GetMagicLoreData(wizardData.Lore);
     if magicLore == nil then
         return false;
-    elseif wizardData.IsLord == true then
-        return Contains(magicLore.Level3DefaultSpellsLord, skillKey);
     else
         return Contains(magicLore.Level3DefaultSpells, skillKey);
     end
@@ -117,11 +145,13 @@ end
 function WWLController:GetMagicLoreData(loreKey)
     return _G.WWLResources.MagicLores[loreKey];
 end
+
 function WWLController:GetDefaultSpellsForWizard(wizardData)
     if type(wizardData.Lore) == "table" then
         return {};
     end
     local defaultSpells = {};
+    --self.Logger:Log("Getting Lore: "..wizardData.Lore);
     local magicLore = self:GetMagicLoreData(wizardData.Lore);
     if wizardData.IsLord == true then
         for index, spellKey in pairs(magicLore.Level1DefaultSpellsLord) do
@@ -167,7 +197,8 @@ function WWLController:SetSpellsForCharacter(character)
         return;
     end
     local characterSubtype = character:character_subtype_key();
-    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype);
+    local characterSubculture = character:faction():subculture();
+    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype, characterSubculture);
     if self:HasSpecialSpellGenerationRules(defaultWizardData) then
         self:PerformSpecialSpellGeneration(defaultWizardData, wizard, character);
     else
@@ -179,12 +210,7 @@ function WWLController:SetSpellsForCharacter(character)
         local remappedWizardData = self:GetWizardDataCopy(wizard);
         -- Remove all disable spell skills
         for index, spellKey in pairs(remappedWizardData.UnlockedSpells) do
-            --self.Logger:Log("Removing : "..spellKey);
-            if defaultWizardData.IsLord == true then
-                cm:remove_effect_bundle_from_characters_force(spellKey.."_disable", characterCqi);
-            else
-                cm:force_remove_trait(characterLookupString, spellKey.."_disable");
-            end
+            cm:remove_effect_bundle_from_character(spellKey.."_disable", character);
         end
 
         local numberOfUnlockedSpells = #remappedWizardData.UnlockedSpells;
@@ -193,12 +219,8 @@ function WWLController:SetSpellsForCharacter(character)
         -- The remaining spells will equal our wizard level
         for i = 1, numberOfUnlockedSpells - remappedWizardData.NumberOfSpells do
             local spellKey = GetAndRemoveRandomObjectFromList(remappedWizardData.UnlockedSpells);
-            --self.Logger:Log("Disabling spell: "..spellKey);
-            if defaultWizardData.IsLord == true then
-                cm:apply_effect_bundle_to_characters_force(spellKey.."_disable", characterCqi, -1, false);
-            else
-                cm:force_add_trait(characterLookupString, spellKey.."_disable");
-            end
+            self.Logger:Log("Disabling spell: "..spellKey);
+            cm:apply_effect_bundle_to_character(spellKey.."_disable", character, -1);
         end
     end
     --self.Logger:Log("Last turn number "..turnNumber);
@@ -225,13 +247,13 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
         spellsForLore[#spellsForLore + 1] = GetRandomObjectFromList(magicLore.InnateSkill);
         -- Remap the characters unlocked spells for easier manipulation
         local remappedWizardData = self:GetWizardDataCopy(wizard);
-        -- Remove all disable spell skills
+        -- Remove all enabled spell abilities
         for index, spellKey in pairs(remappedWizardData.UnlockedSpells) do
-            cm:remove_effect_bundle_from_characters_force(spellKey.."_enable", characterCqi);
+            cm:remove_effect_bundle_from_character(spellKey.."_enable", character);
         end
         wizard.UnlockedSpells = spellsForLore;
         for index, spellKey in pairs(wizard.UnlockedSpells) do
-            cm:apply_effect_bundle_to_characters_force(spellKey.."_enable", characterCqi, -1, false);
+            cm:apply_effect_bundle_to_character(spellKey.."_enable", character, -1);
         end
     elseif defaultWizardData.Lore == "Teclis" then
         local selectedLore = "Mixed";
@@ -245,19 +267,19 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
             }
             -- Remap the characters unlocked spells for easier manipulation
             local spellsForLore = self:GetDefaultSpellsForWizard(selectedLore);
-            -- Remove all current spell skills
+            -- Remove all current enabled spell abilities
             for index, spellKey in pairs(wizard.UnlockedSpells) do
-                cm:remove_effect_bundle_from_characters_force(spellKey.."_enable", characterCqi);
+                cm:remove_effect_bundle_from_character(spellKey.."_enable", character);
             end
             wizard.UnlockedSpells = spellsForLore;
             for index, spellKey in pairs(wizard.UnlockedSpells) do
-                cm:apply_effect_bundle_to_characters_force(spellKey.."_enable", characterCqi, -1, false);
+                cm:apply_effect_bundle_to_character(spellKey.."_enable", character, -1);
             end
         else
             self.Logger:Log("Teclis will have the Mixed Lores of Magic");
-            -- Remove all current spell skills
+            -- Remove all currently enabled spell abilities
             for index, spellKey in pairs(wizard.UnlockedSpells) do
-                cm:remove_effect_bundle_from_characters_force(spellKey.."_enable", characterCqi);
+                cm:remove_effect_bundle_from_character(spellKey.."_enable", character);
             end
             local battleLoresCopy = {};
             for index, battleLore in pairs(self.BattleLores) do
@@ -270,13 +292,13 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
             local innateSkillLoreData = self:GetMagicLoreData(innateSkillLoreKey);
             local innateSkill = GetRandomObjectFromList(innateSkillLoreData.InnateSkill);
             selectedSpells[#selectedSpells + 1] = innateSkill;
-            cm:apply_effect_bundle_to_characters_force(innateSkill.."_enable", characterCqi, -1, false);
+            cm:apply_effect_bundle_to_character(innateSkill.."_enable", character, -1);
             -- Next is the signature spell
             local signatureSpellLoreKey = GetAndRemoveRandomObjectFromList(battleLoresCopy);
             local signatureSpellLoreData = self:GetMagicLoreData(signatureSpellLoreKey);
             local signatureSpell = GetRandomObjectFromList(signatureSpellLoreData.SignatureSpell);
             selectedSpells[#selectedSpells + 1] = signatureSpell;
-            cm:apply_effect_bundle_to_characters_force(signatureSpell.."_enable", characterCqi, -1, false);
+            cm:apply_effect_bundle_to_character(signatureSpell.."_enable", character, -1);
             -- Now we do level 1 spells
             for i = 0, 2 do
                 local level1SpellLoreKey = GetAndRemoveRandomObjectFromList(battleLoresCopy);
@@ -288,10 +310,9 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
                     level1Spell = GetRandomObjectFromList(level1SpellLoreData.Level1DefaultSpells);
                 end
                 selectedSpells[#selectedSpells + 1] = level1Spell;
-                cm:apply_effect_bundle_to_characters_force(level1Spell.."_enable", characterCqi, -1, false);
+                cm:apply_effect_bundle_to_character(level1Spell.."_enable", character, -1);
             end
             -- and finally, level 3 spells
-            -- Now we do level 1 spells
             for i = 0, 1 do
                 local level3SpellLoreKey = GetAndRemoveRandomObjectFromList(battleLoresCopy);
                 local level3SpellLoreData = self:GetMagicLoreData(level3SpellLoreKey);
@@ -302,7 +323,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
                     level3Spell = GetRandomObjectFromList(level3SpellLoreData.Level3DefaultSpells);
                 end
                 selectedSpells[#selectedSpells + 1] = level3Spell;
-                cm:apply_effect_bundle_to_characters_force(level3Spell.."_enable", characterCqi, -1, false);
+                cm:apply_effect_bundle_to_character(level3Spell.."_enable", character, -1);
             end
             -- Now we add our selected spells to our unlocked spells list
             wizard.UnlockedSpells = selectedSpells;
@@ -331,16 +352,16 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
     elseif defaultWizardData.Lore == "Azhag" then
         -- Azhag only gets spells generated when he as the Crown of Sorcery
         if character:has_ancillary("wh_main_anc_enchanted_item_the_crown_of_sorcery") then
-            -- Remove all current spell skills
+            -- Remove all currently enabled spell abilities
             for index, spellKey in pairs(wizard.UnlockedSpells) do
-                cm:remove_effect_bundle_from_characters_force(spellKey.."_enable", characterCqi);
+                cm:remove_effect_bundle_from_character(spellKey.."_enable", character);
             end
             local selectedSpells = {};
             local deathLoreData = self:GetMagicLoreData("Death");
             -- Grab the innate skill
             local deathInnateSkill = GetRandomObjectFromList(deathLoreData.InnateSkill);
             selectedSpells[#selectedSpells + 1] = deathInnateSkill;
-            cm:apply_effect_bundle_to_characters_force(deathInnateSkill.."_enable", characterCqi, -1, false);
+            cm:apply_effect_bundle_to_character(deathInnateSkill.."_enable", character, -1);
             -- Check how many of each spell we need
             local numberOfLevel1Spells = 1;
             local numberOfLevel3Spells = 0;
@@ -360,7 +381,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
                 local level1Spell = GetAndRemoveRandomObjectFromList(remappedLordLevel1DeathSpells);
                 self.Logger:Log("Giving Azhag level 1 spell: "..level1Spell);
                 selectedSpells[#selectedSpells + 1] = level1Spell;
-                cm:apply_effect_bundle_to_characters_force(level1Spell.."_enable", characterCqi, -1, false);
+                cm:apply_effect_bundle_to_character(level1Spell.."_enable", character, -1);
             end
             -- Get the level 3 spells
             local remappedLordLevel3DeathSpells = {};
@@ -371,7 +392,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
                 local level3Spell = GetAndRemoveRandomObjectFromList(remappedLordLevel3DeathSpells);
                 self.Logger:Log("Giving Azhag level 3 spell: "..level3Spell);
                 selectedSpells[#selectedSpells + 1] = level3Spell;
-                cm:apply_effect_bundle_to_characters_force(level3Spell.."_enable", characterCqi, -1, false);
+                cm:apply_effect_bundle_to_character(level3Spell.."_enable", character, -1);
             end
             -- Update the unlocked spell list
             wizard.UnlockedSpells = selectedSpells;
@@ -383,11 +404,11 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
         -- Grab the innate skill
         local vampiresInnateSkill = GetRandomObjectFromList(vampiresLoreData.InnateSkill);
         selectedSpells[#selectedSpells + 1] = vampiresInnateSkill;
-        cm:apply_effect_bundle_to_characters_force(vampiresInnateSkill.."_enable", characterCqi, -1, false);
+        cm:apply_effect_bundle_to_character(vampiresInnateSkill.."_enable", character, -1);
         -- Grab the signature spell
         local vampiresSignatureSpell = GetRandomObjectFromList(vampiresLoreData.SignatureSpell);
         selectedSpells[#selectedSpells + 1] = vampiresSignatureSpell;
-        cm:apply_effect_bundle_to_characters_force(vampiresSignatureSpell.."_enable", characterCqi, -1, false);
+        cm:apply_effect_bundle_to_character(vampiresSignatureSpell.."_enable", character, -1);
         -- Check how many of each spell we need
         local numberOfLevel1Spells = 1;
         local numberOfLevel3Spells = 0;
@@ -410,7 +431,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
             local level1Spell = GetAndRemoveRandomObjectFromList(remappedLordLevel1VampiresSpells);
             self.Logger:Log("Giving Mannfred level 1 spell: "..level1Spell);
             selectedSpells[#selectedSpells + 1] = level1Spell;
-            cm:apply_effect_bundle_to_characters_force(level1Spell.."_enable", characterCqi, -1, false);
+            cm:apply_effect_bundle_to_character(level1Spell.."_enable", character, -1);
         end
         -- Get the level 3 spells
         local remappedLordLevel3VampiresSpells = {};
@@ -421,18 +442,18 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
             local level3Spell = GetAndRemoveRandomObjectFromList(remappedLordLevel3VampiresSpells);
             self.Logger:Log("Giving Mannfred level 3 spell: "..level3Spell);
             selectedSpells[#selectedSpells + 1] = level3Spell;
-            cm:apply_effect_bundle_to_characters_force(level3Spell.."_enable", characterCqi, -1, false);
+            cm:apply_effect_bundle_to_character(level3Spell.."_enable", character, -1);
         end
         -- Then we do the Lore of Death
         local deathLoreData = self:GetMagicLoreData("Death");
         -- Grab the innate skill
         local deathInnateSkill = GetRandomObjectFromList(deathLoreData.InnateSkill);
         selectedSpells[#selectedSpells + 1] = deathInnateSkill;
-        cm:apply_effect_bundle_to_characters_force(deathInnateSkill.."_enable", characterCqi, -1, false);
+        cm:apply_effect_bundle_to_character(deathInnateSkill.."_enable", character, -1);
         -- Grab the signature spell
         local deathSignatureSpell = GetRandomObjectFromList(deathLoreData.SignatureSpell);
         selectedSpells[#selectedSpells + 1] = deathSignatureSpell;
-        cm:apply_effect_bundle_to_characters_force(deathSignatureSpell.."_enable", characterCqi, -1, false);
+        cm:apply_effect_bundle_to_character(deathSignatureSpell.."_enable", character, -1);
         -- Get the level 1 spells
         local remappedLordLevel1DeathSpells = {};
         for index, spellKey in pairs(deathLoreData.Level1DefaultSpellsLord) do
@@ -442,7 +463,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
             local level1Spell = GetAndRemoveRandomObjectFromList(remappedLordLevel1DeathSpells);
             self.Logger:Log("Giving Mannfred level 1 spell: "..level1Spell);
             selectedSpells[#selectedSpells + 1] = level1Spell;
-            cm:apply_effect_bundle_to_characters_force(level1Spell.."_enable", characterCqi, -1, false);
+            cm:apply_effect_bundle_to_character(level1Spell.."_enable", character, -1);
         end
         -- Get the level 3 spells
         local remappedLordLevel3DeathSpells = {};
@@ -453,15 +474,17 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
             local level3Spell = GetAndRemoveRandomObjectFromList(remappedLordLevel3DeathSpells);
             self.Logger:Log("Giving Mannfred level 3 spell: "..level3Spell);
             selectedSpells[#selectedSpells + 1] = level3Spell;
-            cm:apply_effect_bundle_to_characters_force(level3Spell.."_enable", characterCqi, -1, false);
+            cm:apply_effect_bundle_to_character(level3Spell.."_enable", character, -1);
         end
         -- Update the unlocked spell list
         wizard.UnlockedSpells = selectedSpells;
     -- Last case is multi lore characters
     else
+        self.Logger:Log("Found multi lore character");
         -- Remove all current spell skills
         for index, spellKey in pairs(wizard.UnlockedSpells) do
-            cm:remove_effect_bundle_from_characters_force(spellKey.."_enable", characterCqi);
+            self.Logger:Log("Remove spell: "..spellKey.." from character.");
+            cm:remove_effect_bundle_from_character(spellKey.."_enable", character);
         end
         -- Grab the magic lore data for each lore and deep copy them
         local magicLoresData = {};
@@ -480,25 +503,15 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
             for index, level1SpellsKey in pairs(magicLoreData.Level1DefaultSpells) do
                 level1Spells[#level1Spells + 1] = level1SpellsKey;
             end
-            local level1SpellsLord = {};
-            for index, level1SpellsLordKey in pairs(magicLoreData.Level1DefaultSpellsLord) do
-                level1SpellsLord[#level1SpellsLord + 1] = level1SpellsLordKey;
-            end
             local level3Spells = {};
             for index, level3SpellsKey in pairs(magicLoreData.Level3DefaultSpells) do
                 level3Spells[#level3Spells + 1] = level3SpellsKey;
-            end
-            local level3SpellsLord = {};
-            for index, level3SpellsLordKey in pairs(magicLoreData.Level3DefaultSpellsLord) do
-                level3SpellsLord[#level3SpellsLord + 1] = level3SpellsLordKey;
             end
             magicLoresData[#magicLoresData + 1] = {
                 InnateSkill = innateSkills,
                 SignatureSpell = signatureSpells,
                 Level1DefaultSpells = level1Spells,
-                Level1DefaultSpellsLord = level1SpellsLord,
-                Level3DefaultSpells = level3SpellsLord,
-                Level3DefaultSpellsLord = level3SpellsLord,
+                Level3DefaultSpells = level3Spells,
             };
         end
         local selectedSpells = {};
@@ -506,19 +519,30 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
         local innateSkillLoreData = GetRandomObjectFromList(magicLoresData);
         local innateSkill = GetRandomObjectFromList(innateSkillLoreData.InnateSkill);
         selectedSpells[#selectedSpells + 1] = innateSkill;
-        cm:apply_effect_bundle_to_characters_force(innateSkill.."_enable", characterCqi, -1, false);
+        cm:apply_effect_bundle_to_character(innateSkill.."_enable", character, -1);
         -- Grab the signature spell
         local signatureSpellLoreData = GetRandomObjectFromList(magicLoresData);
-        local signatureSpell = GetRandomObjectFromList(signatureSpellLoreData.SignatureSpell);
-        selectedSpells[#selectedSpells + 1] = signatureSpell;
-        cm:apply_effect_bundle_to_characters_force(signatureSpell.."_enable", characterCqi, -1, false);
+        local selectedSignatureSpell = GetRandomObjectFromList(signatureSpellLoreData.SignatureSpell);
+        selectedSpells[#selectedSpells + 1] = selectedSignatureSpell;
+        -- Now disable the other signature spells
+        for index, magicLore in pairs(magicLoresData) do
+            for index, signatureSpell in pairs(magicLore.SignatureSpell) do
+                if signatureSpell ~= selectedSignatureSpell then
+                    self.Logger:Log("Disabling spell: "..signatureSpell);
+                    cm:apply_effect_bundle_to_character(signatureSpell.."_disable", character, -1);
+                else
+                    cm:remove_effect_bundle_from_character(signatureSpell.."_disable", character);
+                end
+            end
+        end
         -- Check how many of each spell we need
         local numberOfLevel1Spells = 1;
         local numberOfLevel3Spells = 0;
         if defaultWizardData.IsLoremaster == true and character:has_skill(defaultWizardData.LoremasterCharacterSkillKey) then
             numberOfLevel1Spells = 2;
             numberOfLevel3Spells = 1;
-        elseif defaultWizardData.DefaultWizardLevel == 4 then
+        elseif defaultWizardData.DefaultWizardLevel == 4
+        or wizard.NumberOfSpells == 4 then
             if Roll100(50) then
                 numberOfLevel1Spells = numberOfLevel1Spells + 1;
             else
@@ -526,30 +550,44 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
             end
         end
         -- Get the level 1 spells
+        local selectedLevel1Spells = {};
         for i = 0, numberOfLevel1Spells do
             local level1SpellLoreData = GetRandomObjectFromList(magicLoresData);
-            local level1Spell = "";
-            if #level1SpellLoreData.Level1DefaultSpellsLord > 0 then
-                level1Spell = GetAndRemoveRandomObjectFromList(level1SpellLoreData.Level1DefaultSpellsLord);
-            else
-                level1Spell = GetAndRemoveRandomObjectFromList(level1SpellLoreData.Level1DefaultSpells);
+            local activeLevel1Spell = GetAndRemoveRandomObjectFromList(level1SpellLoreData.Level1DefaultSpells);
+            selectedLevel1Spells[#selectedLevel1Spells + 1] = activeLevel1Spell;
+            self.Logger:Log("Giving character level 1 spell: "..activeLevel1Spell);
+            selectedSpells[#selectedSpells + 1] = activeLevel1Spell;
+        end
+        -- Now disable the other level 1 spells
+        for index, magicLore in pairs(magicLoresData) do
+            for index, level1Spell in pairs(magicLore.Level1DefaultSpells) do
+                if Contains(selectedLevel1Spells, level1Spell) == false then
+                    self.Logger:Log("Disabling spell: "..level1Spell);
+                    cm:apply_effect_bundle_to_character(level1Spell.."_disable", character, -1);
+                else
+                    cm:remove_effect_bundle_from_character(level1Spell.."_disable", character);
+                end
             end
-            self.Logger:Log("Giving character level 1 spell: "..level1Spell);
-            selectedSpells[#selectedSpells + 1] = level1Spell;
-            cm:apply_effect_bundle_to_characters_force(level1Spell.."_enable", characterCqi, -1, false);
         end
         -- Get the level 3 spells
+        local selectedLevel3Spells = {};
         for i = 0, numberOfLevel3Spells do
             local level3SpellLoreData = GetRandomObjectFromList(magicLoresData);
-            local level3Spell = "";
-            if #level3SpellLoreData.Level3DefaultSpellsLord > 0 then
-                level3Spell = GetAndRemoveRandomObjectFromList(level3SpellLoreData.Level3DefaultSpellsLord);
-            else
-                level3Spell = GetAndRemoveRandomObjectFromList(level3SpellLoreData.Level3DefaultSpells);
+            local activeLevel3Spell = GetAndRemoveRandomObjectFromList(level3SpellLoreData.Level3DefaultSpells);
+            selectedLevel3Spells[#selectedLevel3Spells + 1] = activeLevel3Spell;
+            self.Logger:Log("Giving character level 3 spell: "..activeLevel3Spell);
+            selectedSpells[#selectedSpells + 1] = activeLevel3Spell;
+        end
+        -- Now disable the other level 3 spells
+        for index, magicLore in pairs(magicLoresData) do
+            for index, level3Spell in pairs(magicLore.Level3DefaultSpells) do
+                if Contains(selectedLevel3Spells, level3Spell) == false then
+                    self.Logger:Log("Disabling spell: "..level3Spell);
+                    cm:apply_effect_bundle_to_character(level3Spell.."_disable", character, -1);
+                else
+                    cm:remove_effect_bundle_from_character(level3Spell.."_disable", character);
+                end
             end
-            self.Logger:Log("Giving character level 3 spell: "..level3Spell);
-            selectedSpells[#selectedSpells + 1] = level3Spell;
-            cm:apply_effect_bundle_to_characters_force(level3Spell.."_enable", characterCqi, -1, false);
         end
         -- Update the unlocked spell list
         wizard.UnlockedSpells = selectedSpells;
@@ -614,4 +652,43 @@ function WWLController:IsValidCharacterSkillKey(skillKey)
         return true;
     end
     return false;
+end
+
+function WWLController:GetCharacterWizardDataWithName(nameText, faction, checkForLLNameKeys)
+    self.Logger:Log("Checking for existing wizards");
+    -- First we check if we can find the character alive in the faction
+    local character_list = faction:character_list();
+    for i = 0, character_list:num_items() - 1 do
+        local character = character_list:item_at(i);
+        if character:is_null_interface() == false then
+            if character:military_force():is_null_interface() or character:military_force():is_armed_citizenry() == false then
+                local forename = effect.get_localised_string(character:get_forename());
+                local surname = effect.get_localised_string(character:get_surname());
+                self.Logger:Log("Checking: "..forename.." "..surname);
+                if string.match(nameText, forename.." "..surname) then
+                    self.Logger:Log("Found match!");
+                    return self:GetWizardData(character);
+                end
+            end
+        end
+    end
+    if checkForLLNameKeys == true then
+        -- If we can't find it alive then we try and identify the character by the name keys
+        local subcultureKey = faction:subculture();
+        local llNameKeys = self:GetLegendaryLordNameKeysForSubculture(subcultureKey);
+        for llForeNameKey, llNameKeyData in pairs(llNameKeys) do
+            local forename = effect.get_localised_string(llForeNameKey);
+            if string.match(nameText, forename) then
+                self.Logger:Log("Found matching LL by forename key!");
+                local surname = effect.get_localised_string(llNameKeyData.Surname);
+                if llNameKeyData.Surname == "" or string.match(nameText, surname) then
+                    self.Logger:Log("Found matching LL by name key(s)! Subtype is: "..llNameKeyData.Subtype);
+                    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(llNameKeyData.Subtype, subcultureKey);
+                    return defaultWizardData;
+                end
+            end
+        end
+    end
+    -- If we still can't find them, then they aren't supported
+    return nil;
 end

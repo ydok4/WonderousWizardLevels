@@ -45,9 +45,9 @@ function GetMagicLorePoolDataResources()
             InnateSkill = {"wh_main_skill_all_magic_light_03_exorcism",},
             SignatureSpell = {"wh_main_skill_all_magic_light_dummy_shems_burning_gaze",},
             Level1DefaultSpells = {"wh_main_skill_all_magic_light_02_phas_protection", "wh_main_skill_all_magic_light_04_light_of_battle", "wh_main_skill_all_magic_light_05_net_of_amyntok"},
-            Level1DefaultSpellsLord = {},
+            Level1DefaultSpellsLord = {"wh_main_skill_all_magic_light_02_phas_protection", "wh_main_skill_all_magic_light_04_light_of_battle", "wh_main_skill_all_magic_light_05_net_of_amyntok"},
             Level3DefaultSpells = {"wh_main_skill_all_magic_light_09_banishment", "wh_main_skill_all_magic_light_10_bironas_timewarp", },
-            Level3DefaultSpellsLord = {"wh2_main_skill_all_magic_light_10_bironas_timewarp_lord", },
+            Level3DefaultSpellsLord = {"wh_main_skill_all_magic_light_09_banishment", "wh2_main_skill_all_magic_light_10_bironas_timewarp_lord", },
         },
         Metal = {
             InnateSkill = {"wh_main_skill_all_magic_metal_03_metalshifting",},
@@ -273,6 +273,23 @@ function GetMagicLorePoolDataResources()
             Level1DefaultSpellsLord = {"wh2_main_skill_vmp_magic_vampires_02_vanhels_danse_macabre_lord", "wh2_main_skill_vmp_magic_vampires_04_gaze_of_nagash_lord", "wh2_main_skill_vmp_magic_vampires_05_raise_dead_lord", },
             Level3DefaultSpells = {},
             Level3DefaultSpellsLord = {"wh2_main_skill_vmp_magic_vampires_09_curse_of_years_lord", "wh2_main_skill_vmp_magic_vampires_10_wind_of_death_lord", },
+        },
+        Stealth = {
+            InnateSkill = {"wh2_dlc14_skill_all_magic_stealth_02_toxic_rain_lore_attribute",},
+            SignatureSpell = {"wh2_dlc14_skill_all_magic_stealth_01_warp_stars", },
+            Level1DefaultSpells = {"wh2_dlc14_skill_all_magic_stealth_03_skitterleap", "wh2_dlc14_skill_all_magic_stealth_04_armour_of_darkness", "wh2_dlc14_skill_all_magic_stealth_05_veil_of_shadows", },
+            Level1DefaultSpellsLord = {},
+            Level3DefaultSpells = {"wh2_dlc14_skill_all_magic_stealth_06_brittle_bone", "wh2_dlc14_skill_all_magic_stealth_07_black_whirlwind", },
+            Level3DefaultSpellsLord = {},
+        },
+        -- Non Vanilla
+        Ice = {
+            InnateSkill = {"mixu_all_lord_spell_lore_of_ice_passive",},
+            SignatureSpell = {"mixu_all_lord_spell_lore_of_ice_glacial_barrier", },
+            Level1DefaultSpells = { "mixu_all_lord_spell_lore_of_ice_shield_of_cold", "mixu_all_lord_spell_lore_of_ice_midwinters_kiss", "mixu_all_lord_spell_lore_of_ice_wind_of_ice", },
+            Level1DefaultSpellsLord = { "mixu_all_lord_spell_lore_of_ice_shield_of_cold", "mixu_all_lord_spell_lore_of_ice_midwinters_kiss", "mixu_all_lord_spell_lore_of_ice_wind_of_ice", },
+            Level3DefaultSpells = { "mixu_all_lord_spell_lore_of_ice_shardstorm", "mixu_all_lord_spell_lore_of_ice_invocation_of_the_ice_storm", },
+            Level3DefaultSpellsLord = { "mixu_all_lord_spell_lore_of_ice_shardstorm", "mixu_all_lord_spell_lore_of_ice_invocation_of_the_ice_storm", },
         },
     };
 end
