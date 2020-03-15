@@ -12,14 +12,14 @@ require 'script/_lib/core/model/Logger';
 require 'script/_lib/core/listeners/WWLListeners';
 
 
-function z_wonderous_wizard_levels()
+function z_wondrous_wizard_levels()
     out("WWL: Main mod function");
     WWL = WWLController:new({
         WizardData = WWL.WizardData,
     });
-    WWL:Initialise(random_army_manager, false);
+    WWL:Initialise(random_army_manager, true);
     WWL.Logger:Log("Initialised");
-    WWL_SetupPostUIListeners(WWL, core);
+    WWL_SetupPostUIListeners(WWL, core, find_uicomponent, UIComponent);
     WWL.Logger:Log_Finished();
     out("WWL: Finished setup");
 end

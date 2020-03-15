@@ -1,6 +1,10 @@
 local WWL_UICache = {};
+local find_uicomponent = nil;
+local UIComponent = nil;
 
-function WWL_SetupPostUIListeners(wwl, core)
+function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicomponent_function)
+    find_uicomponent = find_uicomponent_function;
+    UIComponent = uicomponent_function;
     if not core then
         wwl.Logger:Log("ERROR: Core is missing");
         return;
@@ -141,34 +145,70 @@ function WWL_SetupPostUIListeners(wwl, core)
             local characterSubculture = character:faction():subculture();
             wwl.Logger:Log("Character subculture: "..characterSubculture.." character faction: "..character:faction():name());
             local defaultWizardData = wwl:GetDefaultWizardDataForCharacterSubtype(characterSubtype, characterSubculture);
-            wwl.Logger:Log("Getting lore data: "..defaultWizardData.Lore);
-            local loreData = wwl:GetMagicLoreData(defaultWizardData.Lore);
-            local wizardData = wwl:GetWizardData(character);
-            if wizardData == nil then
-                wwl.Logger:Log("WizardData is nil...setting up new character");
-                wizardData = wwl:SetupNewWizard(character);
-            end
-            if string.match(characterSkillKey,  "wwl_skill_wizard_level_0") then
-                wwl.Logger:Log("Wizard level skill is: "..characterSkillKey);
-                local unlockedWizardLevel = string.match(characterSkillKey, "wwl_skill_wizard_level_0(.*)");
-                wizardData.NumberOfSpells = tonumber(unlockedWizardLevel);
-            elseif defaultWizardData.IsLoremaster == true and characterSkillKey == defaultWizardData.LoremasterCharacterSkillKey then
-                wwl.Logger:Log("Loremaster skill unlocked: "..characterSkillKey);
-                local characterCqi = character:command_queue_index();
-                -- Remove all disable spell skills. We don't need these anymore
-                for index, spellKey in pairs(wizardData.UnlockedSpells) do
-                    cm:remove_effect_bundle_from_character(spellKey.."_disable", character);
+            if type(defaultWizardData.Lore) == "table" then
+                for index, loreKey in pairs(defaultWizardData.Lore) do
+                    wwl.Logger:Log("Getting lore data: "..loreKey);
+                    local loreData = wwl:GetMagicLoreData(loreKey);
+                    local wizardData = wwl:GetWizardData(character);
+                    if wizardData == nil then
+                        wwl.Logger:Log("WizardData is nil...setting up new character");
+                        wizardData = wwl:SetupNewWizard(character);
+                    end
+                    if string.match(characterSkillKey,  "wwl_skill_wizard_level_0") then
+                        wwl.Logger:Log("Wizard level skill is: "..characterSkillKey);
+                        local unlockedWizardLevel = string.match(characterSkillKey, "wwl_skill_wizard_level_0(.*)");
+                        wizardData.NumberOfSpells = tonumber(unlockedWizardLevel);
+                    elseif defaultWizardData.IsLoremaster == true and characterSkillKey == defaultWizardData.LoremasterCharacterSkillKey then
+                        wwl.Logger:Log("Loremaster skill unlocked: "..characterSkillKey);
+                        local characterCqi = character:command_queue_index();
+                        -- Remove all disable spell skills. We don't need these anymore
+                        for index, spellKey in pairs(wizardData.UnlockedSpells) do
+                            cm:remove_effect_bundle_from_character(spellKey.."_disable", character);
+                        end
+                    elseif wwl:IsSignatureSpell(loreData, characterSkillKey) == false
+                        and wwl:IsInnateSpell(loreData, characterSkillKey) == false
+                        and Contains(wizardData.UnlockedSpells, characterSkillKey) == false
+                        and (wwl:IsLevel1Spell(defaultWizardData, characterSkillKey) or wwl:IsLevel3Spell(defaultWizardData, characterSkillKey)) then
+                        wwl.Logger:Log("Unlocked skill is: "..characterSkillKey);
+                        if wizardData == nil then
+                            wwl.Logger:Log("Wizard is nil");
+                        else
+                            wizardData.UnlockedSpells[#wizardData.UnlockedSpells + 1] = characterSkillKey;
+                            wwl.Logger:Log("Added skill to array");
+                        end
+                    end
                 end
-            elseif wwl:IsSignatureSpell(loreData, characterSkillKey) == false
-                and wwl:IsInnateSpell(loreData, characterSkillKey) == false
-                and Contains(wizardData.UnlockedSpells, characterSkillKey) == false
-                and (wwl:IsLevel1Spell(defaultWizardData, characterSkillKey) or wwl:IsLevel3Spell(defaultWizardData, characterSkillKey)) then
-                wwl.Logger:Log("Unlocked skill is: "..characterSkillKey);
+            else
+                local loreKey = defaultWizardData.Lore;
+                wwl.Logger:Log("Getting lore data: "..loreKey);
+                local loreData = wwl:GetMagicLoreData(loreKey);
+                local wizardData = wwl:GetWizardData(character);
                 if wizardData == nil then
-                    wwl.Logger:Log("Wizard is nil");
-                else
-                    wizardData.UnlockedSpells[#wizardData.UnlockedSpells + 1] = characterSkillKey;
-                    wwl.Logger:Log("Added skill to array");
+                    wwl.Logger:Log("WizardData is nil...setting up new character");
+                    wizardData = wwl:SetupNewWizard(character);
+                end
+                if string.match(characterSkillKey,  "wwl_skill_wizard_level_0") then
+                    wwl.Logger:Log("Wizard level skill is: "..characterSkillKey);
+                    local unlockedWizardLevel = string.match(characterSkillKey, "wwl_skill_wizard_level_0(.*)");
+                    wizardData.NumberOfSpells = tonumber(unlockedWizardLevel);
+                elseif defaultWizardData.IsLoremaster == true and characterSkillKey == defaultWizardData.LoremasterCharacterSkillKey then
+                    wwl.Logger:Log("Loremaster skill unlocked: "..characterSkillKey);
+                    local characterCqi = character:command_queue_index();
+                    -- Remove all disable spell skills. We don't need these anymore
+                    for index, spellKey in pairs(wizardData.UnlockedSpells) do
+                        cm:remove_effect_bundle_from_character(spellKey.."_disable", character);
+                    end
+                elseif wwl:IsSignatureSpell(loreData, characterSkillKey) == false
+                    and wwl:IsInnateSpell(loreData, characterSkillKey) == false
+                    and Contains(wizardData.UnlockedSpells, characterSkillKey) == false
+                    and (wwl:IsLevel1Spell(defaultWizardData, characterSkillKey) or wwl:IsLevel3Spell(defaultWizardData, characterSkillKey)) then
+                    wwl.Logger:Log("Unlocked skill is: "..characterSkillKey);
+                    if wizardData == nil then
+                        wwl.Logger:Log("Wizard is nil");
+                    else
+                        wizardData.UnlockedSpells[#wizardData.UnlockedSpells + 1] = characterSkillKey;
+                        wwl.Logger:Log("Added skill to array");
+                    end
                 end
             end
             -- Clear cache for that subtype, this will be refreshed the next time any of the general lists are opened
@@ -206,6 +246,8 @@ function WWL_SetupPostUIListeners(wwl, core)
             return context.string == "button_create_army"
             or context.string == "button_agents"
             or context.string == "wizard"
+            -- This exception is for Cataph's Dragon Mage)
+            or (context.string == "champion" and wwl.HumanFaction:subculture() == "wh2_main_sc_hef_high_elves")
             or context.string == "button_cycle_left"
             or context.string == "button_cycle_right"
             or wwl:GetDefaultWizardDataForCharacterSubtype(context.string, wwl.HumanFaction:subculture());
@@ -222,7 +264,7 @@ function WWL_SetupPostUIListeners(wwl, core)
                     wwl.Logger:Log_Finished();
                 end
             end,
-            0.2);
+            0.1);
         end,
         true
     );
@@ -246,7 +288,7 @@ function WWL_SetupPostUIListeners(wwl, core)
                     wwl.Logger:Log_Finished();
                 end
             end,
-            0.2);
+            0.1);
         end,
         true
     );
@@ -270,7 +312,7 @@ function WWL_SetupPostUIListeners(wwl, core)
                     wwl.Logger:Log_Finished();
                 end
             end,
-            0.2);
+            0.1);
         end,
         true
     );
@@ -293,7 +335,7 @@ function WWL_SetupPostUIListeners(wwl, core)
                         wwl.Logger:Log_Finished();
                     end
                 end,
-                0.1);
+                0.2);
             end
             wwl.Logger:Log_Finished();
         end,
@@ -320,10 +362,7 @@ function WWL_SetupPostUIListeners(wwl, core)
     -- These 2 listeners exist to cleanup data when heroes are wounded
     -- When the heroes are wounded they get a new cqi/lookup string
     -- Here we try to match them together
-    local woundedCharLookupString = nil;
-    local woundedCharSubtype = nil;
-    local woundedCharForeName = nil;
-    local woundedCharSurname = nil;
+    local woundedCharacters = nil;
     core:add_listener(
         "WWL_CharacterKilled",
         "CharacterConvalescedOrKilled",
@@ -336,14 +375,16 @@ function WWL_SetupPostUIListeners(wwl, core)
             local character = context:character();
             local charLookupString = "character_cqi:"..character:command_queue_index();
             if character:is_null_interface() or character:is_wounded() == false then
-                wwl.Logger:Log("Char is dead: "..woundedCharLookupString);
+                wwl.Logger:Log("Char is dead: "..charLookupString);
                 wwl.WizardData[charLookupString] = nil;
             else
-                woundedCharLookupString = charLookupString;
-                woundedCharSubtype = character:character_subtype_key();
-                woundedCharForeName = character:get_forename();
-                woundedCharSurname = character:get_surname();
-                wwl.Logger:Log("Char is only wounded: "..woundedCharLookupString);
+                woundedCharacters[#woundedCharacters + 1] = {
+                    CharLookupString = charLookupString;
+                    CharSubtype = character:character_subtype_key();
+                    CharForeName = character:get_forename();
+                    CharSurname = character:get_surname();
+                };
+                wwl.Logger:Log("Char is only wounded: "..charLookupString);
             end
             wwl.Logger:Log_Finished();
         end,
@@ -357,7 +398,7 @@ function WWL_SetupPostUIListeners(wwl, core)
             local character = context:character();
             wwl.Logger:Log("New character: "..character:command_queue_index());
             wwl.Logger:Log_Finished();
-            return woundedCharLookupString ~= nil;
+            return woundedCharacters ~= nil;
         end,
         function(context)
             local character = context:character();
@@ -365,31 +406,24 @@ function WWL_SetupPostUIListeners(wwl, core)
             local charSubtype = character:character_subtype_key();
             local charForeName = character:get_forename();
             local charSurname = character:get_surname();
-            if woundedCharLookupString ~= nil
-            and wwl.WizardData[woundedCharLookupString] ~= nil
-            and woundedCharLookupString ~= charLookupString
-            and charSubtype == woundedCharSubtype
-            and charForeName == woundedCharForeName
-            and charSurname == woundedCharSurname then
-                wwl.Logger:Log("Found matching character with different lookup string");
-                wwl.WizardData[charLookupString] = {
-                    NumberOfSpells = wwl.WizardData[woundedCharLookupString].NumberOfSpells,
-                    UnlockedSpells = wwl.WizardData[woundedCharLookupString].UnlockedSpells,
-                    LastGeneratedSpellTurn = wwl.WizardData[woundedCharLookupString].LastGeneratedSpellTurn,
-                };
-                wwl.WizardData[woundedCharLookupString] = nil;
-                woundedCharLookupString = nil;
-                woundedCharSubtype = nil;
-                woundedCharForeName = nil;
-                woundedCharSurname = nil;
-                wwl.Logger:Log_Finished();
-            else
-                --wwl.Logger:Log("Character does not match last killed info or is invalid");
-                woundedCharLookupString = nil;
-                woundedCharSubtype = nil;
-                woundedCharForeName = nil;
-                woundedCharSurname = nil;
-                --wwl.Logger:Log_Finished();
+            if woundedCharacters ~= nil then
+                for index, woundedCharacterCacheData in pairs(woundedCharacters) do
+                    if woundedCharacterCacheData.CharLookupString ~= charLookupString
+                    and woundedCharacterCacheData.CharSubtype == charSubtype
+                    and woundedCharacterCacheData.CharForeName == charForeName
+                    and woundedCharacterCacheData.CharSurname == charSurname then
+                        wwl.Logger:Log("Found matching character with different lookup string");
+                        wwl.WizardData[charLookupString] = {
+                            NumberOfSpells = wwl.WizardData[woundedCharacterCacheData.CharLookupString].NumberOfSpells,
+                            UnlockedSpells = wwl.WizardData[woundedCharacterCacheData.CharLookupString].UnlockedSpells,
+                            LastGeneratedSpellTurn = wwl.WizardData[woundedCharacterCacheData.CharLookupString].LastGeneratedSpellTurn,
+                        };
+                        wwl.WizardData[woundedCharacterCacheData.CharLookupString] = nil;
+                        woundedCharacters[index] = nil;
+                        wwl.Logger:Log_Finished();
+                        break;
+                    end
+                end
             end
         end,
         true
@@ -397,13 +431,14 @@ function WWL_SetupPostUIListeners(wwl, core)
 end
 
 function SetWizardLevelUI(wwl, pathToGenerals)
+    wwl.Logger:Log("SetWizardLevelUI");
     if not pathToGenerals then
         wwl.Logger:Log("Can't find pathToGenerals");
         return;
     end
-    local playerSubculture = wwl.HumanFaction:subculture();
     local numGenerals = pathToGenerals:ChildCount() - 1;
-    if numGenerals > 0 then
+    if numGenerals >= 0 then
+        local playerSubculture = wwl.HumanFaction:subculture();
         for i = 0, numGenerals do
             wwl.Logger:Log("Checking general: "..i);
             local generalPanel = UIComponent(pathToGenerals:Find(i));

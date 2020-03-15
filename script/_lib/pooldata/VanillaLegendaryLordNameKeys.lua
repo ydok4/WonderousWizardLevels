@@ -102,6 +102,10 @@ function GetVanillaLegendaryLordNameKeys()
                 Subtype = "wh2_main_skv_lord_skrolk",
             },
         },
+        -- TEB
+        wh_main_sc_teb_teb = {
+
+        },
         -- Tomb Kings
         wh2_dlc09_sc_tmb_tomb_kings = {
             -- Arkhan the Black

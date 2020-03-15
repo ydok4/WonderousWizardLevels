@@ -3,7 +3,7 @@ testCharacter = {
     cqi = function() return 123 end,
     get_forename = function() return "Direfan"; end,
     get_surname = function() return "Cylostra"; end,
-    character_subtype_key = function() return "wh2_dlc11_cst_admiral_fem_deep"; end,
+    character_subtype_key = function() return "emp_wizard_metal"; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -48,10 +48,10 @@ humanFaction = {
         return "wh2_main_hef_nagarythe";
     end,
     culture = function()
-        return "wh2_dlc11_cst_vampire_coast";
+        return "wh_main_emp_empire";
     end,
     subculture = function()
-        return "wh2_dlc11_sc_cst_vampire_coast";
+        return "wh_main_sc_emp_empire";
     end,
     character_list = function()
         return {
@@ -97,10 +97,10 @@ testFaction = {
         return "wh2_main_skv_clan_eshin";
     end,
     culture = function()
-        return "wh2_dlc11_cst_vampire_coast";
+        return "wh2_main_def_dark_elves";
     end,
     subculture = function()
-        return "wh2_dlc11_sc_cst_vampire_coast";
+        return "wh_main_sc_emp_empire";
     end,
     character_list = function()
         return {
@@ -399,6 +399,14 @@ function get_cm()
                 return testCharacter:command_queue_index(), testCharacter:military_force():command_queue_index(), testCharacter:faction():name();
             end
         end,
+        create_new_custom_effect_bundle = function()
+            return {
+                set_duration = function() end,
+                add_effect = function() end,
+            };
+        end,
+        apply_custom_effect_bundle_to_region = function() end,
+        apply_custom_effect_bundle_to_character = function() end,
     };
 end
 
@@ -482,6 +490,7 @@ core = {
     end,
     get_ui_root = function() end,
     get_screen_resolution = function() return 0, 1 end;
+    is_mod_loaded = function() return true; end,
 }
 
 random_army_manager = {
@@ -511,14 +520,15 @@ out = function(text)
 end
 
 require 'script/campaign/mod/a_wwl_core_resource_loader'
+require 'script/campaign/mod/z_wwl_cataph_resource_loader'
 require 'script/campaign/mod/z_wwl_mixu_resource_loader'
-require 'script/campaign/mod/z_wonderous_wizard_levels'
+require 'script/campaign/mod/z_wondrous_wizard_levels'
 
 math.randomseed(os.time())
 
 -- This is used in game by Warhammer but we have it hear so it won't throw errors when running
 -- in ZeroBrane IDE
-z_wonderous_wizard_levels();
+z_wondrous_wizard_levels();
 
 local WWL = _G.WWL;
 local MockContext_WWL_FactionTurnStart = {
@@ -541,10 +551,37 @@ local MockContext_WWL_CharacterSkillPointAllocated = {
     Key = "WWL_CharacterSkillPointAllocated",
     Context = {
         character = function() return testCharacter end,
-        skill_point_spent_on = function() return "wh2_dlc11_skill_all_magic_deep_02_tidecall_lord"; end,
+        skill_point_spent_on = function() return "wh_dlc05_skill_magic_shadow_penumbral_pendulum"; end,
     },
 }
 mock_listeners:trigger_listener(MockContext_WWL_CharacterSkillPointAllocated);
+
+
+MockContext_WWL_CharacterSkillPointAllocated = {
+    Key = "WWL_CharacterSkillPointAllocated",
+    Context = {
+        character = function() return testCharacter end,
+        skill_point_spent_on = function() return "wh_main_skill_vmp_lord_unique_mannfred_loremaster_lore_of_death"; end,
+    },
+}
+mock_listeners:trigger_listener(MockContext_WWL_CharacterSkillPointAllocated);
+
+local WWL_CharacterRecruitmentButtons = {
+    Key = "WWL_CharacterRecruitmentButtons",
+    Context = {
+        string = "button_create_army",
+    },
+}
+mock_listeners:trigger_listener(WWL_CharacterRecruitmentButtons);
+
+local WWL_CharacterSelected = {
+    Key = "WWL_CharacterSelected",
+    Context = {
+        character = function() return testCharacter; end,
+    },
+}
+mock_listeners:trigger_listener(WWL_CharacterSelected);
+
 
 WWL_InitialiseSaveHelpers(cm, context);
 WWL_SaveExistingWizardData(WWL);
@@ -553,7 +590,7 @@ WWL = {};
 WWL_InitialiseLoadHelpers(cm, context);
 WWL_LoadExistingWizardData(WWL);
 WWL_LoadExistingWizardSpells(WWL);
-z_wonderous_wizard_levels();
+z_wondrous_wizard_levels();
 turn_number = 2;
 mock_listeners:trigger_listener(MockContext_WWL_FactionTurnStart);
 mock_listeners:trigger_listener(MockContext_WWL_CharacterSkillPointAllocated);
@@ -569,20 +606,3 @@ mock_listeners:trigger_listener(MockContext_WWL_PendingBattle);
 WWL_InitialiseSaveHelpers(cm, context);
 WWL_SaveExistingWizardData(WWL);
 WWL_SaveExistingWizardSpells(WWL);
---[[ER_InitialiseSaveHelpers(cm, context);
-ER_SaveActiveRebellions(ER);
-ER_SaveActiveRebelForces(ER);
-ER_SavePastRebellions(ER);
-
-ER_InitialiseLoadHelpers(cm, context);
-ER_LoadActiveRebellions(ER);
-ER_LoadRebelForces(ER);
-ER_LoadPastRebellions(ER);
-
-zz_enhanced_rebellions();
-
-turn_number = 2;
-mock_listeners:trigger_listener(MockContext_ER_CheckFactionRebellions);
-
-turn_number = 3;
-mock_listeners:trigger_listener(MockContext_ER_CheckFactionRebellions);--]]

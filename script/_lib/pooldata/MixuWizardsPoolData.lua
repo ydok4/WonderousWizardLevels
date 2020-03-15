@@ -40,6 +40,16 @@ function GetMixuWizardsPoolData()
                 DefaultWizardLevel = 3,
                 Lore = "Heavens",
             },
+            emp_wizard_lord_metal = {
+                IsLord = true,
+                DefaultWizardLevel = 3,
+                Lore = "Metal",
+            },
+            emp_wizard_lord_death = {
+                IsLord = true,
+                DefaultWizardLevel = 3,
+                Lore = "Death",
+            },
             -- LL1
             mixu_elspeth_von_draken = {
                 IsLord = true,

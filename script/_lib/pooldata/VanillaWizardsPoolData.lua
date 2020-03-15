@@ -25,7 +25,7 @@ function GetVanillaWizardsPoolDataResources()
             dlc03_bst_malagor = {
                 IsLord = true,
                 DefaultWizardLevel = 4,
-                Lore = "Wild",
+                Lore = {"Wild", "Death", "Shadows", "Beasts", },
             },
         },
         -- Bretonnia
@@ -95,7 +95,7 @@ function GetVanillaWizardsPoolDataResources()
             dlc07_chs_chaos_sorcerer_shadow = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
-                Lore = "Shadow",
+                Lore = "Shadows",
             },
             chs_sorcerer_lord_death = {
                 IsLord = true,
@@ -110,12 +110,12 @@ function GetVanillaWizardsPoolDataResources()
             chs_sorcerer_lord_metal = {
                 IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Death",
+                Lore = "Metal",
             },
             dlc07_chs_sorcerer_lord_shadow = {
                 IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Death",
+                Lore = "Shadows",
             },
         },
         -- Dark Elves

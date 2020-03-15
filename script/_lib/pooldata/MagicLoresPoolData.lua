@@ -124,10 +124,10 @@ function GetMagicLorePoolDataResources()
         },
         LilWaaagh = {
             InnateSkill = {"wh_main_skill_grn_magic_little_waaagh_03_sneaky_stealin", },
-            SignatureSpell = {"wh_main_spell_lil_waaagh_sneaky_stabbin", "wh_main_skill_grn_magic_little_waaagh_01_sneaky_stabbin",},
-            Level1DefaultSpells = {"wh_main_skill_grn_magic_little_waaagh_02_vindictive_glare", "wh_main_skill_grn_magic_little_waaagh_04_itchy_nuisance", "wh_main_skill_grn_magic_little_waaagh_05_gorkll_fix_it", "wh2_main_skill_grn_magic_little_waaagh_04_itchy_nuisance_lord", "wh_main_spell_lil_waaagh_vindictive_glare", "wh2_main_skill_grn_magic_little_waaagh_02_vindictive_glare_lord", },
+            SignatureSpell = {"wh_main_skill_grn_magic_little_waaagh_01_sneaky_stabbin",},
+            Level1DefaultSpells = {"wh_main_skill_grn_magic_little_waaagh_02_vindictive_glare", "wh_main_skill_grn_magic_little_waaagh_04_itchy_nuisance", "wh_main_skill_grn_magic_little_waaagh_05_gorkll_fix_it", },
             Level1DefaultSpellsLord = {"wh2_main_skill_grn_magic_little_waaagh_02_vindictive_glare_lord", "wh2_main_skill_grn_magic_little_waaagh_04_itchy_nuisance_lord", "wh2_main_skill_grn_magic_little_waaagh_05_gorkll_fix_it_lord", },
-            Level3DefaultSpells = {"wh_main_skill_grn_magic_little_waaagh_09_night_shroud", "wh2_main_skill_grn_magic_little_waaagh_09_night_shroud_lord", "wh_main_skill_grn_magic_little_waaagh_10_curse_of_da_bad_moon", "wh2_main_skill_grn_magic_little_waaagh_10_curse_of_da_bad_moon_lord",},
+            Level3DefaultSpells = {"wh_main_skill_grn_magic_little_waaagh_09_night_shroud", "wh_main_skill_grn_magic_little_waaagh_10_curse_of_da_bad_moon", },
             Level3DefaultSpellsLord = {"wh2_main_skill_grn_magic_little_waaagh_09_night_shroud_lord", "wh2_main_skill_grn_magic_little_waaagh_10_curse_of_da_bad_moon_lord", },
         },
         Wild = {
@@ -151,12 +151,12 @@ function GetMagicLorePoolDataResources()
             SignatureSpell = {"wh2_main_skill_all_magic_plague_01_pestilent_breath",},
             Level1DefaultSpells = {"wh2_main_skill_all_magic_plague_02_bless_with_filth", "wh2_main_skill_all_magic_plague_04_wither", "wh2_main_skill_all_magic_plague_05_vermintide", },
             Level1DefaultSpellsLord = {"wh2_main_skill_all_magic_plague_02_bless_with_filth_lord", "wh2_main_skill_all_magic_plague_04_wither_lord", "wh2_main_skill_all_magic_plague_05_vermintide_lord", },
-            Level3DefaultSpells = {"wh2_main_skill_all_magic_plague_09_plague", "wh2_main_skill_all_magic_plague_10_dreaded_thirteenth", "wh2_main_skill_all_magic_plague_11_pestilent_birth", },
-            Level3DefaultSpellsLord = {"wh2_main_skill_all_magic_plague_09_plague_lord", "wh2_main_skill_all_magic_plague_10_dreaded_thirteenth", "wh2_main_skill_all_magic_plague_10_dreaded_thirteenth", },
+            Level3DefaultSpells = {"wh2_main_skill_all_magic_plague_09_plague", "wh2_main_skill_all_magic_plague_10_dreaded_thirteenth", },
+            Level3DefaultSpellsLord = {"wh2_main_skill_all_magic_plague_09_plague_lord", "wh2_main_skill_all_magic_plague_10_dreaded_thirteenth", },
         },
         Ruin = {
             InnateSkill = {"wh2_main_skill_all_magic_ruin_03_lore_attribute", },
-            SignatureSpell = {"wh2_main_skill_all_magic_ruin_01_warp_lightning", "wh2_main_skill_all_magic_ruin_01_warp_lightning_warlock", },
+            SignatureSpell = {"wh2_main_skill_all_magic_ruin_01_warp_lightning", },
             Level1DefaultSpells = {"wh2_main_skill_all_magic_ruin_02_howling_warpgale_warlock", "wh2_main_skill_all_magic_ruin_04_death_frenzy_warlock", "wh2_main_skill_all_magic_ruin_05_skaven_scorch_warlock", },
             Level1DefaultSpellsLord = {"wh2_main_skill_all_magic_ruin_02_howling_warpgale_lord", "wh2_main_skill_all_magic_ruin_04_death_frenzy_lord", "wh2_main_skill_all_magic_ruin_05_skaven_scorch_lord", },
             Level3DefaultSpells = {"wh2_main_skill_all_magic_ruin_09_cracks_call_warlock", "wh2_main_skill_all_magic_ruin_10_skitterleap_warlock", },
@@ -164,7 +164,7 @@ function GetMagicLorePoolDataResources()
         },
         GreySeerRuin = {
             InnateSkill = {"wh2_main_skill_all_magic_ruin_03_lore_attribute", },
-            SignatureSpell = {"wh2_main_skill_all_magic_ruin_01_warp_lightning", "wh2_main_skill_all_magic_ruin_01_warp_lightning_warlock", },
+            SignatureSpell = {"wh2_main_skill_all_magic_ruin_01_warp_lightning", },
             Level1DefaultSpells = {"wh2_main_skill_all_magic_ruin_02_howling_warpgale_warlock", "wh2_main_skill_all_magic_ruin_04_death_frenzy_warlock", "wh2_main_skill_all_magic_ruin_05_skaven_scorch_warlock", },
             Level1DefaultSpellsLord = {"wh2_main_skill_all_magic_ruin_02_howling_warpgale_lord", "wh2_main_skill_all_magic_ruin_04_death_frenzy_lord", "wh2_main_skill_all_magic_ruin_05_skaven_scorch_lord", },
             Level3DefaultSpells = {"wh2_main_skill_all_magic_ruin_09_cracks_call_warlock", "wh2_main_skill_all_magic_plague_10_dreaded_thirteenth", },
