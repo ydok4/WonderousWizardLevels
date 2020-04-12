@@ -571,6 +571,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
             local activeLevel1Spell = GetAndRemoveRandomObjectFromList(level1SpellLoreData.Level1DefaultSpells);
             selectedLevel1Spells[#selectedLevel1Spells + 1] = activeLevel1Spell;
             self.Logger:Log("Giving character level 1 spell: "..activeLevel1Spell);
+            customEffectBundle:add_effect(activeLevel1Spell.."_enable", "character_to_character_own", 1);
             selectedSpells[#selectedSpells + 1] = activeLevel1Spell;
         end
         -- Now disable the other level 1 spells
@@ -589,6 +590,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, wizard, 
             local activeLevel3Spell = GetAndRemoveRandomObjectFromList(level3SpellLoreData.Level3DefaultSpells);
             selectedLevel3Spells[#selectedLevel3Spells + 1] = activeLevel3Spell;
             self.Logger:Log("Giving character level 3 spell: "..activeLevel3Spell);
+            customEffectBundle:add_effect(activeLevel3Spell.."_enable", "character_to_character_own", 1);
             selectedSpells[#selectedSpells + 1] = activeLevel3Spell;
         end
         -- Now disable the other level 3 spells

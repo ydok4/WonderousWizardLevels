@@ -1,0 +1,17 @@
+Initialised   : [30, 03 2020 20:26:38]
+WWL_CharacterRecruitmentButtons   : [30, 03 2020 20:26:38]
+AppointGeneralOpened   : [30, 03 2020 20:26:38]
+ClickedReplaceButton   : [30, 03 2020 20:26:38]
+GeneralRecruitmentClosed   : [30, 03 2020 20:26:38]
+FINISHED
+
+Generating spells for characters in faction: wh2_main_hef_nagarythe   : [30, 03 2020 20:26:41]
+Generating spells for character: 10 subtype: wef_naieth_the_prophetess   : [30, 03 2020 20:26:44]
+New character found!   : [30, 03 2020 20:26:44]
+Found multi lore character   : [30, 03 2020 20:26:44]
+Disabling spell: wh_main_skill_all_magic_heavens_dummy_harmonic_convergence   : [30, 03 2020 20:40:34]
+Giving character level 1 spell: wh_main_skill_all_magic_heavens_05_urannons_thunderbolt   : [30, 03 2020 20:40:34]
+Giving character level 1 spell: wh_dlc05_skill_magic_life_wizard_flesh_to_stone   : [30, 03 2020 20:40:34]
+Giving character level 1 spell: wh_dlc05_skill_magic_life_wizard_earth_blood   : [30, 03 2020 20:40:34]
+Disabling spell: wh_main_skill_all_magic_heavens_02_wind_blast   : [30, 03 2020 20:40:34]
+Disabling spell: wh_main_skill_all_magic_heavens_04_curse_of_the_midnight_wind   : [30, 03 2020 20:40:34]

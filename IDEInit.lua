@@ -3,7 +3,7 @@ testCharacter = {
     cqi = function() return 123 end,
     get_forename = function() return "Direfan"; end,
     get_surname = function() return "Cylostra"; end,
-    character_subtype_key = function() return "emp_wizard_metal"; end,
+    character_subtype_key = function() return "wef_naieth_the_prophetess"; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -48,10 +48,10 @@ humanFaction = {
         return "wh2_main_hef_nagarythe";
     end,
     culture = function()
-        return "wh_main_emp_empire";
+        return "wh_dlc05_wef_wood_elves";
     end,
     subculture = function()
-        return "wh_main_sc_emp_empire";
+        return "wh_dlc05_sc_wef_wood_elves";
     end,
     character_list = function()
         return {
@@ -97,10 +97,10 @@ testFaction = {
         return "wh2_main_skv_clan_eshin";
     end,
     culture = function()
-        return "wh2_main_def_dark_elves";
+        return "wh_dlc05_wef_wood_elves";
     end,
     subculture = function()
-        return "wh_main_sc_emp_empire";
+        return "wh_dlc05_sc_wef_wood_elves";
     end,
     character_list = function()
         return {
