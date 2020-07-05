@@ -3,7 +3,7 @@ testCharacter = {
     cqi = function() return 123 end,
     get_forename = function() return "Direfan"; end,
     get_surname = function() return "Cylostra"; end,
-    character_subtype_key = function() return "wef_naieth_the_prophetess"; end,
+    character_subtype_key = function() return "wh2_main_def_morathi"; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -17,6 +17,7 @@ testCharacter = {
     is_wounded = function() return false; end,
     has_skill = function() return true; end,
     has_ancillary = function() return true; end,
+    has_effect_bundle = function() return false; end,
 }
 
 testMilitaryForce = {
@@ -48,10 +49,10 @@ humanFaction = {
         return "wh2_main_hef_nagarythe";
     end,
     culture = function()
-        return "wh_dlc05_wef_wood_elves";
+        return "wh_main_grn_greenskins";
     end,
     subculture = function()
-        return "wh_dlc05_sc_wef_wood_elves";
+        return "wh_main_sc_grn_greenskins";
     end,
     character_list = function()
         return {
@@ -97,10 +98,10 @@ testFaction = {
         return "wh2_main_skv_clan_eshin";
     end,
     culture = function()
-        return "wh_dlc05_wef_wood_elves";
+        return "wh2_main_def_dark_elves";
     end,
     subculture = function()
-        return "wh_dlc05_sc_wef_wood_elves";
+        return "wh2_main_sc_def_dark_elves";
     end,
     character_list = function()
         return {
@@ -407,6 +408,9 @@ function get_cm()
         end,
         apply_custom_effect_bundle_to_region = function() end,
         apply_custom_effect_bundle_to_character = function() end,
+        random_number = function(self, limit, start)
+            return math.random(start, limit);
+        end,
     };
 end
 
@@ -581,28 +585,14 @@ local WWL_CharacterSelected = {
     },
 }
 mock_listeners:trigger_listener(WWL_CharacterSelected);
-
-
-WWL_InitialiseSaveHelpers(cm, context);
-WWL_SaveExistingWizardData(WWL);
-WWL_SaveExistingWizardSpells(WWL);
 WWL = {};
-WWL_InitialiseLoadHelpers(cm, context);
-WWL_LoadExistingWizardData(WWL);
-WWL_LoadExistingWizardSpells(WWL);
 z_wondrous_wizard_levels();
 turn_number = 2;
 mock_listeners:trigger_listener(MockContext_WWL_FactionTurnStart);
 mock_listeners:trigger_listener(MockContext_WWL_CharacterSkillPointAllocated);
 mock_listeners:trigger_listener(MockContext_WWL_CharacterSkillPointAllocated);
 mock_listeners:trigger_listener(MockContext_WWL_PendingBattle);
-WWL_InitialiseSaveHelpers(cm, context);
-WWL_SaveExistingWizardData(WWL);
-WWL_SaveExistingWizardSpells(WWL);
 turn_number = 3;
 mock_listeners:trigger_listener(MockContext_WWL_FactionTurnStart);
 mock_listeners:trigger_listener(MockContext_WWL_CharacterSkillPointAllocated);
 mock_listeners:trigger_listener(MockContext_WWL_PendingBattle);
-WWL_InitialiseSaveHelpers(cm, context);
-WWL_SaveExistingWizardData(WWL);
-WWL_SaveExistingWizardSpells(WWL);

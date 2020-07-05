@@ -9,6 +9,9 @@ _G.WWLResources = {
     AddAdditionalDataResources = function(self, destination, resources)
         for subcultureKey, dataList in pairs(resources) do
             for dataKey, data in pairs(dataList) do
+                if self[destination][subcultureKey] == nil then
+                    self[destination][subcultureKey] = {};
+                end
                 self[destination][subcultureKey][dataKey] = data;
             end
         end

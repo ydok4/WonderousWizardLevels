@@ -3,179 +3,155 @@ function GetMixuWizardsPoolData()
         -- Chaos
         wh_main_sc_chs_chaos = {
             chs_egrimm_van_horstmann = {
-                IsLord = true,
                 DefaultWizardLevel = 4,
-                Lore = "Light",
+                Lore = "wh_main_lore_light",
             },
         },
         -- Empire
         wh_main_sc_emp_empire = {
-            emp_wizard_metal = {
-                IsLord = false,
-                DefaultWizardLevel = 1,
-                Lore = "Metal",
-            },
             emp_wizard_lord_beasts = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Beasts",
-            },
-            emp_wizard_lord_light = {
-                IsLord = true,
-                DefaultWizardLevel = 3,
-                Lore = "Light",
-            },
-            emp_wizard_lord_fire = {
-                IsLord = true,
-                DefaultWizardLevel = 3,
-                Lore = "Fire",
-            },
-            emp_wizard_lord_shadow = {
-                IsLord = true,
-                DefaultWizardLevel = 3,
-                Lore = "Shadows",
-            },
-            emp_wizard_lord_heavens = {
-                IsLord = true,
-                DefaultWizardLevel = 3,
-                Lore = "Heavens",
-            },
-            emp_wizard_lord_metal = {
-                IsLord = true,
-                DefaultWizardLevel = 3,
-                Lore = "Metal",
+                Lore = "wh_dlc03_lore_beasts",
             },
             emp_wizard_lord_death = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Death",
+                Lore = "wh_main_lore_death",
+            },
+            emp_wizard_lord_fire = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_fire",
+            },
+            emp_wizard_lord_heavens = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_heavens",
+            },
+            emp_wizard_lord_life = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_dlc05_lore_life",
+            },
+            emp_wizard_lord_light = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_light",
+            },
+            emp_wizard_metal = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_metal",
+            },
+            emp_wizard_lord_metal = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_metal",
+            },
+            emp_wizard_lord_shadow = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_dlc05_lore_shadows",
             },
             -- LL1
             mixu_elspeth_von_draken = {
-                IsLord = true,
                 DefaultWizardLevel = 4,
                 IsLoremaster = true,
                 LoremasterCharacterSkillKey = "wh_main_skill_vmp_lord_unique_mannfred_loremaster_lore_of_death",
                 LoremasterCharacterNodeSkillKey = "wwl_upgraded_wizard_level_mixu_elspeth_von_draken",
-                Lore = "Death",
+                Lore = "wh_main_lore_death",
             },
-            mixu_katarin_the_ice_queen = {
-                IsLord = true,
+            --[[mixu_katarin_the_ice_queen = {
                 DefaultWizardLevel = 4,
                 IsLoremaster = true,
                 LoremasterCharacterSkillKey = "mixu_ksl_katarin_bokha_unique_loremaster_of_ice_magic",
                 LoremasterCharacterNodeSkillKey = "wwl_diviner_mixu_katarin_the_ice_queen",
                 Lore = "Ice",
-            },
+            },--]]
         },
         -- Greenskins
         wh_main_sc_grn_greenskins = {
             grn_savage_orc_shaman = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "BigWaaagh",
+                Lore = "wh_main_lore_big_waaagh",
             },
             grn_orc_great_shaman = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "BigWaaagh",
+                Lore = "wh_main_lore_big_waaagh",
             },
         },
         -- High Elves
-        wh2_main_sc_hef_high_elves = {
+        --[[wh2_main_sc_hef_high_elves = {
             hef_belannaer = {
-                IsLord = true,
                 DefaultWizardLevel = 4,
                 Lore = "Teclis",
             },
-        },
+        },--]]
         -- Lizardmen
         wh2_main_sc_lzd_lizardmen = {
             -- LL2
             lzd_tetto_eko = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Heavens",
+                Lore = "wh_main_lore_heavens",
             },
-            lzd_lord_huinitenuchli = {
-                IsLord = true,
+            --[[lzd_lord_huinitenuchli = {
                 DefaultWizardLevel = 5,
                 Lore = "Slann",
-            },
+            },--]]
         },
         -- Norsca
         wh_main_sc_nor_norsca = {
             nor_shaman_sorcerer_lord_death = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Death",
+                Lore = "wh_main_lore_death",
             },
             nor_shaman_sorcerer_lord_fire = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Fire",
+                Lore = "wh_main_lore_fire",
             },
             nor_shaman_sorcerer_lord_metal = {
-                IsLord = true,
-                DefaultWizardLevel = 3,
-                Lore = "Metal",
+                   DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_metal",
             },
         },
         -- Tomb Kings
         wh2_dlc09_sc_tmb_tomb_kings = {
             tmb_liche_high_priest_death = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Death",
+                Lore = "wh_main_lore_death",
             },
             tmb_liche_high_priest_light = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Light",
+                Lore = "wh_main_lore_light",
             },
             tmb_liche_high_priest_nehekhara = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Nehekhara",
+                Lore = "wh2_dlc09_lore_nehekhara",
             },
             tmb_liche_high_priest_shadow = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Shadows",
+                Lore = "wh_dlc05_lore_shadows",
             },
         },
         -- Wood Elves
         wh_dlc05_sc_wef_wood_elves = {
             wef_darkweaver = {
                 DefaultWizardLevel = 3,
-                Lore = "Dark",
+                Lore = "wh2_main_lore_dark_magic",
             },
             wef_highweaver = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "High",
+                Lore = "wh2_main_lore_high_magic",
             },
             wef_spellweaver = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Beasts",
+                Lore = "wh_dlc03_lore_beasts",
             },
             wef_shadowdancer = {
-                IsLord = false,
                 DefaultWizardLevel = 1,
-                Lore = "Shadows",
+                Lore = "wh_dlc05_lore_shadows",
             },
             -- LL1
             wef_drycha = {
-                IsLord = true,
                 DefaultWizardLevel = 2,
-                Lore = "Shadows",
+                Lore = "wh_dlc05_lore_shadows",
             },
             -- LL2
             wef_naieth_the_prophetess = {
-                IsLord = true,
                 DefaultWizardLevel = 4,
-                Lore = { "Heavens", "Life", },
+                Lore = { "wh_main_lore_heavens", "wh_dlc05_lore_life", },
             },
         },
     };

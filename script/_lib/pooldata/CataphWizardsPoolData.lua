@@ -3,22 +3,19 @@ function GetCataphWizardsPoolData()
         -- High Elves
         wh2_main_sc_hef_high_elves = {
             AK_hef_dragonmage = {
-                IsLord = false,
                 DefaultWizardLevel = 1,
-                Lore = "Fire",
+                Lore = "wh_main_lore_fire",
             },
         },
         -- TEB
         wh_main_sc_emp_empire = {
             teb_gashnag = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Shadows",
+                Lore = "wh_dlc05_lore_shadows",
             },
             teb_lucrezzia_belladonna = {
-                IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "Death",
+                Lore = "wh_main_lore_death",
             },
         },
     };
