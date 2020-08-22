@@ -1,0 +1,3 @@
+character_skill_node_sets_tables	2
+agent_key	campaign_key	faction_key	key	subculture	for_army	for_navy	agent_subtype_key
+general			wh2_mixu_skill_node_mixu_katarin_the_ice_queen		false	false	mixu_katarin_the_ice_queen

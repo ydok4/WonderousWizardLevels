@@ -101,6 +101,15 @@ function GetMatchingKeyMatchingLocalisedString(keys, stringToMatch, keyPrefix)
     return nil;
 end
 
+function Contains(sourceTable, checkValue)
+    for index, value in pairs(sourceTable) do
+        if value == checkValue then
+            return true;
+        end
+    end
+    return false;
+end
+
 function GetRandomItemFromWeightedList(items, returnKey)
     local validItems = {};
     local sumOfWeight = 0;
@@ -133,12 +142,3 @@ function GetRandomItemFromWeightedList(items, returnKey)
         return lastData;
     end
 end
-
-function Contains(sourceTable, checkValue)
-    for index, value in pairs(sourceTable) do
-      if value == checkValue then
-        return true;
-      end
-    end
-    return false;
-  end

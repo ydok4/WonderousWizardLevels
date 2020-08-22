@@ -1,6 +1,7 @@
 function CreateDBData(databaseData)
     print("\n\nCreating DB Data...");
     -- Load our existing resources based on the files specified
+    local signatureSkills = GenerateWWLSignatureSkills(databaseData);
     local skills = GenerateWWLSkillTrees(databaseData);
     local effects = GenerateWWLEffects(databaseData);
     local multiLoreSkillsAndEffects = GenerateMultiLoreCharacterSkills(databaseData);
@@ -8,6 +9,15 @@ function CreateDBData(databaseData)
     ConcatTableWithKeys(tablesToExport, skills);
     ConcatTableWithKeys(tablesToExport, effects);
     for key, data in pairs(multiLoreSkillsAndEffects) do
+        if tablesToExport[key] == nil then
+            tablesToExport[key] = {};
+        else
+            table.remove(data, 1);
+            table.remove(data, 1);
+        end
+        ConcatTable(tablesToExport[key], data);
+    end
+    for key, data in pairs(signatureSkills) do
         if tablesToExport[key] == nil then
             tablesToExport[key] = {};
         else
@@ -36,9 +46,96 @@ function ConcatTable(destinationTable, sourceTable)
     end
 end
 
+function Contains(sourceTable, checkValue)
+    for index, value in pairs(sourceTable) do
+        if value == checkValue then
+            return true;
+        end
+    end
+    return false;
+end
+
+function GenerateWWLSignatureSkills(databaseData)
+    local effectsToExport = {};
+    local effectBonusValuesToExport = {};
+    local characterSkillsToExport = {};
+    local characterSkillsToEffectsToExport = {};
+    local characterSkillLocToExport = {};
+    local locToExport = {};
+    for loreKey, loreData in pairs(_G.WWLResources.MagicLores) do
+        if loreData.SignatureSpell ~= nil
+        and #loreData.SignatureSpell == 1 then
+            for index, spellKey in pairs(loreData.SignatureSpell) do
+                if loreData.SignatureSpell ~= nil then
+                    print("Generating new signature spell for lore: "..loreKey.." innate skill: "..spellKey);
+                    -- First we make the custom character skills
+                    local characterSkillsTables = databaseData["character_skills_tables"];
+                    local characterSkillsMatchingLore = characterSkillsTables:GetRowsMatchingColumnValues("key", { spellKey, });
+                    if next(characterSkillsMatchingLore) then
+                        local clonedSkill = characterSkillsTables:CloneRow(1, characterSkillsMatchingLore);
+                        characterSkillsTables:SetColumnValue(clonedSkill, 'key', "wwl_"..spellKey);
+                        characterSkillsTables:SetColumnValue(clonedSkill, 'localised_description', "");
+                        table.insert(characterSkillsToExport, clonedSkill);
+
+                        local characterSkillLoc = databaseData["character_skills_loc"];
+                        local characterSkillNameLoc = characterSkillLoc:GetRowsMatchingColumnValues("key", { "character_skills_localised_name_"..spellKey, });
+                        local clonedNameLoc = characterSkillLoc:CloneRow(1, characterSkillNameLoc);
+                        characterSkillLoc:SetColumnValue(clonedNameLoc, 'key', "character_skills_localised_name_wwl_"..spellKey);
+                        table.insert(characterSkillLocToExport, clonedNameLoc);
+                        local characterSkillDescriptionLoc = characterSkillLoc:GetRowsMatchingColumnValues("key", { "character_skills_localised_description_"..spellKey, });
+                        if next(characterSkillDescriptionLoc) then
+                            local clonedDescriptionLoc = characterSkillLoc:CloneRow(1, characterSkillDescriptionLoc);
+                            characterSkillLoc:SetColumnValue(clonedDescriptionLoc, 'key', "character_skills_localised_description_wwl_"..spellKey);
+                            table.insert(characterSkillLocToExport, clonedDescriptionLoc);
+                        end
+
+                        local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
+                        local characterSkillEffectsMatchingLore = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", { spellKey, });
+                        for effectIndex, effectData in pairs(characterSkillEffectsMatchingLore) do
+                            if effectIndex == 1 then
+                                local clonedBaseEffect = characterSkillLevelToEffectsTable:CloneRow(effectIndex, characterSkillEffectsMatchingLore);
+                                characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'character_skill_key', "wwl_"..spellKey);
+                                characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'value', 1);
+                                characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'effect_key', spellKey.."_enabled");
+                                characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'level', 1);
+                                table.insert(characterSkillsToEffectsToExport, clonedBaseEffect);
+                            end
+                            local clonedEffect = characterSkillLevelToEffectsTable:CloneRow(effectIndex, characterSkillEffectsMatchingLore);
+                            local skillLevelString = characterSkillLevelToEffectsTable:GetColumnValuesForRows("level", { clonedEffect, });
+                            characterSkillLevelToEffectsTable:SetColumnValue(clonedEffect, 'character_skill_key', "wwl_"..spellKey);
+                            characterSkillLevelToEffectsTable:SetColumnValue(clonedEffect, 'level', tonumber(skillLevelString[1]) + 1);
+                            table.insert(characterSkillsToEffectsToExport, clonedEffect);
+                        end
+                    else
+                        local missingSkill = "";
+                    end
+                end
+            end
+        end
+    end
+    local effectTables = databaseData["effects_tables"];
+    local finalisedEffects = effectTables:PrepareRowsForOutput(effectsToExport);
+    local effectBonusValuesTables = databaseData["effect_bonus_value_unit_ability_junctions_tables"];
+    local finalisedEffectBonusValues = effectBonusValuesTables:PrepareRowsForOutput(effectBonusValuesToExport);
+    local characterSkillsTable = databaseData["character_skills_tables"];
+    local finalisedCharacterSkills = characterSkillsTable:PrepareRowsForOutput(characterSkillsToExport);
+    local characterSkillEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
+    local finalisedcharacterSkillEffects = characterSkillEffectsTable:PrepareRowsForOutput(characterSkillsToEffectsToExport);
+    local characterSkillLocTable = databaseData["character_skills_loc"];
+    local finalisedCharacterSkillLoc = characterSkillLocTable:PrepareRowsForOutput(characterSkillLocToExport);
+    return {
+        effects_tables = finalisedEffects,
+        effect_bonus_value_unit_ability_junctions_tables = finalisedEffectBonusValues,
+        character_skills_tables = finalisedCharacterSkills,
+        character_skill_level_to_effects_junctions_tables = finalisedcharacterSkillEffects,
+        character_skills_loc = finalisedCharacterSkillLoc,
+    };
+end
+
 function GenerateWWLSkillTrees(databaseData)
     local characterSkillNodesToExport = {};
     local characterSkillNodeLinksToExport = {};
+    local characterSkillLevelToEffectsToExport = {};
     local specialAbilityGroupsTable = databaseData["special_ability_groups_tables"];
     for specialAbilityGroupIndex, specialAbilityGroupData in pairs(specialAbilityGroupsTable.Data) do
         local groupKey = specialAbilityGroupsTable:GetColumnValueForIndex(specialAbilityGroupIndex, "ability_group");
@@ -98,15 +195,19 @@ function GenerateWWLSkillTrees(databaseData)
             local characterSkillsAndLinks = GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentData, characterSkillKeys);
             ConcatTable(characterSkillNodesToExport, characterSkillsAndLinks["character_skill_nodes_tables"]);
             ConcatTable(characterSkillNodeLinksToExport, characterSkillsAndLinks["character_skill_node_links_tables"]);
+            ConcatTable(characterSkillLevelToEffectsToExport, characterSkillsAndLinks["character_skill_level_to_effects_junctions_tables"]);
         end
     end
     local characterSkillNodesTable = databaseData["character_skill_nodes_tables"];
     local finalisedCharacterSkillNodes = characterSkillNodesTable:PrepareRowsForOutput(characterSkillNodesToExport);
     local characterSkillNodeLinksTable = databaseData["character_skill_node_links_tables"];
     local finalisedCharacterSkillNodeLinks = characterSkillNodeLinksTable:PrepareRowsForOutput(characterSkillNodeLinksToExport);
+    local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
+    local finalisedCharacterSkillLevelToEffects = characterSkillLevelToEffectsTable:PrepareRowsForOutput(characterSkillLevelToEffectsToExport);
     return {
         character_skill_nodes_tables = finalisedCharacterSkillNodes,
         character_skill_node_links_tables = finalisedCharacterSkillNodeLinks,
+        character_skill_level_to_effects_junctions_tables = finalisedCharacterSkillLevelToEffects,
     };
 end
 
@@ -151,22 +252,46 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             table.insert(clonedMagicLoreSkills, 'wwl_'..agentKey.."_mixed_magic_"..i);
         end
     else
+        local realSignatureSkills = {};
+        for index, signatureSpell in pairs(magicLoreData.SignatureSpell) do
+            table.insert( realSignatureSkills, 'wwl_'..signatureSpell);
+        end
         ConcatTable(clonedMagicLoreSkills, magicLoreData.InnateSkill);
-        ConcatTable(clonedMagicLoreSkills, magicLoreData.SignatureSpell);
+        ConcatTable(clonedMagicLoreSkills, realSignatureSkills);
         ConcatTable(clonedMagicLoreSkills, magicLoreData.Level1DefaultSpells);
     end
 
     local startingTier = -1;
     local requiredParentsForUpgrade = 9;
-    if magicLoreData ~= nil
-    and agentData.DefaultWizardLevel > 2 then
+    if agentData.DefaultWizardLevel > 2 then
         requiredParentsForUpgrade = 13;
-        ConcatTable(clonedMagicLoreSkills, magicLoreData.Level3DefaultSpells);
+        if magicLoreData ~= nil then
+            ConcatTable(clonedMagicLoreSkills, magicLoreData.Level3DefaultSpells);
+        end
     end
     local upgradedSkillKey = "";
+    local newCharacterSkillLevelToEffects = {};
     -- Perform filtering for the upgrade skills
     if agentData.LoremasterCharacterSkillKey ~= nil then
         upgradedSkillKey = agentData.LoremasterCharacterSkillKey;
+        local originalLoreMasterSkill = characterSkillNodesTable:GetRowsMatchingColumnValues("character_skill_key", {agentData.LoremasterCharacterSkillKey}, allSkillNodesForCharacter);
+        -- If this is a vanilla skill, hide it
+        if next(originalLoreMasterSkill) then
+            local clonedLoremasterSkillRow = characterSkillNodesTable:CloneRow(1, originalLoreMasterSkill);
+            characterSkillNodesTable:SetColumnValue(clonedLoremasterSkillRow, 'character_skill_key', 'wwl_disable_dummy');
+            characterSkillNodesTable:SetColumnValue(clonedLoremasterSkillRow, 'tier', 99);
+            characterSkillNodesTable:SetColumnValue(clonedLoremasterSkillRow, 'visible_in_ui', 'false');
+            table.insert(newAgentSkills, clonedLoremasterSkillRow);
+        end
+        local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
+        local dummyEffect = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("effect_key", { "wh_main_effect_agent_action_success_chance_skill", });
+        local clonedDummyEffect = characterSkillLevelToEffectsTable:CloneRow(dummyEffect[1], dummyEffect);
+        characterSkillLevelToEffectsTable:SetColumnValue(clonedDummyEffect, 'character_skill_key', agentData.LoremasterCharacterSkillKey);
+        characterSkillLevelToEffectsTable:SetColumnValue(clonedDummyEffect, 'effect_key', "wwl_skill_loremaster_all_spell_slots");
+        characterSkillLevelToEffectsTable:SetColumnValue(clonedDummyEffect, 'value', "1");
+        characterSkillLevelToEffectsTable:SetColumnValue(clonedDummyEffect, 'effect_scope', "character_to_character_own");
+        characterSkillLevelToEffectsTable:SetColumnValue(clonedDummyEffect, 'level', "1");
+        table.insert(newCharacterSkillLevelToEffects, clonedDummyEffect);
     else
         if agentData.DefaultWizardLevel > 3 then
             upgradedSkillKey = "wh_main_skill_all_magic_all_11_diviner";
@@ -282,12 +407,14 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         "wh_main_skill_all_magic_all_07_earthing",
         "wh_main_skill_all_magic_all_08_power_drain",
     };
-    if agentKey == "wh2_main_hef_teclis"
-    or agentKey == "wh2_main_def_morathi"
+    if agentKey == "wh2_main_def_morathi"
     or agentKey == "wh2_dlc11_vmp_bloodline_necrarch"
+    or agentKey == "wh2_main_lzd_lord_mazdamundi"
     or string.match(agentKey, "slann")
     or string.match(agentKey, "archmage") then
         conduitKey = "wh2_dlc14_skilll_all_magic_all_greater_arcane_conduit";
+    elseif agentKey == "wh2_main_hef_teclis" then
+        conduitKey = "wh2_main_skill_hef_teclis_flames_of_the_phoenix";
     else
         conduitKey = "wh_main_skill_all_magic_all_11_arcane_conduit";
     end
@@ -352,6 +479,7 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     return {
         character_skill_nodes_tables = newAgentSkills,
         character_skill_node_links_tables = newAgentLinkSkills,
+        character_skill_level_to_effects_junctions_tables = newCharacterSkillLevelToEffects,
     };
 end
 
@@ -518,11 +646,16 @@ function GenerateMultiLoreCharacterSkills(databaseData)
             characterSkillsTables:SetColumnValue(newSkill, 'background_weighting', '0');
             characterSkillsTables:SetColumnValue(newSkill, 'influence_cost', '0');
             newCharacterSkills[i] = newSkill;
-            local newLoc = {};
-            characterSkillLoc:SetColumnValue(newLoc, 'key', "character_skills_localised_name_"..newSkillKey);
-            characterSkillLoc:SetColumnValue(newLoc, 'text', '');
-            characterSkillLoc:SetColumnValue(newLoc, 'tooltip', 'true');
-            newCharacterSkillsLoc[i] = newLoc;
+            local newLocName = {};
+            characterSkillLoc:SetColumnValue(newLocName, 'key', "character_skills_localised_name_"..newSkillKey);
+            characterSkillLoc:SetColumnValue(newLocName, 'text', '');
+            characterSkillLoc:SetColumnValue(newLocName, 'tooltip', 'true');
+            newCharacterSkillsLoc[i * 2] = newLocName;
+            local newLocDescription = {};
+            characterSkillLoc:SetColumnValue(newLocDescription, 'key', "character_skills_localised_description_"..newSkillKey);
+            characterSkillLoc:SetColumnValue(newLocDescription, 'text', '');
+            characterSkillLoc:SetColumnValue(newLocDescription, 'tooltip', 'true');
+            newCharacterSkillsLoc[i * 2 - 1] = newLocDescription;
         end
         for loreIndex, loreKey in pairs(agentData.Lore) do
             local magicLoreData = _G.WWLResources.MagicLores[loreKey];
@@ -534,7 +667,12 @@ function GenerateMultiLoreCharacterSkills(databaseData)
             -- Then we make the link the effects for the custom skills by coping existing character skills
             local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
             local characterSkillEffectsMatchingLore = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", allSpellsForLore);
+            local maxLevelForSpellSlots = {};
             for spellIndex, spellKey in pairs(allSpellsForLore) do
+                local lastAddedSignatureSpellLevel = 1;
+                if maxLevelForSpellSlots[spellIndex] == nil then
+                    maxLevelForSpellSlots[spellIndex] = 1;
+                end
                 -- Now we generate loc
                 local locForSpells = characterSkillLoc:GetRowsMatchingColumnValues("key", {"character_skills_localised_name_"..spellKey});
                 local locSpellName = characterSkillLoc:GetColumnValueForRow(locForSpells[1], 'text');
@@ -545,6 +683,10 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                 -- Now we clone each effect for the spell. This is so we can make them invisible
                 local effectsForSpell = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", { spellKey, }, characterSkillEffectsMatchingLore);
                 for effectIndex, effectData in pairs(effectsForSpell) do
+                    local effectLevel = characterSkillLevelToEffectsTable:GetColumnValueForRow(effectData, 'level');
+                    if tonumber(effectLevel) > maxLevelForSpellSlots[spellIndex] then
+                        maxLevelForSpellSlots[spellIndex] = tonumber(effectLevel);
+                    end
                     local oldEffectKey = characterSkillLevelToEffectsTable:GetColumnValueForRow(effectData, 'effect_key');
                     local effectsTable = databaseData["effects_tables"];
                     local matchingEffect = effectsTable:GetRowsMatchingColumnValues("effect", { oldEffectKey, });
@@ -565,17 +707,42 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                     local clonedEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, effectsForSpell);
                     characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
                     characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'effect_key', newEffectKey);
+                    if Contains(magicLoreData.SignatureSpell, spellKey) then
+                        if effectIndex == 1 then
+                            local clonedBaseEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, effectsForSpell);
+                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
+                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'effect_key', spellKey..'_enabled');
+                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'level', 1);
+                            table.insert(characterSkillsToEffectsToExport, clonedBaseEffectToSkill);
+                        end
+                        local newEffectLevel = tonumber(effectLevel) + 1;
+                        -- Probably not needed but will confirm
+                        --[[if newEffectLevel > lastAddedSignatureSpellLevel then
+                            local clonedBaseEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, effectsForSpell);
+                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
+                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'effect_key', spellKey..'_enabled');
+                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'level', newEffectLevel);
+                            table.insert(characterSkillsToEffectsToExport, clonedBaseEffectToSkill);
+                            lastAddedSignatureSpellLevel = newEffectLevel;
+                        end--]]
+                        characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'level', newEffectLevel);
+                        maxLevelForSpellSlots[spellIndex] = newEffectLevel;
+                    end
                     table.insert(characterSkillsToEffectsToExport, clonedEffectToSkill);
                 end
-                -- We only need to add this effect once
-                if loreIndex == 1 then
-                    local increasedSpellEffects = {};
-                    characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
-                    characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'effect_key', "wwl_increased_spell_effects");
-                    characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'effect_scope', "character_to_character_own");
-                    characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'level', "2");
-                    characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'value', "1");
-                    table.insert(characterSkillsToEffectsToExport, increasedSpellEffects);
+            end
+            -- We only need to add this effect once
+            for spellIndex, maxLevelForSpellSlot in pairs(maxLevelForSpellSlots) do
+                if maxLevelForSpellSlot > 1 then
+                    for spellLevel = 2, maxLevelForSpellSlot do
+                        local increasedSpellEffects = {};
+                        characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
+                        characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'effect_key', "wwl_increased_spell_effects");
+                        characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'effect_scope', "character_to_character_own");
+                        characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'level', spellLevel);
+                        characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'value', "1");
+                        table.insert(characterSkillsToEffectsToExport, increasedSpellEffects);
+                    end
                 end
             end
         end
@@ -583,16 +750,26 @@ function GenerateMultiLoreCharacterSkills(databaseData)
             local textForSkill = "";
             for j = 1, #temporaryCharacterSkillName[i] do
                 if j ~= #temporaryCharacterSkillName[i] then
-                    textForSkill = textForSkill..temporaryCharacterSkillName[i][j].."/";
+                    textForSkill = textForSkill..temporaryCharacterSkillName[i][j]..", ";
                 else
                     textForSkill = textForSkill..temporaryCharacterSkillName[i][j];
                 end
             end
-            characterSkillLoc:SetColumnValue(newCharacterSkillsLoc[i], 'text', textForSkill);
+            local skillNameText = "";
+            if i == 1 then
+                skillNameText = "Innate Spells";
+            elseif i == 2 then
+                skillNameText = "Signature Spells";
+            else
+                skillNameText = "Spell Slot "..tostring(i - 2);
+            end
+            characterSkillLoc:SetColumnValue(newCharacterSkillsLoc[i * 2], 'text', skillNameText);
+            characterSkillLoc:SetColumnValue(newCharacterSkillsLoc[i * 2 - 1], 'text', textForSkill);
         end
-        local characterSkillsAndLinks = GenerateSkillTreeForAgent(databaseData, nil, agentKey, agentData, { "wh_main_skill_all_magic_all_06_evasion", "wh_main_skill_all_magic_all_07_earthing", "wh_main_skill_all_magic_all_11_arcane_conduit", });
+        local characterSkillsAndLinks = GenerateSkillTreeForAgent(databaseData, nil, agentKey, agentData, { "wh_main_skill_all_magic_all_06_evasion", "wh_main_skill_all_magic_all_07_earthing", "wh_main_skill_all_magic_all_11_arcane_conduit", "wh2_main_skill_magic_dark_flock_of_doom_teclis",});
         ConcatTable(characterSkillNodesToExport, characterSkillsAndLinks["character_skill_nodes_tables"]);
         ConcatTable(characterSkillNodeLinksToExport, characterSkillsAndLinks["character_skill_node_links_tables"]);
+        ConcatTable(characterSkillsToEffectsToExport, characterSkillsAndLinks["character_skill_level_to_effects_junctions_tables"]);
         ConcatTable(characterSkillsToExport, newCharacterSkills);
         ConcatTable(characterSkillLocToExport, newCharacterSkillsLoc);
     end

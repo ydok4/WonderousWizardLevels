@@ -1,7 +1,7 @@
 Table = {
     Name = "",
     Header = {},
-    Colummns = {},
+    Columns = {},
     Data = {},
 }
 

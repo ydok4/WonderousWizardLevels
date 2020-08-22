@@ -1,0 +1,72 @@
+Loc PackedFile	1
+key	text	tooltip
+character_skills_localised_name_mixu_all_lord_spell_lore_of_ice_passive	Gift of the Winter Wind	true
+character_skills_localised_name_mixu_all_lord_spell_lore_of_ice_glacial_barrier	Glacial Barrier	true
+character_skills_localised_name_mixu_all_lord_spell_lore_of_ice_shield_of_cold	Shield of Cold	true
+character_skills_localised_name_mixu_all_lord_spell_lore_of_ice_midwinters_kiss	Midwinter's Kiss	true
+character_skills_localised_name_mixu_all_lord_spell_lore_of_ice_wind_of_ice	Wind of Ice	true
+character_skills_localised_name_mixu_all_lord_spell_lore_of_ice_shardstorm	Shardstorm	true
+character_skills_localised_name_mixu_all_lord_spell_lore_of_ice_invocation_of_the_ice_storm	Invocation of the Ice Storm	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_glacial_barrier	Glacial Barrier	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_glacial_barrier	The caster draws the chill from the depths of her heart and lets it fill every inch of her body. She becomes cold to the touch and even more pallid than before, and her skin becomes hard and resilient.	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_shield_of_cold	Shield of Cold	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_shield_of_cold	The caster lowers the temperature of her body. She is immune to exposure caused by freezing conditions and is immune to damage from cold-based attacks.	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_passive	Gift of the Winter Wind	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_passive	The Wizard is instantly covered by a translucent layer of luminous ice that moulds around their bodies and protects them from the blows of the enemy.	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_midwinters_kiss	Midwinter's Kiss	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_midwinters_kiss	The Wizards channels mighty flows of cold into the land. A heavy frost immediately crusts over every affected surface, halving all movement for those in or moving through the area.	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_wind_of_ice	Wind of Ice	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_wind_of_ice	With a single breath, the caster blows a freezing gale at anyone in front of her within 48 yards.	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_shardstorm	Shardstorm	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_shardstorm	The Wizard unleashes one to ten diamond-hard shards of ice at a target. Each shard is a potent magic missile.	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_invocation_of_the_ice_storm	Invocation of the Ice Storm	true
+unit_abilities_onscreen_name_mixu_bound_spell_invocation_of_the_ice_storm	Invocation of the Ice Storm	true
+unit_abilities_tooltip_text_mixu_bound_spell_invocation_of_the_ice_storm	A swirling flurry of snow and ice rises from the land, freezing and blinding all in its path. The caster can cast blizzard at any point she can see.	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_invocation_of_the_ice_storm	A swirling flurry of snow and ice rises from the land, freezing and blinding all in its path. The caster can cast blizzard at any point she can see.	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_glacial_barrier_upgraded	Glacial Barrier	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_glacial_barrier_upgraded	The caster draws the chill from the depths of her heart and lets it fill every inch of her body. She becomes cold to the touch and even more pallid than before, and her skin becomes hard and resilient.	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_shield_of_cold_upgraded	Shield of Cold	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_shield_of_cold_upgraded	The caster lowers the temperature of her body. She is immune to exposure caused by freezing conditions and is immune to damage from cold-based attacks.	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_midwinters_kiss_upgraded	Midwinter's Kiss	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_wind_of_ice_upgraded	Wind of Ice	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_wind_of_ice_upgraded	With a single breath, the caster blows a freezing gale at anyone in front of her within 48 yards.	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_shardstorm_upgraded	Shardstorm	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_shardstorm_upgraded	The Wizard unleashes one to ten diamond-hard shards of ice at a target. Each shard is a potent magic missile.	true
+unit_abilities_onscreen_name_mixu_spell_lore_of_ice_invocation_of_the_ice_storm_upgraded	Invocation of the Ice Storm	true
+unit_abilities_tooltip_text_mixu_spell_lore_of_ice_invocation_of_the_ice_storm_upgraded	A swirling flurry of snow and ice rises from the land, freezing and blinding all in its path. The caster can cast blizzard at any point she can see.	true
+effects_description_mixu_lore_passive_enable_lore_of_ice	Passive ability: "Gift of the Winter Wind""	true
+effects_description_mixu_magic_ice_cooldown_glacial_barrier	Cooldown: %+n% to "Glacial Barrier"	true
+effects_description_mixu_magic_ice_cooldown_all_spells	Cooldown: %+n% to Lore of Ice spells	true
+effects_description_mixu_magic_ice_cooldown_invocation_of_the_ice_storm	Cooldown: %+n% to "Invocation of the Ice Storm"	true
+effects_description_mixu_magic_ice_cooldown_midwinters_kiss	Cooldown: %+n% to "Midwinter's Kiss"	true
+effects_description_mixu_magic_ice_cooldown_shardstorm	Cooldown: %+n% to "Shardstorm"	true
+effects_description_mixu_magic_ice_cooldown_shield_of_cold	Cooldown: %+n% to "Shield of Cold"	true
+effects_description_mixu_magic_ice_cooldown_wind_of_ice	Cooldown: %+n% to "Wind of Ice"	true
+effects_description_mixu_magic_ice_enable_glacial_barrier	Spell: "Glacial Barrier"	true
+effects_description_mixu_magic_ice_enable_glacial_barrier_upgraded	Spell: "Glacial Barrier Upgraded"	true
+effects_description_mixu_magic_ice_enable_invocation_of_the_ice_storm	Spell: "Invocation of the Ice Storm"	true
+effects_description_mixu_magic_ice_enable_invocation_of_the_ice_storm_upgraded	Spell: "Invocation of the Ice Storm Upgraded"	true
+effects_description_mixu_magic_ice_enable_midwinters_kiss	Spell: "Midwinter's Kiss"	true
+effects_description_mixu_magic_ice_enable_shardstorm	Spell: "Shardstorm"	true
+effects_description_mixu_magic_ice_enable_shardstorm_upgraded	Spell: "Shardstorm Upgraded"	true
+effects_description_mixu_magic_ice_enable_shield_of_cold	Spell: "Shield of Cold"	true
+effects_description_mixu_magic_ice_enable_shield_of_cold_upgraded	Spell: "Shield of Cold Upgraded"	true
+effects_description_mixu_magic_ice_enable_wind_of_ice	Spell: "Wind of Ice"	true
+effects_description_mixu_magic_ice_enable_wind_of_ice_upgraded	Spell: "Wind of Ice Upgraded"	true
+effects_description_mixu_magic_ice_miscast_reduction_glacial_barrier_upgraded	Miscast base chance: %+n% for "Glacial Barrier Upgraded"	true
+effects_description_mixu_magic_ice_miscast_reduction_invocation_of_the_ice_storm_upgraded	Miscast base chance: %+n% for "Invocation of the Ice Storm Upgraded"	true
+effects_description_mixu_magic_ice_miscast_reduction_shardstorm_upgraded	Miscast base chance: %+n% for "Shardstorm Upgraded"	true
+effects_description_mixu_magic_ice_miscast_reduction_shield_of_cold_upgraded	Miscast base chance: %+n% for "Shield of Cold Upgraded"	true
+effects_description_mixu_magic_ice_miscast_reduction_wind_of_ice_upgraded	Miscast base chance: %+n% for "Wind of Ice Upgraded"	true
+effects_description_mixu_magic_ice_reduce_wom_cost_glacial_barrier	Winds of Magic cost: %n for "Glacial Barrier"	true
+effects_description_mixu_magic_ice_reduce_wom_cost_glacial_barrier_upgraded	Winds of Magic cost: %n for "Glacial Barrier Upgraded"	true
+effects_description_mixu_magic_ice_reduce_wom_cost_invocation_of_the_ice_storm	Winds of Magic cost: %n for "Invocation of the Ice Storm"	true
+effects_description_mixu_magic_ice_reduce_wom_cost_invocation_of_the_ice_storm_upgraded	Winds of Magic cost: %n for "Invocation of the Ice Storm Upgraded"	true
+effects_description_mixu_magic_ice_reduce_wom_cost_midwinters_kiss	Winds of Magic cost: %n for "Midwinter's Kiss"	true
+effects_description_mixu_magic_ice_reduce_wom_cost_shardstorm	Winds of Magic cost: %n for "Shardstorm"	true
+effects_description_mixu_magic_ice_reduce_wom_cost_shardstorm_upgraded	Winds of Magic cost: %n for "Shardstorm Upgraded"	true
+effects_description_mixu_magic_ice_reduce_wom_cost_shield_of_cold	Winds of Magic cost: %n for "Shield of Cold"	true
+effects_description_mixu_magic_ice_reduce_wom_cost_shield_of_cold_upgraded	Winds of Magic cost: %n for "Shield of Cold Upgraded"	true
+effects_description_mixu_magic_ice_reduce_wom_cost_wind_of_ice	Winds of Magic cost: %n for "Wind of Ice"	true
+effects_description_mixu_magic_ice_reduce_wom_cost_wind_of_ice_upgraded	Winds of Magic cost: %n for "Wind of Ice Upgraded"	true
+unit_abilities_additional_ui_effects_localised_text_mixu_vortex_multiple_vortexes	[[col:green]][[img:icon_arrow_up]][[/img]] Splits into multiple vortexes[[/col]]	true

@@ -13,6 +13,7 @@ local dbPrefix = "@wwl_";
 
 require 'script/campaign/mod/a_wwl_core_resource_loader'
 require 'script/campaign/mod/z_wwl_cataph_resource_loader'
+require 'script/campaign/mod/z_wwl_kislev_resource_loader'
 require 'script/campaign/mod/z_wwl_mixu_resource_loader'
 require 'script/campaign/mod/z_wwl_wez_speshul_resource_loader'
 

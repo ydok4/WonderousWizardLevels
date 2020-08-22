@@ -218,7 +218,7 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
                     lockUISetup = true;
                     wwl.Logger:Log("WWL_CharacterRecruitmentButtons: "..stringContext);
                     local generalsList = find_uicomponent(core:get_ui_root(), "character_panel", "general_selection_panel", "character_list_parent", "character_list", "listview", "list_clip", "list_box");
-                    SetWizardLevelUI(wwl, generalsList);
+                    SetWizardLevelUI(wwl, generalsList, stringContext);
                     lockUISetup = false;
                     wwl.Logger:Log_Finished();
                 end
@@ -319,7 +319,7 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
     );
 end
 
-function SetWizardLevelUI(wwl, pathToGenerals)
+function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
     wwl.Logger:Log("SetWizardLevelUI");
     if not pathToGenerals then
         wwl.Logger:Log("Can't find pathToGenerals");
@@ -367,6 +367,9 @@ function SetWizardLevelUI(wwl, pathToGenerals)
                     subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText]);
                 end
             elseif WWL_UICache[subtypeComponentText] == nil then
+                if subtypeComponentText == "dy_subtype" and buttonContext ~= nil then
+                    subtypeComponentText = effect.get_localised_string("agent_subtypes_onscreen_name_override_"..buttonContext);
+                end
                 local foundWizard = false;
                 wwl.Logger:Log("Checking for subculture supported subtypes");
                 local supportedSubtypes = wwl:GetSuppportedSubtypesForSubculture(playerSubculture);

@@ -1,0 +1,10 @@
+character_skill_node_sets_tables	2
+agent_key	campaign_key	faction_key	key	subculture	for_army	for_navy	agent_subtype_key
+dignitary			wh_main_skill_node_set_ksl_priest		false	false	wh2_deco_ursun_priest
+champion			wh_main_skill_node_set_ksl_boyar		false	false	wh2_deco_boyar
+spy			wh_main_skill_node_set_ksl_droy		false	false	wh2_deco_droy
+general			wh_main_skill_node_set_ksl_voevoda		false	false	wh2_deco_voevoda
+general			wh_main_skill_node_set_ksl_warlord		false	false	wh2_deco_warlord
+general			wh_main_skill_node_set_ksl_boris		false	false	wh2_deco_boris
+wizard			wh_main_skill_node_set_ksl_icewitch_a		false	false	wh2_deco_icewitch
+wizard			wh_main_skill_node_set_ksl_hag		false	false	wh2_deco_hag

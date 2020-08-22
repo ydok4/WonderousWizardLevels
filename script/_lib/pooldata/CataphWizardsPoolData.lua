@@ -8,6 +8,9 @@ function GetCataphWizardsPoolData()
             },
         },
         -- TEB
+        -- Note: TEB does have it's own subculture (wh_main_sc_teb_teb)
+        -- but in vanilla they reuse empire data.
+        -- Rather than trying to detect this, I just lump this with Empire.
         wh_main_sc_emp_empire = {
             teb_gashnag = {
                 DefaultWizardLevel = 3,

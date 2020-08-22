@@ -54,7 +54,6 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 4,
                 IsLoremaster = true,
                 LoremasterCharacterSkillKey = "wh_dlc07_skill_brt_lord_unique_fay_enchantress_loremaster_lore_of_life",
-                LoremasterCharacterNodeSkillKey = "wh_dlc07_skill_node_brt_fay_enchantress_unique_05",
                 Lore = {"wh_dlc05_lore_life", "wh_dlc03_lore_beasts", "wh_main_lore_heavens", },
             },
         },
@@ -278,7 +277,7 @@ function GetVanillaWizardsPoolDataResources()
             },
             wh2_main_hef_teclis = {
                 DefaultWizardLevel = 4,
-                Lore = "Teclis",
+                Lore = { "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh2_main_lore_high_magic", },
             },
             wh2_dlc10_hef_alarielle = {
                 DefaultWizardLevel = 4,
@@ -351,7 +350,7 @@ function GetVanillaWizardsPoolDataResources()
             },
             wh2_main_lzd_lord_mazdamundi = {
                 DefaultWizardLevel = 5,
-                Lore = "Slann",
+                Lore = { "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh2_main_lore_high_magic", },
             },
             wh2_main_lzd_slann_mage_priest = {
                 DefaultWizardLevel = 5,

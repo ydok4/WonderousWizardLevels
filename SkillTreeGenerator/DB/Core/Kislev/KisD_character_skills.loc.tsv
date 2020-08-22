@@ -1,0 +1,68 @@
+Loc PackedFile	1
+key	text	tooltip
+character_skills_localised_description_wh_dlc08_skill_ksl_lord_unique_boris_0	The best fighters always seek to prove their worth to the Tzar.	true
+character_skills_localised_description_wh_dlc08_skill_ksl_lord_unique_boris_1	On the side of Boris ride the Gryphon Legion, their feathered banners quivering in the wind.	true
+character_skills_localised_description_wh_dlc08_skill_ksl_lord_unique_boris_2	Bohka Palace is guarded by three hundred Kreml Guards, the most loyal soldiers to the Tzar who have swore to protect him with their lives.	true
+character_skills_localised_description_wh_dlc08_skill_ksl_lord_unique_boris_3	"Bastard Empire! Kept safe with Kislev blood! You and your land be dead but for us."	true
+character_skills_localised_description_wh_dlc08_skill_ksl_lord_unique_boris_4	In the years of Boris' reign, Kislev grew strong both in military and economy.	true
+character_skills_localised_description_wh_dlc08_skill_ksl_lord_unique_boris_5	"Kislev!" Boris shouted, his deep voice booming across the snow scape. The bear roared, joining his master in the sound of triumph.	true
+character_skills_localised_description_wh_ksl_growl	The Priest's chants fill his warriors with implacable, ferocious rage.	true
+character_skills_localised_description_wh_ksl_prayer	The Priest's rousing prayers grant his followers strength and courage as they tap deep into Kislevite national pride.	true
+character_skills_localised_description_wh_main_skill_ksl_droy_armour	The champions of the Tzarina need the best armour.	true
+character_skills_localised_description_wh_main_skill_ksl_lord_campaign_devout	This man has cheated death again and again. Praise Ursun as he surely watches over him.	true
+character_skills_localised_description_wh_main_skill_ksl_lord_campaign_kvas	"Come now comrades, there is enough meat and kvas for everyone. Let us feast!"	true
+character_skills_localised_description_wh2_dlc11_skill_ksl_army_buff_beast_master	From the frozen steppes, the great bears and majestic hawks heed the call of the Land.	true
+character_skills_localised_description_wh2_dlc11_skill_ksl_army_buff_blessed	Many comrades seek the Priests from the Cult of Ursun before a great battle.	true
+character_skills_localised_description_wh2_dlc11_skill_ksl_army_buff_endless_war	The constant threat from the North is forcing the smiths to improve their weapon and armour craftmanship year after year.	true
+character_skills_localised_description_wh2_dlc11_skill_ksl_army_buff_gunnery	Even if the use of gunpowder weapons has always been rather limited, the supplies coming in from trade are always useful.	true
+character_skills_localised_description_wh2_dlc11_skill_ksl_army_buff_pistolkorps	Honing their bow skills for years, the Ungols and Kossars have specialized in ambushes.	true
+character_skills_localised_description_wh2_dlc11_skill_ksl_army_buff_sharpshooter	The veteran marksman knows the precise range required to land the killing shot.	true
+character_skills_localised_description_wh2_dlc11_skill_ksl_army_buff_speed_of_horse	"Then the Winged Lancers arrived, galloped into the back of the enemy lines and turned the tide."	true
+character_skills_localised_description_wh2_dlc11_skill_ksl_army_buff_strength_of_hardship	It appears a spell of some sort has been cast on the frontline of Boris' army. Could it be a Hag Witch hidden in the woods?	true
+character_skills_localised_description_wh2_dlc11_skill_ksl_army_buff_taste_for_battle	Kislev breeds hardy and fierce warriors both due to the climate and the constant depredations by raiders from the Chaos Wastes.	true
+character_skills_localised_description_wh2_dlc11_skill_ksl_army_buff_tzar_finest	"Bloody Kislevites! Don't they ever relax?"	true
+character_skills_localised_description_wh2_main_skill_innate_boris	Following the devastation and ruin of the Great War against Chaos, Tzar Boris Bokha was instrumental in rebuilding the nation of Kislev and reclaiming many of its lost lands. 	true
+character_skills_localised_name_wh_dlc08_skill_ksl_lord_unique_boris_0	Best of Kislev	true
+character_skills_localised_name_wh_dlc08_skill_ksl_lord_unique_boris_1	The Mighty Gryphon Legion	true
+character_skills_localised_name_wh_dlc08_skill_ksl_lord_unique_boris_2	The Hand-picked Elite	true
+character_skills_localised_name_wh_dlc08_skill_ksl_lord_unique_boris_3	Powerful Nobles	true
+character_skills_localised_name_wh_dlc08_skill_ksl_lord_unique_boris_4	Reclaiming the Glory	true
+character_skills_localised_name_wh_dlc08_skill_ksl_lord_unique_boris_5	Rise of a Legend	true
+character_skills_localised_name_wh_ksl_growl	Growling Fury	true
+character_skills_localised_name_wh_ksl_prayer	Prayers of Ursun	true
+character_skills_localised_name_wh_main_skill_ksl_lord_campaign_devout	Devout Follower	true
+character_skills_localised_name_wh_main_skill_ksl_lord_campaign_kvas	Uniting the Land	true
+character_skills_localised_name_wh2_dlc11_skill_ksl_army_buff_beast_master	Mother Kislev	true
+character_skills_localised_name_wh2_dlc11_skill_ksl_army_buff_blessed	Blessed by Ursun	true
+character_skills_localised_name_wh_main_skill_ksl_droy_armour	Personal Champion	true
+character_skills_localised_name_wh2_dlc11_skill_ksl_army_buff_endless_war	An Endless War	true
+character_skills_localised_name_wh2_dlc11_skill_ksl_army_buff_gunnery	Lightweight Artillery	true
+character_skills_localised_name_wh2_dlc11_skill_ksl_army_buff_pistolkorps	Marksmen	true
+character_skills_localised_name_wh2_dlc11_skill_ksl_army_buff_sharpshooter	Sharpshooter	true
+character_skills_localised_name_wh2_dlc11_skill_ksl_army_buff_speed_of_horse	Winged Knights	true
+character_skills_localised_name_wh2_dlc11_skill_ksl_army_buff_strength_of_hardship	Protective Spell	true
+character_skills_localised_name_wh_main_skill_ksl_droy_morale	Renowned Fighter	true
+character_skills_localised_name_wh_main_skill_ksl_army_ungol_northern_threat	Northern Threat	true
+character_skills_localised_name_wh_main_skill_ksl_army_buff_charge_ungol_cav	Ungol Cavalry	true
+character_skills_localised_name_wh_main_skill_ksl_army_buff_defence_ungol_inf	Free Spirits	true
+character_skills_localised_name_wh_main_skill_ksl_army_buff_blessed_ksl_ungol_all	Blessed by Dazh	true
+character_skills_localised_name_wh_main_skill_ksl_droy_bonus_vs_inf	Blademaster	true
+character_skills_localised_name_wh2_dlc11_skill_ksl_army_buff_taste_for_battle	Nation Forged in Blood	true
+character_skills_localised_name_wh2_dlc11_skill_ksl_army_buff_tzar_finest	For this is Kislev	true
+character_skills_localised_name_wh2_main_skill_innate_boris	Tzar of Kislev	true
+character_skills_localised_description_wh_main_skill_ksl_lord_campaign_defenders	Kislevites are willing and motivated soldiers, who know that they are defending their homes and families.	true
+character_skills_localised_description_wh_main_skill_ksl_army_ungol_northern_threat	The constant threat from the North is forcing the Ungols to improve their weapon and armour craftmanship even while living in the open steppes.	true
+character_skills_localised_description_wh_main_skill_ksl_army_buff_charge_ungol_cav	"You'll find no sturdier or faster warhorse than those the Ungols ride, comrade."	true
+character_skills_localised_description_wh_main_skill_ksl_army_buff_defence_ungol_inf	They grew up in the steppes as free men. They will never give up their freedom.	true
+character_skills_localised_description_wh_main_skill_ksl_army_buff_blessed_ksl_ungol_all	"May Dazh watch over us and our children and our lands."	true
+character_skills_localised_name_wh_main_skill_ksl_lord_campaign_defenders	Defenders of the Borders	true
+character_skills_localised_name_wh_main_skill_ksl_lord_unique_boris_tzar_kislev	Tzar of Kislev	true
+character_skills_localised_name_wh_main_skill_ksl_lord_unique_boris_mark_bear	Mark of the Bear God	true
+character_skills_localised_description_wh_main_skill_ksl_lord_unique_boris_tzar_kislev	Boris Bokha is a fiery, passionate warrior with a driving spirit and eagerness to reclaim the lost glory of Kislev.	true
+character_skills_localised_description_wh_main_skill_ksl_droy_bonus_vs_inf	"Their speed with a blade is blistering, said to be only bettered by the Elves, and even then, many doubt that."	true
+character_skills_localised_description_wh_main_skill_ksl_lord_unique_boris_mark_bear	Surrounded and cut off the rest of his army, Boris Bokha continues to fight. The spirit of the Bear God never ceases to burn inside of him.	true
+character_skills_localised_description_wh_main_skill_ancient_widow	The Hag transforms into a grey-haired\\nmonstrosity over eight feet in height, with glowing\\neyes, rusted metal teeth, and long, iron talons.	true
+character_skills_localised_description_wh_main_skill_ksl_droy_morale	The Droyaska are the greatest fighters in the Kislev nation. It is a title that only the Tzar or Tzarina herself can formally grant.	true
+character_skills_localised_name_wh_main_skill_ksl_lord_unique_boris_shard_blade	Shard Blade	true
+character_skills_localised_name_wh_main_skill_ksl_lord_unique_boris_armour_ursun	Armour of Ursun	true
+character_skills_localised_name_wh_main_skill_ancient_widow	Form of the Ancient Widow	false

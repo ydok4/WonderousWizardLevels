@@ -211,13 +211,23 @@ function GetMagicLorePoolDataResources()
             Level3DefaultSpells = {},
         },--]]
         -- Non Vanilla
-        Ice = {
+        mixu_lore_of_ice = {
             InnateSkill = {"mixu_all_lord_spell_lore_of_ice_passive",},
             SignatureSpell = {"mixu_all_lord_spell_lore_of_ice_glacial_barrier", },
             Level1DefaultSpells = { "mixu_all_lord_spell_lore_of_ice_shield_of_cold", "mixu_all_lord_spell_lore_of_ice_midwinters_kiss", "mixu_all_lord_spell_lore_of_ice_wind_of_ice", },
-            Level1DefaultSpellsLord = { "mixu_all_lord_spell_lore_of_ice_shield_of_cold", "mixu_all_lord_spell_lore_of_ice_midwinters_kiss", "mixu_all_lord_spell_lore_of_ice_wind_of_ice", },
             Level3DefaultSpells = { "mixu_all_lord_spell_lore_of_ice_shardstorm", "mixu_all_lord_spell_lore_of_ice_invocation_of_the_ice_storm", },
-            Level3DefaultSpellsLord = { "mixu_all_lord_spell_lore_of_ice_shardstorm", "mixu_all_lord_spell_lore_of_ice_invocation_of_the_ice_storm", },
+        },
+        wh_main_lore_winter_rage = {
+            InnateSkill = {"skill_all_magic_ice_winter",},
+            SignatureSpell = {"magic_ice_ice_shards", },
+            Level1DefaultSpells = { "magic_ice_storm_strike", "magic_ice_chill_blast", "magic_ice_ice_blizzard", },
+            Level3DefaultSpells = { "magic_ice_tempest", "magic_ice_hailstorm", },
+        },
+        wh_main_lore_cold_witchering = {
+            InnateSkill = { "skill_all_magic_ice_cold", },
+            SignatureSpell = {"magic_ice_shield_of_cold", },
+            Level1DefaultSpells = { "magic_ice_frost_blade", "magic_ice_crisping_cold", "magic_ice_shattering_frost", },
+            Level3DefaultSpells = { "magic_ice_chill", "magic_ice_blinding_blizzard", },
         },
     };
 end

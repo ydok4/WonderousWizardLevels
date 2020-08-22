@@ -222,115 +222,7 @@ function WWLController:SetSpellsForCharacter(character)
 end
 
 function WWLController:PerformSpecialSpellGeneration(defaultWizardData, character)
-    if defaultWizardData.Lore == "Slann" then
-        --[[local validLores = {"High", };
-        for index, battleLoreKey in pairs(self.BattleLores) do
-            validLores[#validLores + 1] = battleLoreKey;
-        end
-        local selectedLore = GetRandomObjectFromList(validLores);
-        local tempWizardData = {
-            DefaultWizardLevel = 5,
-            Lore = selectedLore;
-        };
-        self.Logger:Log("Selected Slann lore: "..selectedLore);
-        local spellsForLore = self:GetDefaultSpellsForWizard(tempWizardData);
-        local magicLore = self:GetMagicLoreData(selectedLore);
-        spellsForLore[#spellsForLore + 1] = GetRandomObjectFromList(magicLore.SignatureSpell);
-        spellsForLore[#spellsForLore + 1] = GetRandomObjectFromList(magicLore.InnateSkill);
-        -- Remap the characters unlocked spells for easier manipulation
-        local remappedWizardData = self:GetWizardDataCopy(wizard);
-        -- Remove all enabled spell abilities
-        for index, spellKey in pairs(remappedWizardData.UnlockedSpells) do
-            cm:remove_effect_bundle_from_character(spellKey.."_enable", character);
-        end
-        wizard.UnlockedSpells = spellsForLore;
-        local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
-        customEffectBundle:set_duration(2);
-        for index, spellKey in pairs(wizard.UnlockedSpells) do
-            customEffectBundle:add_effect(spellKey.."_enable", "character_to_character_own", 1);
-        end
-        cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);--]]
-    elseif defaultWizardData.Lore == "Teclis" then
-        --[[local selectedLore = "Mixed";
-        if Roll100(50) then
-            self.Logger:Log("Teclis will have the lore of High Magic");
-            selectedLore = "High";
-            local tempWizardData = {
-                DefaultWizardLevel = 4,
-                Lore = selectedLore;
-            };
-            local magicLoreData = self:GetMagicLoreData(tempWizardData.Lore);
-            local spellsForLore = {};
-            wizard.UnlockedSpells = spellsForLore;
-            -- Remap the characters unlocked spells for easier manipulation
-            local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
-            customEffectBundle:set_duration(2);
-            local innateSkill = GetRandomObjectFromList(magicLoreData.InnateSkill);
-            customEffectBundle:add_effect(innateSkill.."_enable", "character_to_character_own", 1);
-            spellsForLore[#spellsForLore + 1] = innateSkill;
-            self.Logger:Log("Unlocking: "..innateSkill.." for Teclis");
-            local signatureSkill = GetRandomObjectFromList(magicLoreData.SignatureSpell);
-            customEffectBundle:add_effect(signatureSkill.."_enable", "character_to_character_own", 1);
-            spellsForLore[#spellsForLore + 1] = signatureSkill;
-            self.Logger:Log("Unlocking: "..signatureSkill.." for Teclis");
-            for index, spellKey in pairs(magicLoreData.Level1DefaultSpells) do
-                self.Logger:Log("Unlocking: "..spellKey.." for Teclis");
-                customEffectBundle:add_effect(spellKey.."_enable", "character_to_character_own", 1);
-                spellsForLore[#spellsForLore + 1] = spellKey;
-            end
-            for index, spellKey in pairs(magicLoreData.Level3DefaultSpells) do
-                self.Logger:Log("Unlocking: "..spellKey.." for Teclis");
-                customEffectBundle:add_effect(spellKey.."_enable", "character_to_character_own", 1);
-                spellsForLore[#spellsForLore + 1] = spellKey;
-            end
-            cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
-        else
-            self.Logger:Log("Teclis will have the Mixed Lores of Magic");
-            local battleLoresCopy = {};
-            for index, battleLore in pairs(self.BattleLores) do
-                battleLoresCopy[#battleLoresCopy + 1] = battleLore;
-            end
-            local selectedSpells = {};
-            -- Now we generate a spell from each lore.
-            -- First we do the innate skill
-            local innateSkillLoreKey = GetAndRemoveRandomObjectFromList(battleLoresCopy);
-            local innateSkillLoreData = self:GetMagicLoreData(innateSkillLoreKey);
-            local innateSkill = GetRandomObjectFromList(innateSkillLoreData.InnateSkill);
-            selectedSpells[#selectedSpells + 1] = innateSkill;
-            local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
-            customEffectBundle:set_duration(2);
-            customEffectBundle:add_effect(innateSkill.."_enable", "character_to_character_own", 1);
-            self.Logger:Log("Unlocking: "..innateSkill.." for Teclis");
-            -- Next is the signature spell
-            local signatureSpellLoreKey = GetAndRemoveRandomObjectFromList(battleLoresCopy);
-            local signatureSpellLoreData = self:GetMagicLoreData(signatureSpellLoreKey);
-            local signatureSpell = GetRandomObjectFromList(signatureSpellLoreData.SignatureSpell);
-            selectedSpells[#selectedSpells + 1] = signatureSpell;
-            customEffectBundle:add_effect(signatureSpell.."_enable", "character_to_character_own", 1);
-            self.Logger:Log("Unlocking: "..signatureSpell.." for Teclis");
-            -- Now we do level 1 spells
-            for i = 0, 2 do
-                local level1SpellLoreKey = GetAndRemoveRandomObjectFromList(battleLoresCopy);
-                local level1SpellLoreData = self:GetMagicLoreData(level1SpellLoreKey);
-                local level1Spell = GetRandomObjectFromList(level1SpellLoreData.Level1DefaultSpells);
-                selectedSpells[#selectedSpells + 1] = level1Spell;
-                self.Logger:Log("Unlocking: "..level1Spell.." for Teclis");
-                customEffectBundle:add_effect(level1Spell.."_enable", "character_to_character_own", 1);
-            end
-            -- and finally, level 3 spells
-            for i = 0, 1 do
-                local level3SpellLoreKey = GetAndRemoveRandomObjectFromList(battleLoresCopy);
-                local level3SpellLoreData = self:GetMagicLoreData(level3SpellLoreKey);
-                local level3Spell = GetRandomObjectFromList(level3SpellLoreData.Level3DefaultSpells);
-                selectedSpells[#selectedSpells + 1] = level3Spell;
-                self.Logger:Log("Unlocking: "..level3Spell.." for Teclis");
-                customEffectBundle:add_effect(level3Spell.."_enable", "character_to_character_own", 1);
-            end
-            cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
-            -- Now we add our selected spells to our unlocked spells list
-            wizard.UnlockedSpells = selectedSpells;
-        end--]]
-    elseif defaultWizardData.Lore == "wh2_main_lore_loremaster" then
+    if defaultWizardData.Lore == "wh2_main_lore_loremaster" then
         local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
         customEffectBundle:set_duration(2);
         local loremasterLoreData = self:GetMagicLoreData(defaultWizardData.Lore);
@@ -392,12 +284,14 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         local selectedSignatureSpell = GetRandomObjectFromList(signatureSpellLoreData.SignatureSpell);
         self.Logger:Log("Enabling spell: "..selectedSignatureSpell);
         selectedSpells[#selectedSpells + 1] = selectedSignatureSpell;
-        -- Now disable the other signature spells
-        for index, magicLore in pairs(magicLoresData) do
-            for index, signatureSpell in pairs(magicLore.SignatureSpell) do
-                if signatureSpell ~= selectedSignatureSpell then
-                    self.Logger:Log("Disabling spell: "..signatureSpell);
-                    customEffectBundle:add_effect(signatureSpell.."_disabled", "character_to_character_own", 1);
+        -- Now disable the other signature spells (except for mannfred)
+        if character:character_subtype_key() ~= "vmp_mannfred_von_carstein" then
+            for index, magicLore in pairs(magicLoresData) do
+                for index, signatureSpell in pairs(magicLore.SignatureSpell) do
+                    if signatureSpell ~= selectedSignatureSpell then
+                        self.Logger:Log("Disabling spell: "..signatureSpell);
+                        customEffectBundle:add_effect(signatureSpell.."_disabled", "character_to_character_own", 1);
+                    end
                 end
             end
         end
@@ -412,6 +306,11 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         and character:has_skill(defaultWizardData.LoremasterCharacterSkillKey) then
             numberOfLevel1Spells = 2;
             numberOfLevel3Spells = 1;
+        elseif character:character_subtype_key() == "wh2_main_hef_teclis" then
+            numberOfLevel1Spells = 3;
+            numberOfLevel3Spells = 2;
+        elseif defaultWizardData.DefaultWizardLevel == 5 then
+            numberOfLevel3Spells = numberOfLevel3Spells + 2;
         elseif defaultWizardData.DefaultWizardLevel > 3
         or numberOfSpells > 3 then
             if Roll100(50) then

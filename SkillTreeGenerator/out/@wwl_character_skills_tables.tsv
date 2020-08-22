@@ -1,5 +1,40 @@
 character_skills_tables	5
 image_path	key	localised_description	localised_name	unlocked_at_rank	is_background_skill	is_female_only_background_skill	is_male_only_background_skill	background_weighting	influence_cost
+character_magic.png	wwl_wh2_main_hef_teclis_mixed_magic_1			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_hef_teclis_mixed_magic_2			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_hef_teclis_mixed_magic_3			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_hef_teclis_mixed_magic_4			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_hef_teclis_mixed_magic_5			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_hef_teclis_mixed_magic_6			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_hef_teclis_mixed_magic_7			0	false	false	false	0	0
+character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_1			0	false	false	false	0	0
+character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_2			0	false	false	false	0	0
+character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_3			0	false	false	false	0	0
+character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_4			0	false	false	false	0	0
+character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_5			0	false	false	false	0	0
+character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_6			0	false	false	false	0	0
+character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_7			0	false	false	false	0	0
+character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_1			0	false	false	false	0	0
+character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_2			0	false	false	false	0	0
+character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_3			0	false	false	false	0	0
+character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_4			0	false	false	false	0	0
+character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_5			0	false	false	false	0	0
+character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_6			0	false	false	false	0	0
+character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_7			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_1			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_2			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_3			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_4			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_5			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_6			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_7			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_lzd_lord_mazdamundi_mixed_magic_1			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_lzd_lord_mazdamundi_mixed_magic_2			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_lzd_lord_mazdamundi_mixed_magic_3			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_lzd_lord_mazdamundi_mixed_magic_4			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_lzd_lord_mazdamundi_mixed_magic_5			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_lzd_lord_mazdamundi_mixed_magic_6			0	false	false	false	0	0
+character_magic.png	wwl_wh2_main_lzd_lord_mazdamundi_mixed_magic_7			0	false	false	false	0	0
 character_magic.png	wwl_dlc07_brt_fay_enchantress_mixed_magic_1			0	false	false	false	0	0
 character_magic.png	wwl_dlc07_brt_fay_enchantress_mixed_magic_2			0	false	false	false	0	0
 character_magic.png	wwl_dlc07_brt_fay_enchantress_mixed_magic_3			0	false	false	false	0	0
@@ -21,20 +56,6 @@ character_magic.png	wwl_wef_naieth_the_prophetess_mixed_magic_4			0	false	false	
 character_magic.png	wwl_wef_naieth_the_prophetess_mixed_magic_5			0	false	false	false	0	0
 character_magic.png	wwl_wef_naieth_the_prophetess_mixed_magic_6			0	false	false	false	0	0
 character_magic.png	wwl_wef_naieth_the_prophetess_mixed_magic_7			0	false	false	false	0	0
-character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_1			0	false	false	false	0	0
-character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_2			0	false	false	false	0	0
-character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_3			0	false	false	false	0	0
-character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_4			0	false	false	false	0	0
-character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_5			0	false	false	false	0	0
-character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_6			0	false	false	false	0	0
-character_magic.png	wwl_dlc03_bst_malagor_mixed_magic_7			0	false	false	false	0	0
-character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_1			0	false	false	false	0	0
-character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_2			0	false	false	false	0	0
-character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_3			0	false	false	false	0	0
-character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_4			0	false	false	false	0	0
-character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_5			0	false	false	false	0	0
-character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_6			0	false	false	false	0	0
-character_magic.png	wwl_wh2_dlc11_cst_noctilus_mixed_magic_7			0	false	false	false	0	0
 character_magic.png	wwl_vmp_mannfred_von_carstein_mixed_magic_1			0	false	false	false	0	0
 character_magic.png	wwl_vmp_mannfred_von_carstein_mixed_magic_2			0	false	false	false	0	0
 character_magic.png	wwl_vmp_mannfred_von_carstein_mixed_magic_3			0	false	false	false	0	0
@@ -42,10 +63,34 @@ character_magic.png	wwl_vmp_mannfred_von_carstein_mixed_magic_4			0	false	false	
 character_magic.png	wwl_vmp_mannfred_von_carstein_mixed_magic_5			0	false	false	false	0	0
 character_magic.png	wwl_vmp_mannfred_von_carstein_mixed_magic_6			0	false	false	false	0	0
 character_magic.png	wwl_vmp_mannfred_von_carstein_mixed_magic_7			0	false	false	false	0	0
-character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_1			0	false	false	false	0	0
-character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_2			0	false	false	false	0	0
-character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_3			0	false	false	false	0	0
-character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_4			0	false	false	false	0	0
-character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_5			0	false	false	false	0	0
-character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_6			0	false	false	false	0	0
-character_magic.png	wwl_wh2_main_def_morathi_mixed_magic_7			0	false	false	false	0	0
+wh_main_spell_fire_fireball.png	wwl_wh_main_skill_all_magic_fire_01_fireball		Fireball	0	false	false	false	0.0	0
+wh_dlc03_spell_beasts_wyssans_wildform.png	wwl_wh_dlc03_skill_magic_beasts_wyssans_wildform		Wyssan's Wildform	0	false	false	false	0.0	0
+grudge_shield_of_ice.png	wwl_magic_ice_shield_of_cold		Shield of Cold	0	false	false	false	0.0	0
+wh_dlc03_spell_wild_viletide.png	wwl_wh_dlc03_skill_magic_wild_viletide		Viletide	0	false	false	false	0.0	0
+wh2_main_spell_plague_pestilent_breath.png	wwl_wh2_main_skill_all_magic_plague_01_pestilent_breath		Pestilent Breath	0	false	false	false	0.0	0
+wh_main_spell_vampires_invocation_of_nehek.png	wwl_wh_main_skill_vmp_magic_vampires_01_invocation_of_nehek		Invocation of Nehek	0	false	false	false	0.0	0
+wh_dlc05_spell_life_awakening_of_the_wood.png	wwl_wh_dlc05_skill_magic_life_wizard_awakening_of_the_wood		Awakening of the Wood	0	false	false	false	0.0	0
+wh_main_spell_vampires_invocation_of_nehek.png	wwl_wh_main_skill_vmp_magic_vampires_01_invocation_of_nehek		Invocation of Nehek	0	false	false	false	0.0	0
+wh_main_spell_death_spirit_leech.png	wwl_wh_main_skill_all_magic_death_01_spirit_leech		Spirit Leech	0	false	false	false	0.0	0
+wh2_dlc09_spell_nehekhara_djafs_incantation_of_cursed_blades.png	wwl_wh2_dlc09_skill_tmb_nehekhara_lore_0_djafs_incantation_of_cursed_blades		Djaf's Incantation of Cursed Blades	0	false	false	false	0.0	0
+wh_main_spell_lil_waaagh_sneaky_stabbin.png	wwl_wh_main_skill_grn_magic_little_waaagh_01_sneaky_stabbin		Sneaky Stabbin'	0	false	false	false	0.0	0
+wh_main_spell_big_waaagh_gaze_of_mork.png	wwl_wh_main_skill_grn_magic_big_waaagh_01_gaze_of_mork		Gaze of Mork	0	false	false	false	0.0	0
+wh_main_spell_heavens_harmonic_convergence.png	wwl_wh_main_skill_all_magic_heavens_01_harmonic_convergence		Harmonic Convergence	0	false	false	false	0.0	0
+wh2_dlc11_spell_deep_spiteful_shot.png	wwl_wh2_dlc11_skill_all_magic_deep_01_spiteful_shot		Spiteful Shot	0	false	false	false	0.0	0
+wh2_dlc14_skill_all_magic_stealth_01_warp_stars.png	wwl_wh2_dlc14_skill_all_magic_stealth_01_warp_stars		Warp Stars	0	false	false	false	0.0	0
+wh2_main_spell_plague_pestilent_breath.png	wwl_wh2_main_skill_all_magic_plague_01_pestilent_breath		Pestilent Breath	0	false	false	false	0.0	0
+grudge_ice_shards.png	wwl_magic_ice_ice_shards		Ice Shards	0	false	false	false	0.0	0
+wh_main_spell_vampires_invocation_of_nehek.png	wwl_wh_dlc04_skill_vmp_magic_strigoi_01_invocation_of_nehek		Invocation of Nehek	0	false	false	false	0.0	0
+mixu_spell_lore_of_ice_glacial_barrier.png	wwl_mixu_all_lord_spell_lore_of_ice_glacial_barrier			0	false	false	false	0.0	0
+wh_main_spell_vampires_invocation_of_nehek.png	wwl_wh_main_skill_vmp_magic_vampires_01_invocation_of_nehek		Invocation of Nehek	0	false	false	false	0.0	0
+wh_main_spell_vampires_invocation_of_nehek.png	wwl_wh2_dlc11_skill_vmp_bloodline_necrarch_magic_invocation_of_nehek		Invocation of Nehek	0	false	false	false	0.0	0
+wh_main_spell_vampires_invocation_of_nehek.png	wwl_wh2_dlc11_skill_vmp_bloodline_von_carstein_magic_invocation_of_nehek		Invocation of Nehek	0	false	false	false	0.0	0
+wh_main_spell_vampires_vanhels_danse_macabre.png	wwl_wh_main_skill_vmp_magic_vampires_02_vanhels_danse_macabre		Vanhel's Danse Macabre	0	false	false	false	0.0	0
+wh2_main_spell_ruin_warp_lightning.png	wwl_wh2_main_skill_all_magic_ruin_01_warp_lightning		Warp Lightning	0	false	false	false	0.0	0
+wh_main_spell_metal_searing_doom.png	wwl_wh_main_skill_all_magic_metal_01_searing_doom		Searing Doom	0	false	false	false	0.0	0
+wh_dlc05_spell_shadow_melkoths_mystifying_miasma.png	wwl_wh_dlc05_skill_magic_shadow_mystifying_miasma_branchwraith		Melkoth's Mystifying Miasma	0	false	false	false	0.0	0
+wh2_main_spell_ruin_warp_lightning.png	wwl_wh2_main_skill_all_magic_ruin_01_warp_lightning		Warp Lightning	0	false	false	false	0.0	0
+wh_main_spell_light_shems_burning_gaze.png	wwl_wh_main_skill_all_magic_light_01_shems_burning_gaze		Shem's Burning Gaze	0	false	false	false	0.0	0
+wh2_main_spell_high_magic_apotheosis.png	wwl_wh2_main_skill_all_magic_high_02_apotheosis		Apotheosis	0	false	false	false	0.0	0
+wh_dlc05_spell_shadow_melkoths_mystifying_miasma.png	wwl_wh_dlc05_skill_magic_shadow_mystifying_miasma		Melkoth's Mystifying Miasma	0	false	false	false	0.0	0
+wh2_main_spell_dark_magic_chillwind.png	wwl_wh2_main_skill_magic_dark_chillwind		Chillwind	0	false	false	false	0.0	0

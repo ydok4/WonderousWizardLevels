@@ -5,6 +5,7 @@ function LoadVanillaDBs()
     print("\n\nLoading supported db files");
     -- Load the core vanilla files
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_level_to_effects_junctions_tables_data__.tsv", "character_skill_level_to_effects_junctions_tables");
+
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_node_links_tables_data__.tsv", "character_skill_node_links_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_node_sets_tables_data__.tsv", "character_skill_node_sets_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_data__.tsv", "character_skill_nodes_tables");
@@ -17,6 +18,36 @@ function LoadVanillaDBs()
     LoadFile("SkillTreeGenerator/DB/Core/special_ability_groups_tables_data__.tsv", "special_ability_groups_tables");
     LoadFile("SkillTreeGenerator/DB/Core/special_ability_groups_to_unit_abilities_junctions_tables_data__.tsv", "special_ability_groups_to_unit_abilities_junctions_tables");
     LoadFile("SkillTreeGenerator/DB/Core/unit_abilities_tables_data__.tsv", "unit_abilities_tables");
+
+    -- Kislev
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/character_skill_level_to_effects_junctions_tables_mixu_ice_magic.tsv", "character_skill_level_to_effects_junctions_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/character_skill_level_to_effects_junctions_tables_KisD_icewitch.tsv", "character_skill_level_to_effects_junctions_tables");
+
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/effects_tables_KisD_icewitch.tsv", "effects_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/effects_tables_mixu_katarin.tsv", "effects_tables");
+
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/effect_bonus_value_unit_ability_junctions_tables_KisD_icewitch.tsv", "effect_bonus_value_unit_ability_junctions_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/effect_bonus_value_unit_ability_junctions_tables_mixu_ice_magic.tsv", "effect_bonus_value_unit_ability_junctions_tables");
+
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/character_skill_node_sets_tables_KisD_characters.tsv", "character_skill_node_sets_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/character_skill_node_sets_tables_mixu_katarin.tsv", "character_skill_node_sets_tables");
+
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/character_skill_nodes_tables_KisD_witches.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/character_skill_nodes_tables_mixu_katarin.tsv", "character_skill_nodes_tables");
+
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/character_skills_tables_KisD_icewitch.tsv", "character_skills_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/character_skills_tables_mixu_katarin.tsv", "character_skills_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/KisD_character_skills.loc.tsv", "character_skills_loc");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/KisD_character_skills_magic.loc.tsv", "character_skills_loc");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/mixu_ice_magic.loc.tsv", "character_skills_loc");
+
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/special_ability_groups_tables_KisD_icewitch.tsv", "special_ability_groups_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/special_ability_groups_tables_mixu_katarin.tsv", "special_ability_groups_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/special_ability_groups_to_unit_abilities_junctions_tables_KisD_icewitch.tsv", "special_ability_groups_to_unit_abilities_junctions_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/special_ability_groups_to_unit_abilities_junctions_tables_mixu_katarin.tsv", "special_ability_groups_to_unit_abilities_junctions_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/unit_abilities_tables_KisD_icewitch.tsv", "unit_abilities_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Kislev/unit_abilities_tables_mixu_katarin.tsv", "unit_abilities_tables");
+
     -- Load the additional supported mod files
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_node_sets_tables_aa_mixu_ll_I_redux.tsv", "character_skill_node_sets_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_node_sets_tables_ab_kouran_darkhand.tsv", "character_skill_node_sets_tables");
@@ -58,7 +89,7 @@ function LoadFile(fileName, addToFileName)
         and VanillaDBs[fileKey] == nil then
             VanillaDBs[fileKey] = Table:new({
                 Header = {},
-                Colummns = {},
+                Columns = {},
                 Data = {},
             });
             VanillaDBs[fileKey]:AddToHeader(fields);

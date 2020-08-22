@@ -1,0 +1,3 @@
+special_ability_groups_tables	8
+ability_group	icon_path	special_edition_mask	sort_order	is_naval	colour_r	colour_g	colour_b	button_name	sound_event	is_composite_group
+mixu_lore_of_ice	UI\Battle UI\ability_icons\mixu_spell_lore_of_ice_passive.png	0	3	false	12	99	178	lore_heavens	Play_WH_UI_Ability_Click_Generic_Heavens	false
