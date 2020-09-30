@@ -13,11 +13,11 @@ function GetKislevWizardsPoolData()
             },
             wh2_deco_icewitch = {
                 DefaultWizardLevel = 1,
-                Lore = "wh_main_lore_winter_rage",
+                Lore = "deco_lore_of_ice",
             },
             wh2_deco_hag = {
                 DefaultWizardLevel = 1,
-                Lore = "wh_main_lore_cold_witchering",
+                Lore = "deco_lore_of_hags",
             },
         },
     };

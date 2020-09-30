@@ -154,9 +154,9 @@ function GetMagicLorePoolDataResources()
         },
         wh_dlc05_lore_branchwraith = {
             InnateSkill = {"wh_dlc05_skill_magic_shadow_smoke_and_mirrors", },
-            SignatureSpell = {"wh_dlc05_skill_magic_shadow_mystifying_miasma_branchwraith", },
-            Level1DefaultSpells = {"wh_dlc05_skill_magic_life_wizard_awakening_of_the_wood_branchwraith", "wh_dlc05_skill_magic_shadow_the_withering_branchwraith", "wh_dlc05_skill_magic_shadow_penumbral_pendulum_branchwraith", },
-            Level3DefaultSpells = {"wh_dlc05_skill_magic_life_wizard_earth_blood_branchwraith", "wh_dlc05_skill_magic_life_wizard_shield_of_thorns_branchwraith", },
+            SignatureSpell = {"wh_dlc05_skill_magic_shadow_mystifying_miasma", },
+            Level1DefaultSpells = {"wh_dlc05_skill_magic_life_wizard_awakening_of_the_wood", "wh_dlc05_skill_magic_shadow_the_withering", "wh_dlc05_skill_magic_shadow_penumbral_pendulum", },
+            Level3DefaultSpells = {"wh_dlc05_skill_magic_life_wizard_earth_blood", "wh_dlc05_skill_magic_life_wizard_shield_of_thorns", },
         },
         wh_dlc04_lore_helman_ghorst = {
             InnateSkill = {"wh_main_skill_vmp_magic_vampires_helman_03_the_curse_of_undeath", },
@@ -166,27 +166,27 @@ function GetMagicLorePoolDataResources()
         },
         wh_dlc04_lore_strigoi = {
             InnateSkill = {"wh_main_skill_vmp_magic_vampires_03_the_curse_of_undeath",},
-            SignatureSpell = {"wh_dlc04_skill_vmp_magic_strigoi_01_invocation_of_nehek", },
-            Level1DefaultSpells = {"wh_dlc04_skill_all_magic_strigoi_01_spirit_leech", "wh_dlc04_skill_vmp_magic_strigoi_04_gaze_of_nagash", "wh_dlc04_skill_vmp_magic_strigoi_05_raise_dead", },
-            Level3DefaultSpells = {"wh_dlc04_skill_vmp_magic_strigoi_04_soulblight", "wh_dlc04_skill_vmp_magic_strigoi_05_doom_and_darkness", },
+            SignatureSpell = {"wh_main_skill_vmp_magic_vampires_01_invocation_of_nehek", },
+            Level1DefaultSpells = {"wh_main_skill_all_magic_death_01_spirit_leech", "wh_main_skill_vmp_magic_vampires_04_gaze_of_nagash", "wh_dlc04_skill_vmp_magic_strigoi_05_raise_dead", },
+            Level3DefaultSpells = {"wh_main_skill_all_magic_death_04_soulblight", "wh_main_skill_all_magic_death_05_doom_and_darkness", },
         },
         wh2_dlc11_vmp_lore_von_carstein = {
             InnateSkill = {"wh2_dlc11_skill_vmp_bloodline_von_carstein_magic_curse_of_undeath",},
-            SignatureSpell = {"wh2_dlc11_skill_vmp_bloodline_von_carstein_magic_invocation_of_nehek", },
-            Level1DefaultSpells = { "wh2_dlc11_skill_vmp_bloodline_von_carstein_magic_vanhels_danse_macabre", "wh2_dlc11_skill_vmp_bloodline_von_carstein_magic_flock_of_doom", "wh2_dlc11_skill_vmp_bloodline_von_carstein_magic_raise_dead", },
-            Level3DefaultSpells = { "wh2_dlc11_skill_vmp_bloodline_von_carstein_magic_transformation_of_kadon", "wh2_dlc11_skill_vmp_bloodline_von_carstein_magic_wind_of_death", },
+            SignatureSpell = {"wh_main_skill_vmp_magic_vampires_01_invocation_of_nehek", },
+            Level1DefaultSpells = { "wh_main_skill_vmp_magic_vampires_02_vanhels_danse_macabre", "wh_dlc03_skill_magic_beasts_flock_of_doom", "wh_main_skill_vmp_magic_vampires_05_raise_dead", },
+            Level3DefaultSpells = { "wh2_dlc11_skill_vmp_bloodline_von_carstein_magic_transformation_of_kadon", "wh_main_skill_vmp_magic_vampires_10_wind_of_death", },
         },
         wh2_dlc11_vmp_lore_lahmian = {
             InnateSkill = { "wh2_dlc11_skill_vmp_bloodline_lahmian_magic_curse_of_undeath",},
             SignatureSpell = {"wh_main_skill_vmp_magic_vampires_01_invocation_of_nehek", },
-            Level1DefaultSpells = { "wh2_dlc11_skill_vmp_bloodline_lahmian_magic_the_enfeebling_foe", "wh2_dlc11_skill_vmp_bloodline_lahmian_magic_penumbral_pendulum", "wh2_dlc11_skill_vmp_bloodline_lahmian_magic_raise_dead", },
-            Level3DefaultSpells = { "wh2_dlc11_skill_vmp_bloodline_lahmian_magic_okkams_mindrazor", "wh2_dlc11_skill_vmp_bloodline_lahmian_magic_wind_of_death", },
+            Level1DefaultSpells = { "wh_dlc05_skill_magic_shadow_enfeebling_foe", "wh_dlc05_skill_magic_shadow_penumbral_pendulum", "wh_main_skill_vmp_magic_vampires_05_raise_dead", },
+            Level3DefaultSpells = { "wh_dlc05_skill_magic_shadow_okkams_mindrazor", "wh_main_skill_vmp_magic_vampires_10_wind_of_death", },
         },
         wh2_dlc11_vmp_lore_necrarch = {
             InnateSkill = {"wh2_dlc11_skill_vmp_bloodline_necrarch_magic_curse_of_undeath",},
-            SignatureSpell = {"wh2_dlc11_skill_vmp_bloodline_necrarch_magic_invocation_of_nehek", },
-            Level1DefaultSpells = { "wh2_dlc11_skill_vmp_bloodline_necrarch_magic_spirit_leech", "wh2_dlc11_skill_vmp_bloodline_necrarch_magic_panns_pelt", "wh2_dlc11_skill_vmp_bloodline_necrarch_magic_raise_dead", },
-            Level3DefaultSpells = { "wh2_dlc11_skill_vmp_bloodline_necrarch_magic_curse_of_anraheir", "wh2_dlc11_skill_vmp_bloodline_necrarch_magic_purple_sun", },
+            SignatureSpell = {"wh_main_skill_vmp_magic_vampires_01_invocation_of_nehek", },
+            Level1DefaultSpells = { "wh_main_skill_all_magic_death_01_spirit_leech", "wh_dlc03_skill_magic_beasts_panns_impenetrable_pelt", "wh_main_skill_vmp_magic_vampires_05_raise_dead", },
+            Level3DefaultSpells = { "wh_dlc03_skill_magic_beasts_the_curse_of_anraheir", "wh_main_skill_all_magic_death_10_the_purple_sun_of_xereus", },
         },
         wh2_dlc14_lore_stealth = {
             InnateSkill = {"wh2_dlc14_skill_all_magic_stealth_02_toxic_rain_lore_attribute",},
@@ -217,17 +217,17 @@ function GetMagicLorePoolDataResources()
             Level1DefaultSpells = { "mixu_all_lord_spell_lore_of_ice_shield_of_cold", "mixu_all_lord_spell_lore_of_ice_midwinters_kiss", "mixu_all_lord_spell_lore_of_ice_wind_of_ice", },
             Level3DefaultSpells = { "mixu_all_lord_spell_lore_of_ice_shardstorm", "mixu_all_lord_spell_lore_of_ice_invocation_of_the_ice_storm", },
         },
-        wh_main_lore_winter_rage = {
-            InnateSkill = {"skill_all_magic_ice_winter",},
-            SignatureSpell = {"magic_ice_ice_shards", },
-            Level1DefaultSpells = { "magic_ice_storm_strike", "magic_ice_chill_blast", "magic_ice_ice_blizzard", },
-            Level3DefaultSpells = { "magic_ice_tempest", "magic_ice_hailstorm", },
+        deco_lore_of_ice = {
+            InnateSkill = {"skill_all_deco_ice_winter",},
+            SignatureSpell = {"deco_ice_ice_shards", },
+            Level1DefaultSpells = { "deco_ice_storm_strike", "deco_ice_chill_blast", "deco_ice_ice_blizzard", },
+            Level3DefaultSpells = { "deco_ice_tempest", "deco_ice_hailstorm", },
         },
-        wh_main_lore_cold_witchering = {
-            InnateSkill = { "skill_all_magic_ice_cold", },
-            SignatureSpell = {"magic_ice_shield_of_cold", },
-            Level1DefaultSpells = { "magic_ice_frost_blade", "magic_ice_crisping_cold", "magic_ice_shattering_frost", },
-            Level3DefaultSpells = { "magic_ice_chill", "magic_ice_blinding_blizzard", },
+        deco_lore_of_hags = {
+            InnateSkill = { "skill_all_deco_ice_cold", },
+            SignatureSpell = {"deco_ice_shield_of_cold", },
+            Level1DefaultSpells = { "deco_ice_frost_blade", "deco_ice_crisping_cold", "deco_ice_shattering_frost", },
+            Level3DefaultSpells = { "deco_ice_chill", "deco_ice_blinding_blizzard", },
         },
     };
 end

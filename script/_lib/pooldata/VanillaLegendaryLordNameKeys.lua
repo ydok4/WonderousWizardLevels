@@ -66,7 +66,7 @@ function GetVanillaLegendaryLordNameKeys()
                 Surname = "",
                 Subtype = "wh2_main_hef_teclis",
             },
-            -- Alarielle the Radian
+            -- Alarielle the Radiant
             names_name_898828143 = {
                 Surname = "",
                 Subtype = "wh2_dlc10_hef_alarielle",

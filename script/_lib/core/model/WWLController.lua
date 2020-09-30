@@ -177,6 +177,22 @@ function WWLController:GetSpellsForCharacter(character, lore)
     return unlockedSpells;
 end
 
+function WWLController:GetWizardLevel(character)
+    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(character:character_subtype_key(), character:faction():subculture());
+    if defaultWizardData == nil then
+        return nil;
+    end
+    local maxWizardLevel = defaultWizardData.DefaultWizardLevel;
+    for i = maxWizardLevel, 5 do
+        if character:has_skill("wwl_skill_wizard_level_0"..tostring(i)) then
+            maxWizardLevel = i;
+        else
+            break;
+        end
+    end
+    return maxWizardLevel;
+end
+
 function WWLController:SetSpellsForCharacter(character)
     -- We don't regenerate spells more than once per turn
     -- and there is no point to generating spells for loremasters
@@ -211,7 +227,7 @@ function WWLController:SetSpellsForCharacter(character)
             local spellKey = GetAndRemoveRandomObjectFromList(unlockedSpells);
             local effectKey = spellKey.."_disabled";
             self.Logger:Log("Disabling spell: "..spellKey.." with effect: "..effectKey);
-            customEffectBundle:add_effect(effectKey, "character_to_character_own", 2);
+            customEffectBundle:add_effect(effectKey, "character_to_character_own", 1);
         end
         cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
     end
@@ -264,7 +280,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             };
         end
         local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
-        customEffectBundle:set_duration(2);
+        customEffectBundle:set_duration(1);
         local selectedSpells = {};
         -- Grab the innate skill
         --[[local innateSkillLoreData = GetRandomObjectFromList(magicLoresData);
@@ -392,7 +408,7 @@ function WWLController:IsValidCharacterSkillKey(skillKey)
     return false;
 end
 
-function WWLController:GetCharacterWizardDataWithName(nameText, faction, checkForLLNameKeys)
+function WWLController:GetCharacterWizardLevelWithName(nameText, faction, checkForLLNameKeys)
     self.Logger:Log("Checking for existing wizards");
     -- First we check if we can find the character alive in the faction
     local character_list = faction:character_list();
@@ -405,8 +421,8 @@ function WWLController:GetCharacterWizardDataWithName(nameText, faction, checkFo
                 self.Logger:Log("Checking: "..forename.." "..surname);
                 if string.match(nameText, forename.." "..surname) then
                     self.Logger:Log("Found match!");
-                    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(character:character_subtype_key(), character:subculture());
-                    return self:GetSpellsForCharacter(character, defaultWizardData.Lore);
+                    local wizardLevel = self:GetWizardLevel(character);
+                    return wizardLevel;
                 end
             end
         end
@@ -428,6 +444,6 @@ function WWLController:GetCharacterWizardDataWithName(nameText, faction, checkFo
             end
         end
     end
-    -- If we still can't find them, then they aren't supported
+    -- If we still can't find them, then they aren't supported or aren't recruited
     return nil;
 end

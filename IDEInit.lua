@@ -101,7 +101,7 @@ testFaction = {
         return "wh2_main_def_dark_elves";
     end,
     subculture = function()
-        return "wh_main_sc_ksl_kislev";
+        return "wh2_main_sc_hef_high_elves";
     end,
     character_list = function()
         return {
@@ -189,7 +189,7 @@ test_unit = {
 
 effect = {
     get_localised_string = function()
-        return "Murdredesa";
+        return "Archmage";
     end,
 }
 
@@ -417,7 +417,7 @@ end
 cm = get_cm();
 mock_max_unit_ui_component = {
     Id = function() return "wh2_dlc10_hef_inf_shadow_walkers_0_recruitable" end,
-    ChildCount = function() return 1; end,
+    ChildCount = function() return 2; end,
     Find = function() return mock_unit_ui_component; end,
     SetVisible = function() end,
     MoveTo = function() end,
@@ -430,7 +430,7 @@ mock_max_unit_ui_component = {
     Resize = function() return; end,
     SetCanResizeWidth = function() return; end,
     SimulateMouseOn = function() return; end,
-    GetStateText = function() return "/unit/wh_main_vmp_inf_zombie]]"; end,
+    GetStateText = function() return "Archmage"; end,
     --GetStateText = function() return "Unlocks recruitment of:"; end,
     SetCanResizeHeight = function() end;
     SetCanResizeWidth = function() end;
@@ -439,7 +439,7 @@ mock_max_unit_ui_component = {
 mock_unit_ui_component = {
     Id = function() return "wh_main_vmp_inf_zombie_mercenary" end,
     --Id = function() return "building_info_recruitment_effects" end,
-    ChildCount = function() return 1; end,
+    ChildCount = function() return 2; end,
     Find = function() return mock_max_unit_ui_component; end,
     SetVisible = function() end,
     MoveTo = function() end,
@@ -452,14 +452,14 @@ mock_unit_ui_component = {
     Resize = function() return; end,
     SetCanResizeWidth = function() return; end,
     SimulateMouseOn = function() return; end,
-    GetStateText = function() return "/unit/wh_main_vmp_inf_zombie]]"; end,
+    GetStateText = function() return "Archmage"; end,
     SetCanResizeHeight = function() end;
     SetCanResizeWidth = function() end;
 }
 
 mock_unit_ui_list_component = {
     Id = function() return "mock_list" end,
-    ChildCount = function() return 1; end,
+    ChildCount = function() return 2; end,
     Find = function() return mock_unit_ui_component; end,
     SetVisible = function() end,
     MoveTo = function() end,
@@ -472,7 +472,7 @@ mock_unit_ui_list_component = {
     Resize = function() return; end,
     SetCanResizeWidth = function() return; end,
     SimulateMouseOn = function() return; end,
-    GetStateText = function() return "/unit/wh_main_vmp_inf_zombie]]"; end,
+    GetStateText = function() return "Archmage"; end,
     --GetStateText = function() return "Unlocks recruitment of:"; end,
     SetCanResizeHeight = function() end;
     SetCanResizeWidth = function() end;

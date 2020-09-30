@@ -221,9 +221,7 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     local knownAgentSkillNodes = characterSkillNodesTable:GetRowsMatchingColumnValues("character_skill_key", characterSkillKeys, allSkillNodesForCharacter);
     local rowIndents = characterSkillNodesTable:GetUniqueColumnValuesForRows("indent", knownAgentSkillNodes);
     local rowIndent = rowIndents[1];
-    if agentKey == "grn_goblin_great_shaman" then
-        rowIndent = 4;
-    elseif #rowIndents > 1 then
+    if #rowIndents > 1 then
         if rowIndents[1] == '1.0'
         or rowIndents[1] == '0.0' then
             rowIndent = rowIndents[2];

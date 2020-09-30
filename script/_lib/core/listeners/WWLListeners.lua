@@ -346,21 +346,15 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
                 end
                 if WWL_UICache[subtypeComponentText] == nil or WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] == nil then
                     wwl.Logger:Log("Checking for Legendary Lord by name: "..nameText);
-                    local characterWizardData = wwl:GetCharacterWizardDataWithName(nameText, wwl.HumanFaction, true);
+                    local characterWizardLevel = wwl:GetCharacterWizardLevelWithName(nameText, wwl.HumanFaction, true);
                     -- If we can't find a Legendary Character by their name then they aren't a wizard or aren't supported
-                    if characterWizardData == nil then
+                    if characterWizardLevel == nil then
                         wwl.Logger:Log("Could not find supported LL");
                         WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = 0;
                     else
-                        if characterWizardData.NumberOfSpells then
-                            wwl.Logger:Log("LL is active. Using saved values.");
-                            subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardData.NumberOfSpells);
-                            WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardData.NumberOfSpells;
-                        else
-                            wwl.Logger:Log("LL is not active. Using default values.");
-                            subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardData.DefaultWizardLevel);
-                            WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardData.DefaultWizardLevel;
-                        end
+                        wwl.Logger:Log("Found LL...using detected value: "..characterWizardLevel);
+                        subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardLevel);
+                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevel;
                         subtypeComponent:SetVisible(true);
                     end
                 elseif WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] > 0 then
@@ -389,16 +383,16 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
                             };
                             local nameComponent = find_uicomponent(generalPanel, "dy_name");
                             local nameText = nameComponent:GetStateText();
-                            local characterWizardData = wwl:GetCharacterWizardDataWithName(nameText, wwl.HumanFaction, false);
+                            local characterWizardLevel = wwl:GetCharacterWizardLevelWithName(nameText, wwl.HumanFaction, false);
                             -- If we can't find a character with any active data, then we probably haven't recruited them yet
-                            if characterWizardData == nil or characterWizardData.NumberOfSpells == nil then
-                                wwl.Logger:Log("Character is not active. Using default values.");
+                            if characterWizardLevel == nil then
+                                wwl.Logger:Log("Character is not active. Using default values: "..subTypeData.DefaultWizardLevel);
                                 subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..subTypeData.DefaultWizardLevel);
                                 WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = subTypeData.DefaultWizardLevel;
                             else
-                                wwl.Logger:Log("Character is active. Using saved values.");
-                                subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardData.NumberOfSpells);
-                                WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardData.NumberOfSpells;
+                                wwl.Logger:Log("Character is active. Using value: "..characterWizardLevel);
+                                subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardLevel);
+                                WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevel;
                             end
                             subtypeComponent:SetVisible(true);
                             foundWizard = true;
@@ -421,15 +415,15 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
                 local nameText = nameComponent:GetStateText();
                 if WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] == nil then
                     wwl.Logger:Log("Wizard is not cached by name");
-                    local characterWizardData = wwl:GetCharacterWizardDataWithName(nameText, wwl.HumanFaction, false);
+                    local characterWizardLevel = wwl:GetCharacterWizardLevelWithName(nameText, wwl.HumanFaction, false);
                     -- If we can't find a character with any active data, then we probably haven't recruited them yet
-                    if characterWizardData == nil then
+                    if characterWizardLevel == nil then
                         local defaultWizardLevel = WWL_UICache[subtypeComponentText].DefaultWizardLevel;
                         subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..defaultWizardLevel);
                         WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = defaultWizardLevel;
                     else
-                        subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardData.NumberOfSpells);
-                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardData.NumberOfSpells;
+                        subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardLevel);
+                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevel;
                     end
                 else
                     wwl.Logger:Log("Found wizard cache by name");
