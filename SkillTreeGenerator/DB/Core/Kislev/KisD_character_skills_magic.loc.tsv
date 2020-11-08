@@ -1,19 +1,19 @@
 Loc PackedFile	1
 key	text	tooltip
-character_skills_localised_description_magic_ice_blinding_blizzard	Malign spirits dog the foes’ every step, tripping them at important moments, poking their eyes when they need to see, and forcing them to bark obscenities when they try to give orders.	false
-character_skills_localised_description_magic_ice_chill	The Hag speaks with the pitiless chill of the Ancient Widow, demanding her enemies to suffer her wrath.	false
-character_skills_localised_description_magic_ice_chill_blast	With a single breath, the caster blows a freezing gale at anyone in front of him within 48 yards.	false
-character_skills_localised_description_magic_ice_crisping_cold	The Hag summons a myriad of friendly spirits to invigorate her allies.	false
-character_skills_localised_description_magic_ice_frost_blade	The Hag’s eyes turn blue as she enters a trance and commune with the spirits, foretelling those close to her about the ensuing enemy encounter.	false
-character_skills_localised_description_magic_ice_hailstorm	The caster channels Ice Magic upwards, forming large chunks of ice that fall to the ground with horrifying speed.	false
-character_skills_localised_description_magic_ice_ice_blizzard	A swirling flurry of snow and ice rises from the land, freezing and blinding all in its path.	false
-character_skills_localised_description_magic_ice_ice_shards	Sharp icicles spring from the mage's hand in the direction of the target, causing multiple wounds as they pierce and impale their targets.	false
-character_skills_localised_description_magic_ice_shattering_frost	This curse attracts diseased spirits that sicken those too weak to resist them; they soar in a great swarm around the caster's foes, infusing them with all manner of malign illnesses.	false
-character_skills_localised_description_magic_ice_shield_of_cold	The Hag mutters some ancient words and suddenly a spiritual shield materialises and protects the friendly regiments from damage.	false
-character_skills_localised_description_magic_ice_storm_strike	Channels mighty flows of magic into a howling gale of cold. Anyone between the caster and his target is slashed by wind-whipped ice shards.	false
-character_skills_localised_description_magic_ice_tempest	A furious blizzard stirs up around the enemy target, stopping them in their tracks. The troops are temporarily immobilized by the strong winds and biting cold, rendering them unable to move and causing severe damage.	false
-character_skills_localised_description_skill_all_magic_ice_cold	The bond of the Hag Witch with the spirit world is so powerful, that nightmarish visions hinder all enemy movements every time she casts a spell.	false
-character_skills_localised_description_skill_all_magic_ice_winter	When the Ice Witch casts a spell, the forces of winter come to her aid, crippling the enemy's resistance.	false
+character_skills_localised_description_deco_ice_blinding_blizzard	Malign spirits dog the foes’ every step, tripping them at important moments, poking their eyes when they need to see, and forcing them to bark obscenities when they try to give orders.	false
+character_skills_localised_description_deco_ice_chill	The Hag speaks with the pitiless chill of the Ancient Widow, demanding her enemies to suffer her wrath.	false
+character_skills_localised_description_deco_ice_chill_blast	With a single breath, the caster blows a freezing gale at anyone in front of him within 48 yards.	false
+character_skills_localised_description_deco_ice_crisping_cold	The Hag summons a myriad of friendly spirits to invigorate her allies.	false
+character_skills_localised_description_deco_ice_frost_blade	The Hag’s eyes turn blue as she enters a trance and commune with the spirits, foretelling those close to her about the ensuing enemy encounter.	false
+character_skills_localised_description_deco_ice_hailstorm	The caster channels Ice Magic upwards, forming large chunks of ice that fall to the ground with horrifying speed.	false
+character_skills_localised_description_deco_ice_ice_blizzard	A swirling flurry of snow and ice rises from the land, freezing and blinding all in its path.	false
+character_skills_localised_description_deco_ice_ice_shards	Sharp icicles spring from the mage's hand in the direction of the target, causing multiple wounds as they pierce and impale their targets.	false
+character_skills_localised_description_deco_ice_shattering_frost	This curse attracts diseased spirits that sicken those too weak to resist them; they soar in a great swarm around the caster's foes, infusing them with all manner of malign illnesses.	false
+character_skills_localised_description_deco_ice_shield_of_cold	The Hag mutters some ancient words and suddenly a spiritual shield materialises and protects the friendly regiments from damage.	false
+character_skills_localised_description_deco_ice_storm_strike	Channels mighty flows of magic into a howling gale of cold. Anyone between the caster and his target is slashed by wind-whipped ice shards.	false
+character_skills_localised_description_deco_ice_tempest	A furious blizzard stirs up around the enemy target, stopping them in their tracks. The troops are temporarily immobilized by the strong winds and biting cold, rendering them unable to move and causing severe damage.	false
+character_skills_localised_description_skill_all_deco_ice_cold	The bond of the Hag Witch with the spirit world is so powerful, that nightmarish visions hinder all enemy movements every time she casts a spell.	false
+character_skills_localised_description_skill_all_deco_ice_winter	When the Ice Witch casts a spell, the forces of winter come to her aid, crippling the enemy's resistance.	false
 character_skills_localised_description_wh_main_skill_emp_all_unique_ursuns_ward_a	Ursun, also known as the Great Bear, or Father Bear is the God of Bears and Strength and the patron god of Kislev.	false
 character_skills_localised_description_wh_main_skill_mount_ksl_boris_bear	A symbol of Ursun's glory, this powerful beast is always faithful to the Red Tzar.	false
 character_skills_localised_description_wh_main_skill_mount_ksl_ursun_priest_bear	Although a rare sight, a few powerful Priest of Ursun are seen riding wild bears.	false
@@ -25,20 +25,20 @@ character_skills_localised_description_wh_main_skill_mount_ksl_ungol_warhorse	Th
 character_skills_localised_description_wh_main_skill_mount_ksl_icewitch_barded_warhorse_a	Battle Wizards are rarely armoured for it interferes with their casting, yet a steed can and should be barded to add a level of protection.	false
 character_skills_localised_description_wh_main_skill_mount_ksl_icewitch_pegasus_a	The ice pegasi are rare creatures known to live in the cold, distant lands of Kislev. Legends say that only Ice Witches can tame them.	false
 character_skills_localised_description_wh_main_skill_mount_ksl_icewitch_warhorse_a	Should a Battle Wizard need a mount, then his station would ensure he receives a warhorse of good breed.	false
-character_skills_localised_name_magic_ice_blinding_blizzard	Curse of Misfortune	false
-character_skills_localised_name_magic_ice_chill	Cursed Pledge	false
-character_skills_localised_name_magic_ice_chill_blast	Chill Blast	false
-character_skills_localised_name_magic_ice_crisping_cold	Summon Spirits	false
-character_skills_localised_name_magic_ice_frost_blade	Fortune Told	false
-character_skills_localised_name_magic_ice_hailstorm	Hailstorm	false
-character_skills_localised_name_magic_ice_ice_blizzard	Ice Blizzard	false
-character_skills_localised_name_magic_ice_ice_shards	Ice Shards	false
-character_skills_localised_name_magic_ice_shattering_frost	Curse of Sickness	false
-character_skills_localised_name_magic_ice_shield_of_cold	Hag's Blessing	false
-character_skills_localised_name_magic_ice_storm_strike	Storm Strike	false
-character_skills_localised_name_magic_ice_tempest	Biting Wind	false
-character_skills_localised_name_skill_all_magic_ice_cold	Unnatural Presence	false
-character_skills_localised_name_skill_all_magic_ice_winter	Winter Rage	false
+character_skills_localised_name_deco_ice_blinding_blizzard	Curse of Misfortune	false
+character_skills_localised_name_deco_ice_chill	Cursed Pledge	false
+character_skills_localised_name_deco_ice_chill_blast	Chill Blast	false
+character_skills_localised_name_deco_ice_crisping_cold	Summon Spirits	false
+character_skills_localised_name_deco_ice_frost_blade	Fortune Told	false
+character_skills_localised_name_deco_ice_hailstorm	Hailstorm	false
+character_skills_localised_name_deco_ice_ice_blizzard	Ice Blizzard	false
+character_skills_localised_name_deco_ice_ice_shards	Ice Shards	false
+character_skills_localised_name_deco_ice_shattering_frost	Curse of Sickness	false
+character_skills_localised_name_deco_ice_shield_of_cold	Hag's Blessing	false
+character_skills_localised_name_deco_ice_storm_strike	Storm Strike	false
+character_skills_localised_name_deco_ice_tempest	Biting Wind	false
+character_skills_localised_name_skill_all_deco_ice_cold	Unnatural Presence	false
+character_skills_localised_name_skill_all_deco_ice_winter	Winter Rage	false
 character_skills_localised_name_wh_main_skill_emp_all_unique_ursuns_ward_a	Ursun’s Ward	false
 character_skills_localised_name_wh_main_skill_mount_ksl_boris_bear	Urskin	false
 character_skills_localised_name_wh_main_skill_mount_ksl_ursun_priest_bear	War Bear	false

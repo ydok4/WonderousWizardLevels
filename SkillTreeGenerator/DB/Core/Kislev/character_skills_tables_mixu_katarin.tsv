@@ -2,12 +2,12 @@ character_skills_tables	5
 image_path	key	localised_description	localised_name	unlocked_at_rank	is_background_skill	is_female_only_background_skill	is_male_only_background_skill	background_weighting	influence_cost
 campaign_item.png	mixu_emp_all_campaign_scholar			0	false	false	false	0.0	0
 mixu_trait_kislev.png	mixu_innate_ksl_katarin_the_ice_queen			0	true	false	false	100.0	0
-character_magic.png	mixu_ksl_katarin_bokha_unique_loremaster_of_ice_magic			0	false	false	false	0.0	0
+character_magic.png	mixu_ksl_katarin_bokha_unique_loremaster_of_ice_magic			17	false	false	false	0.0	0
 campaign_influence.png	mixu_ksl_katarin_bokha_campaign_the_great_queen			0	false	false	false	0.0	0
 battle_speed.png	mixu_ksl_katarin_bokha_battle_the_strength_of_kislev			0	false	false	false	0.0	0
 campaign_ambush.png	mixu_ksl_katarin_bokha_campaign_saboteur			0	false	false	false	0.0	0
-character_replenishment.png	mixu_ksl_katarin_bokha_generic_salyaks_healing			0	false	false	false	0.0	0
-mixu_character_kin_of_the_bear_god.png	mixu_ksl_katarin_bokha_generic_kin_of_the_bear_god			0	false	false	false	0.0	0
+character_replenishment.png	mixu_ksl_katarin_bokha_generic_salyaks_healing			7	false	false	false	0.0	0
+mixu_character_kin_of_the_bear_god.png	mixu_ksl_katarin_bokha_generic_kin_of_the_bear_god			11	false	false	false	0.0	0
 mixu_ability_beloved_of_kislev.png	mixu_ksl_katarin_bokha_special_beloved_of_kislev			9	false	false	false	0.0	0
 mixu_special_purple_sword.png	mixu_ksl_katarin_bokha_special_royal_guard			0	false	false	false	0.0	0
 mixu_special_empire_hat.png	mixu_ksl_katarin_bokha_special_loyal_followers			0	false	false	false	0.0	0

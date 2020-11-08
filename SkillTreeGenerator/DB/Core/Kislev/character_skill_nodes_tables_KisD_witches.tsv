@@ -1,14 +1,14 @@
 character_skill_nodes_tables	5
 campaign_key	character_skill_key	character_skill_node_set_key	faction_key	indent	key	tier	subculture	points_on_creation	required_num_parents	visible_in_ui
 	wh2_main_skill_all_hero_assist_army_scouting	wh_main_skill_node_set_ksl_icewitch_a		5.0	ksl_icewitch_campaign_01_a	0.0		0	0	true
-	magic_ice_ice_shards	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_01_a	1.0		1	0	true
-	magic_ice_storm_strike	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_02_a	2.0		0	0	true
-	magic_ice_chill_blast	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_03_a	3.0		0	0	true
-	magic_ice_ice_blizzard	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_04_a	4.0		0	0	true
-	skill_all_magic_ice_winter	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_05_a	5.0		0	3	true
-	magic_ice_tempest	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_06_a	6.0		0	0	true
-	magic_ice_hailstorm	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_07_a	7.0		0	0	true
-	magic_ice_ice_shards_dummy	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_dummy_a	0.0		1	0	false
+	deco_ice_ice_shards	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_01_a	1.0		1	0	true
+	deco_ice_storm_strike	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_02_a	2.0		0	0	true
+	deco_ice_chill_blast	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_03_a	3.0		0	0	true
+	deco_ice_ice_blizzard	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_04_a	4.0		0	0	true
+	skill_all_deco_ice_winter	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_05_a	5.0		0	3	true
+	deco_ice_tempest	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_06_a	6.0		0	0	true
+	deco_ice_hailstorm	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_07_a	7.0		0	0	true
+	deco_ice_ice_shards_dummy	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_dummy_a	0.0		1	0	false
 	wh2_main_skill_lzd_disciplines_unfathomable_presence	wh_main_skill_node_set_ksl_icewitch_a		0.0	ksl_icewitch_unique_04_a	3.0		0	0	true
 	wh2_main_skill_hef_teclis_sublime_focus	wh_main_skill_node_set_ksl_icewitch_a		0.0	ksl_icewitch_unique_05_a	4.0		0	0	true
 	wh2_main_skill_lzd_disciplines_soul_of_stone	wh_main_skill_node_set_ksl_icewitch_a		0.0	ksl_icewitch_unique_06_a	5.0		0	0	true
@@ -40,14 +40,14 @@ campaign_key	character_skill_key	character_skill_node_set_key	faction_key	indent
 	wh2_main_skill_innate_all_knowledgeable	wh_main_skill_node_set_ksl_icewitch_a		6.0	ksl_icewitch_innate_14_a	13.0		0	0	false
 	wh2_main_skill_innate_all_intelligent	wh_main_skill_node_set_ksl_icewitch_a		6.0	ksl_icewitch_innate_15_a	14.0		0	0	false
 	wh2_main_skill_all_hero_assist_army_scouting	wh_main_skill_node_set_ksl_hag		5.0	ksl_hag_witch_campaign_01_a	0.0		0	0	true
-	magic_ice_shield_of_cold	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_01_a	1.0		1	0	true
-	magic_ice_frost_blade	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_02_a	2.0		0	0	true
-	magic_ice_crisping_cold	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_03_a	3.0		0	0	true
-	magic_ice_shattering_frost	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_04_a	4.0		0	0	true
-	skill_all_magic_ice_cold	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_05_a	5.0		0	3	true
-	magic_ice_chill	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_06_a	6.0		0	0	true
-	magic_ice_blinding_blizzard	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_07_a	7.0		0	0	true
-	magic_ice_shield_of_cold_dummy	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_dummy_a	0.0		1	0	false
+	deco_ice_shield_of_cold	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_01_a	1.0		1	0	true
+	deco_ice_frost_blade	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_02_a	2.0		0	0	true
+	deco_ice_crisping_cold	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_03_a	3.0		0	0	true
+	deco_ice_shattering_frost	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_04_a	4.0		0	0	true
+	skill_all_deco_ice_cold	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_05_a	5.0		0	3	true
+	deco_ice_chill	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_06_a	6.0		0	0	true
+	deco_ice_blinding_blizzard	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_07_a	7.0		0	0	true
+	deco_ice_shield_of_cold_dummy	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_dummy_a	0.0		1	0	false
 	wh2_main_skill_lzd_disciplines_unfathomable_presence	wh_main_skill_node_set_ksl_hag		0.0	ksl_hag_witch_unique_04_a	3.0		0	0	true
 	wh2_main_skill_hef_teclis_sublime_focus	wh_main_skill_node_set_ksl_hag		0.0	ksl_hag_witch_unique_05_a	4.0		0	0	true
 	wh2_main_skill_lzd_disciplines_soul_of_stone	wh_main_skill_node_set_ksl_hag		0.0	ksl_hag_witch_unique_06_a	5.0		0	0	true
@@ -77,3 +77,5 @@ campaign_key	character_skill_key	character_skill_node_set_key	faction_key	indent
 	wh2_main_skill_innate_all_tough	wh_main_skill_node_set_ksl_hag		6.0	ksl_hag_witch_innate_13_a	12.0		0	0	false
 	wh2_main_skill_innate_all_knowledgeable	wh_main_skill_node_set_ksl_hag		6.0	ksl_hag_witch_innate_14_a	13.0		0	0	false
 	wh2_main_skill_innate_all_intelligent	wh_main_skill_node_set_ksl_hag		6.0	ksl_hag_witch_innate_15_a	14.0		0	0	false
+	wh_main_skill_all_magic_all_11_arcane_conduit	wh_main_skill_node_set_ksl_hag		1.0	ksl_hag_witch_war1_08_a	8.0		0	0	true
+	wh_main_skill_all_magic_all_11_arcane_conduit	wh_main_skill_node_set_ksl_icewitch_a		1.0	ksl_icewitch_war2_08_a	8.0		0	0	true

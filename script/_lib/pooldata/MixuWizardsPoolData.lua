@@ -53,6 +53,7 @@ function GetMixuWizardsPoolData()
                 LoremasterCharacterNodeSkillKey = "wwl_upgraded_wizard_level_mixu_elspeth_von_draken",
                 Lore = "wh_main_lore_death",
             },
+            -- Replaced by Deco's Kislev
             --[[mixu_katarin_the_ice_queen = {
                 DefaultWizardLevel = 4,
                 IsLoremaster = true,
@@ -73,12 +74,12 @@ function GetMixuWizardsPoolData()
             },
         },
         -- High Elves
-        --[[wh2_main_sc_hef_high_elves = {
+        wh2_main_sc_hef_high_elves = {
             hef_belannaer = {
                 DefaultWizardLevel = 4,
-                Lore = "Teclis",
+                Lore = { "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh2_main_lore_high_magic", },
             },
-        },--]]
+        },
         -- Lizardmen
         wh2_main_sc_lzd_lizardmen = {
             -- LL2
@@ -86,10 +87,10 @@ function GetMixuWizardsPoolData()
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_heavens",
             },
-            --[[lzd_lord_huinitenuchli = {
+            lzd_lord_huinitenuchli = {
                 DefaultWizardLevel = 5,
-                Lore = "Slann",
-            },--]]
+                Lore = { "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh2_main_lore_high_magic", },
+            },
         },
         -- Norsca
         wh_main_sc_nor_norsca = {
@@ -123,6 +124,33 @@ function GetMixuWizardsPoolData()
             tmb_liche_high_priest_shadow = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_dlc05_lore_shadows",
+            },
+        },
+        -- Vampire Counts
+        wh_main_sc_vmp_vampire_counts = {
+            vmp_damsel_heavens = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_heavens",
+            },
+            vmp_damsel_beasts = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc03_lore_beasts",
+            },
+            vmp_damsel_life = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc05_lore_life",
+            },
+            vmp_bloodline_dark_prophetess = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_dlc05_lore_shadows",
+            },
+            vmp_nicolete_de_oisement = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_vampires",
+            },
+            vmp_aucassin_de_hane = {
+                DefaultWizardLevel = 2,
+                Lore = "wh_main_lore_vampires",
             },
         },
         -- Wood Elves

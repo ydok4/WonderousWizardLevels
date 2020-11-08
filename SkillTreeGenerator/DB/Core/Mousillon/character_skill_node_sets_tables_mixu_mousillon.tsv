@@ -1,0 +1,16 @@
+character_skill_node_sets_tables	2
+agent_key	campaign_key	faction_key	key	subculture	for_army	for_navy	agent_subtype_key
+champion			wh2_main_skill_node_set_vmp_black_grail_knight		false	false	vmp_bretonnian_wight
+general			mixu_skill_node_set_vmp_bloodline_dark_prophetess		false	false	vmp_bloodline_dark_prophetess
+general			mixu_skill_node_set_vmp_bloodline_fallen_knight		false	false	vmp_bloodline_fallen_knight
+general			mixu_dummy_subtype_skill_node_set		false	false	mixu_dummy_subtype
+general			mixu_skill_node_set_vmp_mallobaude		false	false	vmp_mallobaude
+champion			mixu_skill_node_set_vmp_bougars_the_butcher		false	false	vmp_bougars_the_butcher
+spy			mixu_skill_node_set_vmp_eustache_of_the_rusting_blade		false	false	vmp_eustache_of_the_rusting_blade
+wizard			mixu_skill_node_set_vmp_aucassin_de_hane		false	false	vmp_aucassin_de_hane
+champion			mixu_skill_node_set_vmp_the_old_one		false	false	vmp_the_old_one
+general			mixu_skill_node_set_vmp_nicolete_de_oisement		false	false	vmp_nicolete_de_oisement
+runesmith			mixu_skill_node_set_vmp_damsel_heavens		false	false	vmp_damsel_heavens
+runesmith			mixu_skill_node_set_vmp_damsel_beasts		false	false	vmp_damsel_beasts
+runesmith			mixu_skill_node_set_vmp_damsel_life		false	false	vmp_damsel_life
+general			mixu_skill_node_set_dummy_leviathan		false	false	mixu_dummy_leviathan

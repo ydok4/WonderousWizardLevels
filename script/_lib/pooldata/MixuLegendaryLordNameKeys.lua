@@ -57,5 +57,19 @@ function GetMixuLegendaryLordNameKeys()
                 Subtype = "wef_naieth_the_prophetess",
             },
         },
+
+        -- Vampire Counts
+        wh_main_sc_vmp_vampire_counts = {
+            -- Nicolete de Oisement
+            names_name_768057464 = {
+                Surname = "",
+                Subtype = "vmp_nicolete_de_oisement",
+            },
+            -- Aucassin de Hane
+            names_name_768057463 = {
+                Surname = "",
+                Subtype = "vmp_aucassin_de_hane",
+            },
+        },
     };
 end
