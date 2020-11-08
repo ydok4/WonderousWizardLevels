@@ -414,12 +414,14 @@ function WWLController:GetCharacterWizardLevelWithName(nameText, faction, checkF
     local character_list = faction:character_list();
     for i = 0, character_list:num_items() - 1 do
         local character = character_list:item_at(i);
-        if character:is_null_interface() == false then
+        if character:is_null_interface() == false
+        and not character:character_type("colonel") then
             if character:military_force():is_null_interface() or character:military_force():is_armed_citizenry() == false then
                 local forename = effect.get_localised_string(character:get_forename());
                 local surname = effect.get_localised_string(character:get_surname());
-                self.Logger:Log("Checking: "..forename.." "..surname);
-                if string.match(nameText, forename.." "..surname) then
+                self.Logger:Log("Checking: "..forename.." "..surname.." subtype: "..character:character_subtype_key());
+                if (forename ~= "" or surname ~= "")
+                and string.match(nameText, forename.." "..surname) then
                     self.Logger:Log("Found match!");
                     local wizardLevel = self:GetWizardLevel(character);
                     return wizardLevel;

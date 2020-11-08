@@ -52,7 +52,7 @@ humanFaction = {
         return "wh_main_grn_greenskins";
     end,
     subculture = function()
-        return "wh2_main_sc_hef_high_elves";
+        return "wh_main_sc_vmp_vampire_counts";
     end,
     character_list = function()
         return {
@@ -101,7 +101,7 @@ testFaction = {
         return "wh2_main_def_dark_elves";
     end,
     subculture = function()
-        return "wh2_main_sc_hef_high_elves";
+        return "wh_main_sc_vmp_vampire_counts";
     end,
     character_list = function()
         return {
@@ -189,7 +189,7 @@ test_unit = {
 
 effect = {
     get_localised_string = function()
-        return "Archmage";
+        return "Legendary Lord";
     end,
 }
 
@@ -415,7 +415,7 @@ function get_cm()
 end
 
 cm = get_cm();
-mock_max_unit_ui_component = {
+mock_dy_subtype_ui_component = {
     Id = function() return "wh2_dlc10_hef_inf_shadow_walkers_0_recruitable" end,
     ChildCount = function() return 2; end,
     Find = function() return mock_unit_ui_component; end,
@@ -430,13 +430,13 @@ mock_max_unit_ui_component = {
     Resize = function() return; end,
     SetCanResizeWidth = function() return; end,
     SimulateMouseOn = function() return; end,
-    GetStateText = function() return "Archmage"; end,
+    GetStateText = function() return "Legendary Lord"; end,
     --GetStateText = function() return "Unlocks recruitment of:"; end,
     SetCanResizeHeight = function() end;
     SetCanResizeWidth = function() end;
 }
 
-mock_unit_ui_component = {
+mock_dy_name_ui_component = {
     Id = function() return "wh_main_vmp_inf_zombie_mercenary" end,
     --Id = function() return "building_info_recruitment_effects" end,
     ChildCount = function() return 2; end,
@@ -452,7 +452,7 @@ mock_unit_ui_component = {
     Resize = function() return; end,
     SetCanResizeWidth = function() return; end,
     SimulateMouseOn = function() return; end,
-    GetStateText = function() return "Archmage"; end,
+    GetStateText = function() return "The Red Duke"; end,
     SetCanResizeHeight = function() end;
     SetCanResizeWidth = function() end;
 }
@@ -460,7 +460,14 @@ mock_unit_ui_component = {
 mock_unit_ui_list_component = {
     Id = function() return "mock_list" end,
     ChildCount = function() return 2; end,
-    Find = function() return mock_unit_ui_component; end,
+    Find = function(self, param1, param2)
+        if param2 == "dy_subtype" then
+            return mock_dy_subtype_ui_component;
+        elseif param2 == "dy_name" then
+            return mock_dy_name_ui_component;
+        end
+        return mock_max_unit_ui_component;
+    end,
     SetVisible = function() end,
     MoveTo = function() end,
     SetStateText = function() end,
@@ -472,13 +479,18 @@ mock_unit_ui_list_component = {
     Resize = function() return; end,
     SetCanResizeWidth = function() return; end,
     SimulateMouseOn = function() return; end,
-    GetStateText = function() return "Archmage"; end,
+    GetStateText = function() return "Legendary Lord"; end,
     --GetStateText = function() return "Unlocks recruitment of:"; end,
     SetCanResizeHeight = function() end;
     SetCanResizeWidth = function() end;
 }
 
-find_uicomponent = function()
+find_uicomponent = function(self, param1)
+    if param1 == "dy_subtype" then
+        return mock_dy_subtype_ui_component;
+    elseif param1 == "dy_name" then
+        return mock_dy_name_ui_component;
+    end
     return mock_unit_ui_list_component;
 end
 

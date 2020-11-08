@@ -160,7 +160,7 @@ function GetVanillaLegendaryLordNameKeys()
                 Subtype = "dlc04_vmp_vlad_con_carstein",
             },
             -- The Red Duke
-            names_name_796438121 = {
+            names_name_2147359236 = {
                 Surname = "",
                 Subtype = "wh_dlc05_vmp_red_duke",
             },
