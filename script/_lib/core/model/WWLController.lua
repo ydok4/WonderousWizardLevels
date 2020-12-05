@@ -229,12 +229,16 @@ function WWLController:SetSpellsForCharacter(character)
             self.Logger:Log("Disabling spell: "..spellKey.." with effect: "..effectKey);
             customEffectBundle:add_effect(effectKey, "character_to_character_own", 1);
         end
-        cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
+        if not character:is_null_interface() then
+            cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
+        end
     end
     -- Any applied effect bundles will expire next turn, which is when we need to regenerate
     local lastGeneratedTurn = cm:create_new_custom_effect_bundle("wwl_character_last_generated_turn");
     lastGeneratedTurn:set_duration(1);
-    cm:apply_custom_effect_bundle_to_character(lastGeneratedTurn, character);
+    if not character:is_null_interface() then
+        cm:apply_custom_effect_bundle_to_character(lastGeneratedTurn, character);
+    end
 end
 
 function WWLController:PerformSpecialSpellGeneration(defaultWizardData, character)
@@ -372,6 +376,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             end
         end
         cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
+        self.Logger:Log_Finished();
     end
 end
 

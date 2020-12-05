@@ -674,11 +674,80 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_branchwraith",
             },
-            -- Durthu
+            wh2_dlc16_wef_spellweaver_beasts = {
+                IsLord = true,
+                DefaultWizardLevel = 3,
+                Lore = "wh_dlc03_lore_beasts",
+            },
+            wh2_dlc16_wef_spellweaver_dark = {
+                IsLord = true,
+                DefaultWizardLevel = 3,
+                Lore = "wh2_main_lore_dark_magic",
+            },
+            wh2_dlc16_wef_spellweaver_high = {
+                IsLord = true,
+                DefaultWizardLevel = 3,
+                Lore = "wh2_main_lore_high_magic",
+            },
+            wh2_dlc16_wef_spellweaver_life = {
+                IsLord = true,
+                DefaultWizardLevel = 3,
+                Lore = "wh_dlc05_lore_life",
+            },
+            wh2_dlc16_wef_spellweaver_shadows = {
+                IsLord = true,
+                DefaultWizardLevel = 3,
+                Lore = "wh_dlc05_lore_shadows",
+            },
             dlc05_wef_durthu = {
                 IsLord = true,
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc03_lore_beasts",
+            },
+            wh2_dlc16_wef_ariel = {
+                IsLord = false,
+                DefaultWizardLevel = 4,
+                Lore = { "wh_dlc05_lore_life", "wh2_main_lore_dark_magic", "wh2_main_lore_high_magic", },
+            },
+            wh2_dlc16_wef_drycha = {
+                IsLord = true,
+                DefaultWizardLevel = 2,
+                Lore = "wh_dlc05_lore_shadows",
+            },
+            wh2_dlc16_wef_coeddil = {
+                IsLord = false,
+                DefaultWizardLevel = 3,
+                Lore = { "wh2_main_lore_dark_magic", "wh_dlc03_lore_beasts", },
+            },
+            wh2_dlc16_wef_malicious_ancient_treeman_beasts = {
+                IsLord = true,
+                DefaultWizardLevel = 2,
+                Lore = "wh_dlc03_lore_beasts",
+            },
+            wh2_dlc16_wef_malicious_ancient_treeman_life = {
+                IsLord = true,
+                DefaultWizardLevel = 2,
+                Lore = "wh_dlc05_lore_life",
+            },
+            wh2_dlc16_wef_malicious_ancient_treeman_shadows = {
+                IsLord = true,
+                DefaultWizardLevel = 2,
+                Lore = "wh_dlc05_lore_shadows",
+            },
+            wh2_dlc16_wef_malicious_branchwraith_beasts = {
+                IsLord = false,
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc03_lore_beasts",
+            },
+            wh2_dlc16_wef_malicious_branchwraith_life = {
+                IsLord = false,
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc05_lore_life",
+            },
+            wh2_dlc16_wef_malicious_branchwraith_shadows = {
+                IsLord = false,
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc05_lore_shadows",
             },
         },
     };

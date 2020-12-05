@@ -149,13 +149,13 @@ function GetMixuWizardsPoolData()
                 Lore = "wh_main_lore_vampires",
             },
             vmp_aucassin_de_hane = {
-                DefaultWizardLevel = 2,
+                DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_vampires",
             },
         },
         -- Wood Elves
         wh_dlc05_sc_wef_wood_elves = {
-            wef_darkweaver = {
+            --[[wef_darkweaver = {
                 DefaultWizardLevel = 3,
                 Lore = "wh2_main_lore_dark_magic",
             },
@@ -166,16 +166,16 @@ function GetMixuWizardsPoolData()
             wef_spellweaver = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_dlc03_lore_beasts",
-            },
+            },--]]
             wef_shadowdancer = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_shadows",
             },
             -- LL1
-            wef_drycha = {
+            --[[wef_drycha = {
                 DefaultWizardLevel = 2,
                 Lore = "wh_dlc05_lore_shadows",
-            },
+            },--]]
             -- LL2
             wef_naieth_the_prophetess = {
                 DefaultWizardLevel = 4,

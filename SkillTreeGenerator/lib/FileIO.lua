@@ -56,6 +56,7 @@ function LoadVanillaDBs()
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_node_sets_tables_AK_mages.tsv", "character_skill_node_sets_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_node_sets_tables_ws_.tsv", "character_skill_node_sets_tables");
     LoadFile("SkillTreeGenerator/DB/Core/Mousillon/character_skill_node_sets_tables_mixu_mousillon.tsv", "character_skill_node_sets_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Deco/character_skill_node_sets_tables_data__deco_beastmen_shaman.tsv", "character_skill_node_sets_tables");
 
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_!_ab_mixu_le_override.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_ab_hef_belannaer.tsv", "character_skill_nodes_tables");
@@ -76,6 +77,7 @@ function LoadVanillaDBs()
     LoadFile("SkillTreeGenerator/DB/Core/Mousillon/character_skill_nodes_tables_mixu_mousillon_bloodlines.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/Mousillon/character_skill_nodes_tables_mixu_mousillon_characters.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/Mousillon/character_skill_nodes_tables_mixu_mousillon_knights_of_mallobaude.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Deco/character_skill_nodes_tables_data__deco_beastmen_shaman.tsv", "character_skill_nodes_tables");
     return VanillaDBs;
 end
 

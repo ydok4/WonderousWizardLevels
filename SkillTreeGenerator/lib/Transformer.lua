@@ -764,7 +764,7 @@ function GenerateMultiLoreCharacterSkills(databaseData)
             characterSkillLoc:SetColumnValue(newCharacterSkillsLoc[i * 2], 'text', skillNameText);
             characterSkillLoc:SetColumnValue(newCharacterSkillsLoc[i * 2 - 1], 'text', textForSkill);
         end
-        local characterSkillsAndLinks = GenerateSkillTreeForAgent(databaseData, nil, agentKey, agentData, { "wh_main_skill_all_magic_all_06_evasion", "wh_main_skill_all_magic_all_07_earthing", "wh_main_skill_all_magic_all_11_arcane_conduit", "wh2_main_skill_magic_dark_flock_of_doom_teclis", "wh2_main_skill_all_magic_high_09_arcane_unforging_lord", });
+        local characterSkillsAndLinks = GenerateSkillTreeForAgent(databaseData, nil, agentKey, agentData, { "wh_main_skill_all_magic_all_06_evasion", "wh_main_skill_all_magic_all_07_earthing", "wh_main_skill_all_magic_all_08_power_drain", "wh_main_skill_all_magic_all_11_arcane_conduit", "wh2_main_skill_magic_dark_flock_of_doom_teclis", "wh2_main_skill_all_magic_high_09_arcane_unforging_lord", });
         ConcatTable(characterSkillNodesToExport, characterSkillsAndLinks["character_skill_nodes_tables"]);
         ConcatTable(characterSkillNodeLinksToExport, characterSkillsAndLinks["character_skill_node_links_tables"]);
         ConcatTable(characterSkillsToEffectsToExport, characterSkillsAndLinks["character_skill_level_to_effects_junctions_tables"]);

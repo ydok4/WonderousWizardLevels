@@ -177,6 +177,21 @@ function GetVanillaLegendaryLordNameKeys()
                 Surname = "",
                 Subtype = "dlc05_wef_durthu",
             },
+            -- Ariel
+            names_name_671478894 = {
+                Surname = "",
+                Subtype = "wh2_dlc16_wef_ariel",
+            },
+            -- Drycha
+            names_name_252873721 = {
+                Surname = "",
+                Subtype = "wh2_dlc16_wef_drycha",
+            },
+            -- Coedill
+            names_name_1535812850 = {
+                Surname = "",
+                Subtype = "wh2_dlc16_wef_coeddil",
+            },
         },
     };
 end
