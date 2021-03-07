@@ -221,6 +221,14 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     local knownAgentSkillNodes = characterSkillNodesTable:GetRowsMatchingColumnValues("character_skill_key", characterSkillKeys, allSkillNodesForCharacter);
     local rowIndents = characterSkillNodesTable:GetUniqueColumnValuesForRows("indent", knownAgentSkillNodes);
     local rowIndent = rowIndents[1];
+    if rowIndent == nil then
+        print("Agent: "..agentKey.." Is missing data");
+        return {
+            character_skill_nodes_tables = {},
+            character_skill_node_links_tables = {},
+            character_skill_level_to_effects_junctions_tables = {},
+        };
+    end
     if #rowIndents > 1 then
         if rowIndents[1] == '1.0'
         or rowIndents[1] == '0.0' then

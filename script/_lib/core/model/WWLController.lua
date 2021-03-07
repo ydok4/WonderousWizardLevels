@@ -193,19 +193,45 @@ function WWLController:GetWizardLevel(character)
     return maxWizardLevel;
 end
 
-function WWLController:SetSpellsForCharacter(character)
+function WWLController:SetSpellsForCharacter(character, forceGeneration)
     -- We don't regenerate spells more than once per turn
     -- and there is no point to generating spells for loremasters
     -- since they have them
-    if character:has_effect_bundle("wwl_character_last_generated_turn") then
+    if character:has_effect_bundle("wwl_character_last_generated_turn")
+    and forceGeneration ~= true then
         self.Logger:Log("Character has already generated spells this turn. Not generating spells.");
         return;
+    elseif forceGeneration == true then
+        self.Logger:Log("Forcing generation for character");
     end
+    local characterCqi = character:command_queue_index();
     local characterSubtype = character:character_subtype_key();
+    --self.Logger:Log("Character subtype: ".. characterSubtype.." character cqi: "..characterCqi);
     local characterSubculture = character:faction():subculture();
     local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype, characterSubculture);
     if self:HasSpecialSpellGenerationRules(defaultWizardData) then
-        self:PerformSpecialSpellGeneration(defaultWizardData, character);
+        local specialCallbackTimeout = 0.2;
+        --[[if characterSubtype == "wh2_main_hef_loremaster_of_hoeth" then
+            specialCallbackTimeout = 0.6;
+        end--]]
+        cm:callback(function()
+            local specialCharacter = cm:get_character_by_cqi(characterCqi);
+            --local specialCharacterCqi = character:command_queue_index();
+            --local specialCharacterSubtype = character:character_subtype_key();
+            --self.Logger:Log("Character subtype: ".. specialCharacterSubtype.." character cqi: "..specialCharacterCqi);
+            if specialCharacter
+            and not specialCharacter:is_null_interface()
+            and not specialCharacter:is_wounded() then
+                self:PerformSpecialSpellGeneration(defaultWizardData, specialCharacter);
+                -- Any applied effect bundles will expire next turn, which is when we need to regenerate
+                local lastGeneratedTurn = cm:create_new_custom_effect_bundle("wwl_character_last_generated_turn");
+                lastGeneratedTurn:set_duration(1);
+                if not character:is_null_interface() then
+                    cm:apply_custom_effect_bundle_to_character(lastGeneratedTurn, specialCharacter);
+                end
+            end
+        end,
+        specialCallbackTimeout);
     else
         if defaultWizardData.IsLoremaster == true
         and character:has_skill(defaultWizardData.LoremasterCharacterSkillKey) then
@@ -222,39 +248,51 @@ function WWLController:SetSpellsForCharacter(character)
         -- Then we disable spells required for our wizard level
         -- The remaining spells will equal our wizard level
         local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
-        customEffectBundle:set_duration(2);
+        customEffectBundle:set_duration(1);
         for i = 1, #unlockedSpells - numberOfSpells do
             local spellKey = GetAndRemoveRandomObjectFromList(unlockedSpells);
             local effectKey = spellKey.."_disabled";
             self.Logger:Log("Disabling spell: "..spellKey.." with effect: "..effectKey);
             customEffectBundle:add_effect(effectKey, "character_to_character_own", 1);
         end
-        if not character:is_null_interface() then
-            cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
+        --cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
+        -- Any applied effect bundles will expire next turn, which is when we need to regenerate
+        local lastGeneratedTurn = cm:create_new_custom_effect_bundle("wwl_character_last_generated_turn");
+        lastGeneratedTurn:set_duration(1);
+        local defaultCallbackTime = 0.2;
+        if character:faction():is_human() == true then
+            defaultCallbackTime = 0.3;
         end
-    end
-    -- Any applied effect bundles will expire next turn, which is when we need to regenerate
-    local lastGeneratedTurn = cm:create_new_custom_effect_bundle("wwl_character_last_generated_turn");
-    lastGeneratedTurn:set_duration(1);
-    if not character:is_null_interface() then
-        cm:apply_custom_effect_bundle_to_character(lastGeneratedTurn, character);
+        --cm:apply_custom_effect_bundle_to_character(lastGeneratedTurn, character);
+        if not character:is_null_interface() then
+            cm:callback(function()
+                local grabbedCharacter = cm:get_character_by_cqi(characterCqi);
+                if grabbedCharacter
+                and not grabbedCharacter:is_null_interface()
+                and not grabbedCharacter:is_wounded() then
+                    cm:apply_custom_effect_bundle_to_character(customEffectBundle, grabbedCharacter);
+                    cm:apply_custom_effect_bundle_to_character(lastGeneratedTurn, grabbedCharacter);
+                end
+            end,
+            defaultCallbackTime);
+        end
     end
 end
 
 function WWLController:PerformSpecialSpellGeneration(defaultWizardData, character)
     if defaultWizardData.Lore == "wh2_main_lore_loremaster" then
-        local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
-        customEffectBundle:set_duration(2);
+        local customEffectBundleLoremaster = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
+        customEffectBundleLoremaster:set_duration(1);
         local loremasterLoreData = self:GetMagicLoreData(defaultWizardData.Lore);
         for i = 0, 0 do
             local signatureSpell = GetAndRemoveRandomObjectFromList(loremasterLoreData.SignatureSpell);
             self.Logger:Log("Disabling Loremaster level signature spell: "..signatureSpell);
-            customEffectBundle:add_effect(signatureSpell.."_disabled", "character_to_character_own", 1);
+            customEffectBundleLoremaster:add_effect(signatureSpell.."_disabled", "character_to_character_own", 1);
         end
-        cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
+        cm:apply_custom_effect_bundle_to_character(customEffectBundleLoremaster, character);
     -- Last case is multi lore characters
     else
-        self.Logger:Log("Found multi lore character");
+        self.Logger:Log("Found multi lore character: "..character:character_subtype_key());
         -- Grab the magic lore data for each lore and deep copy them
         local magicLoresData = {};
         for index, loreKey in pairs(defaultWizardData.Lore) do
@@ -295,7 +333,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             for index, innateSkill in pairs(magicLore.InnateSkill) do
                 if innateSkill ~= selectedInnateSkill then
                     self.Logger:Log("Disabling spell: "..innateSkill);
-                    customEffectBundle:add_effect(innateSkill.."_disabled", "character_to_character_own", 1);
+                    customEffectBundle:add_effect(innateSkill.."_disabled", "character_to_character_own_factionwide_unseen", 1);
                 end
             end
         end--]]
@@ -375,25 +413,28 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
                 end
             end
         end
-        cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
-        self.Logger:Log_Finished();
+        if not character:is_null_interface()
+        and not character:is_wounded() then
+            local characterCqi = character:command_queue_index();
+            local characterSubtype = character:character_subtype_key();
+            self.Logger:Log("Character subtype: ".. characterSubtype.." character cqi: "..characterCqi);
+            cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
+        end
     end
+    self.Logger:Log_Finished();
 end
 
 function WWLController:HasSpecialSpellGenerationRules(wizardData)
     if type(wizardData.Lore) == "table" then
         return true;
-    elseif wizardData.Lore == "Slann"
-    or wizardData.Lore == "Teclis"
-    or wizardData.Lore == "Azhag"
-    or wizardData.Lore == "Mannfred"
-    or wizardData.Lore == "LoremasterOfHoeth" then
+    elseif wizardData.Lore == "wh2_main_lore_loremaster" then
         return true;
     end
     return false;
 end
 
 function WWLController:IsValidCharacterSkillKey(skillKey)
+    --self.Logger:Log("Allocated: "..skillKey);
     if
     -- This first case is used for some of the Tomb Kings casters
     (string.match(skillKey,  "_lore_") and not string.match(skillKey, "_loremaster_"))
@@ -406,7 +447,13 @@ function WWLController:IsValidCharacterSkillKey(skillKey)
     -- Third case is the wizard level skills we are listening for
     or string.match(skillKey,  "wwl_skill_wizard_level_0")
     -- Fourth case is the loremaster skills
-    or (skillKey == "" or skillKey == "")
+    or (skillKey == "wwl_skill_mannfred_dual_loremaster"
+    or skillKey == "wh_main_skill_vmp_lord_unique_loremaster_lore_of_vampires"
+    or skillKey == "wh_dlc07_skill_brt_lord_unique_fay_enchantress_loremaster_lore_of_life"
+    or skillKey == "wh2_main_def_morathi_loremaster_lore_of_dark_magic"
+    or skillKey == "wh_main_skill_emp_lord_unique_balthasar_loremaster_lore_of_metal"
+    or skillKey == "wh2_dlc10_hef_alarielle_loremaster_lore_of_light_magic"
+    or skillKey == "AK_hobo_loremaster_lichemaster")
     then
         return true;
     end

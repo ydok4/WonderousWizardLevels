@@ -9,7 +9,7 @@ function LoadVanillaDBs()
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_node_links_tables_data__.tsv", "character_skill_node_links_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_node_sets_tables_data__.tsv", "character_skill_node_sets_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_data__.tsv", "character_skill_nodes_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_ws_sav_orc_great_shaman.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_ws_generic_lords.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skills_tables_data__.tsv", "character_skills_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skills__.loc.tsv", "character_skills_loc");
     LoadFile("SkillTreeGenerator/DB/Core/effects_tables_data__.tsv", "effects_tables");
@@ -57,6 +57,7 @@ function LoadVanillaDBs()
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_node_sets_tables_ws_.tsv", "character_skill_node_sets_tables");
     LoadFile("SkillTreeGenerator/DB/Core/Mousillon/character_skill_node_sets_tables_mixu_mousillon.tsv", "character_skill_node_sets_tables");
     LoadFile("SkillTreeGenerator/DB/Core/Deco/character_skill_node_sets_tables_data__deco_beastmen_shaman.tsv", "character_skill_node_sets_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Lichemaster/character_skill_node_sets_tables_AK_hobo.tsv", "character_skill_node_sets_tables");
 
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_!_ab_mixu_le_override.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_ab_hef_belannaer.tsv", "character_skill_nodes_tables");
@@ -78,6 +79,7 @@ function LoadVanillaDBs()
     LoadFile("SkillTreeGenerator/DB/Core/Mousillon/character_skill_nodes_tables_mixu_mousillon_characters.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/Mousillon/character_skill_nodes_tables_mixu_mousillon_knights_of_mallobaude.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/Deco/character_skill_nodes_tables_data__deco_beastmen_shaman.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/Lichemaster/character_skill_nodes_tables_AAK_hobo_heroes.tsv", "character_skill_nodes_tables");
     return VanillaDBs;
 end
 

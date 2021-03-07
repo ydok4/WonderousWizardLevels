@@ -77,7 +77,7 @@ function GetMixuWizardsPoolData()
         wh2_main_sc_hef_high_elves = {
             hef_belannaer = {
                 DefaultWizardLevel = 4,
-                Lore = { "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh2_main_lore_high_magic", },
+                Lore = { "wh2_dlc15_lore_beasts_eagle", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh2_main_lore_high_magic", },
             },
         },
         -- Lizardmen

@@ -39,11 +39,15 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
             local characters = faction:character_list();
             for i = 0, characters:num_items() - 1 do
                 local character = characters:item_at(i);
-                --wwl.Logger:Log("Checking character type: "..character:character_subtype_key());
-                local isSupportedCharacter = wwl:IsSupportedCharacter(character);
-                if isSupportedCharacter == true then
-                    wwl.Logger:Log("Generating spells for character: "..character:command_queue_index().." subtype: "..character:character_subtype_key());
-                    wwl:SetSpellsForCharacter(character);
+                if character
+                and not character:is_null_interface()
+                and not character:is_wounded() then
+                    --wwl.Logger:Log("Checking character type: "..character:character_subtype_key());
+                    local isSupportedCharacter = wwl:IsSupportedCharacter(character);
+                    if isSupportedCharacter == true then
+                        wwl.Logger:Log("Generating spells for character: "..character:command_queue_index().." subtype: "..character:character_subtype_key());
+                        wwl:SetSpellsForCharacter(character);
+                    end
                 end
             end
             wwl.Logger:Log_Finished();
@@ -62,6 +66,7 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
         end,
         function(context)
             local character = context:character();
+            wwl.Logger:Log("Selected: "..character:character_subtype_key());
             wwl:SetSpellsForCharacter(character);
             wwl.Logger:Log_Finished();
         end,
@@ -73,7 +78,7 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
         "WWL_PendingBattle",
         "PendingBattle",
         function(context)
-            return true;
+            return cm:pending_battle_cache_human_is_involved();
         end,
         function(context)
             local num_defenders = cm:pending_battle_cache_num_defenders();
@@ -141,35 +146,7 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
             local character = context:character();
             local characterSubtype = character:character_subtype_key();
             wwl.Logger:Log("Character subtype: "..characterSubtype.." cqi: "..character:command_queue_index());
-            local characterSubculture = character:faction():subculture();
-            wwl.Logger:Log("Character subculture: "..characterSubculture.." character faction: "..character:faction():name());
-            local defaultWizardData = wwl:GetDefaultWizardDataForCharacterSubtype(characterSubtype, characterSubculture);
-            if type(defaultWizardData.Lore) == "table" then
-                for index, loreKey in pairs(defaultWizardData.Lore) do
-                    wwl.Logger:Log("Getting lore data: "..loreKey);
-                    local unlockedSpells = wwl:GetSpellsForCharacter(character, loreKey);
-                    if defaultWizardData.IsLoremaster == true
-                    and characterSkillKey == defaultWizardData.LoremasterCharacterSkillKey then
-                        wwl.Logger:Log("Loremaster skill unlocked: "..characterSkillKey);
-                        -- Remove all disable spell skills. We don't need these anymore
-                        for index, spellKey in pairs(unlockedSpells) do
-                            --cm:remove_effect_bundle_from_character(spellKey.."_disabled", character);
-                        end
-                    end
-                end
-            else
-                local loreKey = defaultWizardData.Lore;
-                wwl.Logger:Log("Getting lore data: "..loreKey);
-                local unlockedSpells = wwl:GetSpellsForCharacter(character, loreKey);
-                if defaultWizardData.IsLoremaster == true
-                and characterSkillKey == defaultWizardData.LoremasterCharacterSkillKey then
-                    wwl.Logger:Log("Loremaster skill unlocked: "..characterSkillKey);
-                    -- Remove all disable spell skills. We don't need these anymore
-                    for index, spellKey in pairs(#unlockedSpells) do
-                        --cm:remove_effect_bundle_from_character(spellKey.."_disabled", character);
-                    end
-                end
-            end
+            wwl:SetSpellsForCharacter(character, true);
             -- Clear cache for that subtype, this will be refreshed the next time any of the general lists are opened
             local faction = character:faction();
             if WWL_UICache ~= nil and faction:name() == wwl.HumanFaction:name() then

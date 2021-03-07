@@ -3,7 +3,7 @@ testCharacter = {
     cqi = function() return 123 end,
     get_forename = function() return "Direfan"; end,
     get_surname = function() return "Cylostra"; end,
-    character_subtype_key = function() return "wh2_dlc10_hef_alarielle"; end,
+    character_subtype_key = function() return "wh2_main_hef_loremaster_of_hoeth"; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -540,7 +540,9 @@ require 'script/campaign/mod/z_wwl_cataph_resource_loader'
 require 'script/campaign/mod/z_wwl_deco_resource_loader'
 require 'script/campaign/mod/z_wwl_kislev_resource_loader'
 require 'script/campaign/mod/z_wwl_mixu_resource_loader'
+require 'script/campaign/mod/z_wwl_wez_speshul_resource_loader'
 require 'script/campaign/mod/z_wondrous_wizard_levels'
+
 
 math.randomseed(os.time())
 

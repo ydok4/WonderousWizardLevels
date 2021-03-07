@@ -1,4 +1,10 @@
 function GetVanillaWizardsPoolDataResources()
+    -- Used by the skill node generator
+    if _G.IgnoreVanillaWizards == true then
+        return {
+
+        };
+    end
     return {
         wh_dlc03_sc_bst_beastmen = {
             -- Beastmen
@@ -261,7 +267,7 @@ function GetVanillaWizardsPoolDataResources()
             },
             wh2_dlc15_hef_mage_beasts = {
                 DefaultWizardLevel = 1,
-                Lore = "wh_dlc03_lore_beasts",
+                Lore = "wh2_dlc15_lore_beasts_eagle",
             },
             wh2_dlc15_hef_mage_death = {
                 DefaultWizardLevel = 1,
@@ -277,7 +283,7 @@ function GetVanillaWizardsPoolDataResources()
             },
             wh2_main_hef_teclis = {
                 DefaultWizardLevel = 4,
-                Lore = { "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh2_main_lore_high_magic", },
+                Lore = { "wh2_dlc15_lore_beasts_eagle", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh2_main_lore_high_magic", },
             },
             wh2_dlc10_hef_alarielle = {
                 DefaultWizardLevel = 4,
@@ -291,7 +297,7 @@ function GetVanillaWizardsPoolDataResources()
             },
             wh2_dlc15_hef_archmage_beasts = {
                 DefaultWizardLevel = 3,
-                Lore = "wh_dlc03_lore_beasts",
+                Lore = "wh2_dlc15_lore_beasts_eagle",
             },
             wh2_dlc15_hef_archmage_death = {
                   DefaultWizardLevel = 3,
@@ -652,7 +658,7 @@ function GetVanillaWizardsPoolDataResources()
             dlc05_wef_spellsinger_beasts = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
-                Lore = "wh_dlc03_lore_beasts",
+                Lore = "wh2_dlc15_lore_beasts_eagle",
             },
             dlc05_wef_spellsinger_life = {
                 IsLord = false,
@@ -677,7 +683,7 @@ function GetVanillaWizardsPoolDataResources()
             wh2_dlc16_wef_spellweaver_beasts = {
                 IsLord = true,
                 DefaultWizardLevel = 3,
-                Lore = "wh_dlc03_lore_beasts",
+                Lore = "wh2_dlc15_lore_beasts_eagle",
             },
             wh2_dlc16_wef_spellweaver_dark = {
                 IsLord = true,
@@ -702,7 +708,7 @@ function GetVanillaWizardsPoolDataResources()
             dlc05_wef_durthu = {
                 IsLord = true,
                 DefaultWizardLevel = 1,
-                Lore = "wh_dlc03_lore_beasts",
+                Lore = "wh2_dlc15_lore_beasts_eagle",
             },
             wh2_dlc16_wef_ariel = {
                 IsLord = false,

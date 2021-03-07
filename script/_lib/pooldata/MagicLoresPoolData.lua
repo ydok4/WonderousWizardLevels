@@ -7,6 +7,12 @@ function GetMagicLorePoolDataResources()
             Level1DefaultSpells = {"wh_dlc03_skill_magic_beasts_flock_of_doom", "wh_dlc03_skill_magic_beasts_panns_impenetrable_pelt", "wh_dlc03_skill_magic_beasts_the_amber_spear", },
             Level3DefaultSpells = {"wh_dlc03_skill_magic_beasts_the_curse_of_anraheir", "wh_dlc03_skill_magic_beasts_transformation_of_kadon", },    
         },
+        wh2_dlc15_lore_beasts_eagle = {
+            InnateSkill = {"wh_dlc03_skill_magic_beasts_wild_heart",},
+            SignatureSpell = {"wh_dlc03_skill_magic_beasts_wyssans_wildform", },
+            Level1DefaultSpells = {"wh_dlc03_skill_magic_beasts_flock_of_doom", "wh_dlc03_skill_magic_beasts_panns_impenetrable_pelt", "wh_dlc03_skill_magic_beasts_the_amber_spear", },
+            Level3DefaultSpells = {"wh_dlc03_skill_magic_beasts_the_curse_of_anraheir", "wh2_dlc15_skill_magic_beasts_transformation_of_kadon", },    
+        },
         wh_main_lore_death = {
             InnateSkill = {"wh_main_skill_all_magic_death_03_life_leeching",},
             SignatureSpell = {"wh_main_skill_all_magic_death_01_spirit_leech", },
