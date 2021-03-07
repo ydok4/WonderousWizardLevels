@@ -210,7 +210,7 @@ function WWLController:SetSpellsForCharacter(character, forceGeneration)
     local characterSubculture = character:faction():subculture();
     local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype, characterSubculture);
     if self:HasSpecialSpellGenerationRules(defaultWizardData) then
-        local specialCallbackTimeout = 0.2;
+        local specialCallbackTimeout = 0.3;
         --[[if characterSubtype == "wh2_main_hef_loremaster_of_hoeth" then
             specialCallbackTimeout = 0.6;
         end--]]
@@ -284,7 +284,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         local customEffectBundleLoremaster = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
         customEffectBundleLoremaster:set_duration(1);
         local loremasterLoreData = self:GetMagicLoreData(defaultWizardData.Lore);
-        for i = 0, 0 do
+        for i = 0, 1 do
             local signatureSpell = GetAndRemoveRandomObjectFromList(loremasterLoreData.SignatureSpell);
             self.Logger:Log("Disabling Loremaster level signature spell: "..signatureSpell);
             customEffectBundleLoremaster:add_effect(signatureSpell.."_disabled", "character_to_character_own", 1);
@@ -365,8 +365,8 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             numberOfLevel1Spells = 2;
             numberOfLevel3Spells = 1;
         elseif character:character_subtype_key() == "wh2_main_hef_teclis" then
-            numberOfLevel1Spells = 3;
-            numberOfLevel3Spells = 2;
+            numberOfLevel1Spells = 2;
+            numberOfLevel3Spells = 1;
         elseif defaultWizardData.DefaultWizardLevel == 5 then
             numberOfLevel3Spells = numberOfLevel3Spells + 2;
         elseif defaultWizardData.DefaultWizardLevel > 3
