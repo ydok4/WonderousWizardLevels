@@ -284,8 +284,16 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         local customEffectBundleLoremaster = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
         customEffectBundleLoremaster:set_duration(1);
         local loremasterLoreData = self:GetMagicLoreData(defaultWizardData.Lore);
-        for i = 0, 1 do
-            local signatureSpell = GetAndRemoveRandomObjectFromList(loremasterLoreData.SignatureSpell);
+        local numberOfSpellsToDisable = 4;
+        if character:has_skill("wwl_skill_wizard_level_03") then
+            numberOfSpellsToDisable = 1;
+        end
+        local signatureSpells = {};
+        for index, signatureSpellKey in pairs(loremasterLoreData.SignatureSpell) do
+            signatureSpells[#signatureSpells + 1] = signatureSpellKey;
+        end
+        for i = 0, numberOfSpellsToDisable do
+            local signatureSpell = GetAndRemoveRandomObjectFromList(signatureSpells);
             self.Logger:Log("Disabling Loremaster level signature spell: "..signatureSpell);
             customEffectBundleLoremaster:add_effect(signatureSpell.."_disabled", "character_to_character_own", 1);
         end

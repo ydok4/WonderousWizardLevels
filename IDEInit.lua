@@ -384,6 +384,7 @@ function get_cm()
         apply_effect_bundle_to_character = function() end,
         remove_effect_bundle_from_character = function() end,
         remove_effect_bundle_from_characters_force = function() end,
+        pending_battle_cache_human_is_involved = function() return true; end,
         pending_battle_cache_num_defenders = function() return 2; end,
         pending_battle_cache_num_attackers = function() return 2; end,
         pending_battle_cache_get_defender = function(self, index)

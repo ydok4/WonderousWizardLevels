@@ -78,96 +78,101 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
         "WWL_PendingBattle",
         "PendingBattle",
         function(context)
-            return cm:pending_battle_cache_human_is_involved();
+            return true;
         end,
         function(context)
-            local num_defenders = cm:pending_battle_cache_num_defenders();
-            local defenders = {};
-            local maxDefenderLevel = 0;
-            for i = 1, num_defenders do
-                local defender_cqi, defender_force_cqi, defender_faction_name = cm:pending_battle_cache_get_defender(i);
-                wwl.Logger:Log("Defender cqi: "..defender_cqi.." Defender faction name "..defender_faction_name);
-                if defender_faction_name ~= "rebels" then
-                    local militaryForce = cm:model():military_force_for_command_queue_index(tonumber(defender_force_cqi));
-                    if not militaryForce:is_null_interface() then
-                        local charactersInMilitaryForce = militaryForce:character_list();
-                        for i = 0, charactersInMilitaryForce:num_items() - 1 do
-                            local character = charactersInMilitaryForce:item_at(i);
-                            if wwl:IsSupportedCharacter(character) == true then
-                                local characterCqi = character:command_queue_index();
-                                local characterSubtype = character:character_subtype_key();
-                                wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
-                                wwl:SetSpellsForCharacter(character);
-                                local wizardLevel = 1;
-                                if character:has_skill("wwl_skill_wizard_level_02") then
-                                    wizardLevel = 2;
-                                elseif character:has_skill("wwl_skill_wizard_level_03") then
-                                    wizardLevel = 3;
-                                elseif character:has_skill("wwl_skill_wizard_level_04") then
-                                    wizardLevel = 4;
-                                elseif character:has_skill("wwl_skill_wizard_level_05") then
-                                    wizardLevel = 5;
-                                end
-                                if wizardLevel > maxDefenderLevel then
-                                    maxDefenderLevel = wizardLevel;
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-            wwl.Logger:Log_Finished();
-
-            local num_attackers = cm:pending_battle_cache_num_attackers();
-            local attackers = {};
-            local maxAttackerLevel = 0;
-            for i = 1, num_attackers do
-                local attacker_cqi, attacker_force_cqi, attacker_faction_name = cm:pending_battle_cache_get_attacker(i);
-                wwl.Logger:Log("Attacker cqi: "..attacker_cqi.." Attacker faction name "..attacker_faction_name);
-                if attacker_faction_name ~= "rebels" then
-                    local militaryForce = cm:model():military_force_for_command_queue_index(tonumber(attacker_force_cqi));
-                    if not militaryForce:is_null_interface() then
-                        local charactersInMilitaryForce = militaryForce:character_list();
-                        for i = 0, charactersInMilitaryForce:num_items() - 1 do
-                            local character = charactersInMilitaryForce:item_at(i);
-                            if wwl:IsSupportedCharacter(character) == true then
-                                local characterCqi = character:command_queue_index();
-                                local characterSubtype = character:character_subtype_key();
-                                wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
-                                wwl:SetSpellsForCharacter(character);
-                                local wizardLevel = 1;
-                                if character:has_skill("wwl_skill_wizard_level_02") then
-                                    wizardLevel = 2;
-                                elseif character:has_skill("wwl_skill_wizard_level_03") then
-                                    wizardLevel = 3;
-                                elseif character:has_skill("wwl_skill_wizard_level_04") then
-                                    wizardLevel = 4;
-                                elseif character:has_skill("wwl_skill_wizard_level_05") then
-                                    wizardLevel = 5;
-                                end
-                                if wizardLevel > maxDefenderLevel then
-                                    maxAttackerLevel = wizardLevel;
+            -- When used on the trigger for this event, this does not fire correctly
+            local ishumanInvolved = cm:pending_battle_cache_human_is_involved();
+            if ishumanInvolved == true then
+                wwl.Logger:Log("In pending battle cache");
+                local num_defenders = cm:pending_battle_cache_num_defenders();
+                local defenders = {};
+                local maxDefenderLevel = 0;
+                for i = 1, num_defenders do
+                    local defender_cqi, defender_force_cqi, defender_faction_name = cm:pending_battle_cache_get_defender(i);
+                    wwl.Logger:Log("Defender cqi: "..defender_cqi.." Defender faction name "..defender_faction_name);
+                    if defender_faction_name ~= "rebels" then
+                        local militaryForce = cm:model():military_force_for_command_queue_index(tonumber(defender_force_cqi));
+                        if not militaryForce:is_null_interface() then
+                            local charactersInMilitaryForce = militaryForce:character_list();
+                            for i = 0, charactersInMilitaryForce:num_items() - 1 do
+                                local character = charactersInMilitaryForce:item_at(i);
+                                if wwl:IsSupportedCharacter(character) == true then
+                                    local characterCqi = character:command_queue_index();
+                                    local characterSubtype = character:character_subtype_key();
+                                    wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
+                                    wwl:SetSpellsForCharacter(character);
+                                    local wizardLevel = 1;
+                                    if character:has_skill("wwl_skill_wizard_level_02") then
+                                        wizardLevel = 2;
+                                    elseif character:has_skill("wwl_skill_wizard_level_03") then
+                                        wizardLevel = 3;
+                                    elseif character:has_skill("wwl_skill_wizard_level_04") then
+                                        wizardLevel = 4;
+                                    elseif character:has_skill("wwl_skill_wizard_level_05") then
+                                        wizardLevel = 5;
+                                    end
+                                    if wizardLevel > maxDefenderLevel then
+                                        maxDefenderLevel = wizardLevel;
+                                    end
                                 end
                             end
                         end
                     end
                 end
+                wwl.Logger:Log_Finished();
+
+                local num_attackers = cm:pending_battle_cache_num_attackers();
+                local attackers = {};
+                local maxAttackerLevel = 0;
+                for i = 1, num_attackers do
+                    local attacker_cqi, attacker_force_cqi, attacker_faction_name = cm:pending_battle_cache_get_attacker(i);
+                    wwl.Logger:Log("Attacker cqi: "..attacker_cqi.." Attacker faction name "..attacker_faction_name);
+                    if attacker_faction_name ~= "rebels" then
+                        local militaryForce = cm:model():military_force_for_command_queue_index(tonumber(attacker_force_cqi));
+                        if not militaryForce:is_null_interface() then
+                            local charactersInMilitaryForce = militaryForce:character_list();
+                            for i = 0, charactersInMilitaryForce:num_items() - 1 do
+                                local character = charactersInMilitaryForce:item_at(i);
+                                if wwl:IsSupportedCharacter(character) == true then
+                                    local characterCqi = character:command_queue_index();
+                                    local characterSubtype = character:character_subtype_key();
+                                    wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
+                                    wwl:SetSpellsForCharacter(character);
+                                    local wizardLevel = 1;
+                                    if character:has_skill("wwl_skill_wizard_level_02") then
+                                        wizardLevel = 2;
+                                    elseif character:has_skill("wwl_skill_wizard_level_03") then
+                                        wizardLevel = 3;
+                                    elseif character:has_skill("wwl_skill_wizard_level_04") then
+                                        wizardLevel = 4;
+                                    elseif character:has_skill("wwl_skill_wizard_level_05") then
+                                        wizardLevel = 5;
+                                    end
+                                    if wizardLevel > maxDefenderLevel then
+                                        maxAttackerLevel = wizardLevel;
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+                local defenderDifference = maxDefenderLevel - maxAttackerLevel;
+                -- Defender battle effects
+    
+    
+                local attackerDifference = maxAttackerLevel - maxDefenderLevel;
+                -- Attacker battle effects
+                --[[local battle_effects = cm:create_new_custom_effect_bundle("wwl_battle_effects");
+                battle_effects:set_duration(1);
+                battle_effects:add_effect("wh_main_effect_military_force_winds_of_magic_depletion_mod_character", "character_to_force_own_unseen", 2 * attackerDifference);
+                battle_effects:add_effect("wh_main_effect_character_stat_mod_miscast_chance", "character_to_character_own", -2 * wizardLevel);--]]
+    
+    
+                -- wh_main_effect_military_force_winds_of_magic_depletion_mod_character_enemy
+                -- wh_main_effect_military_force_winds_of_magic_depletion_mod_character_enemy
+                wwl.Logger:Log_Finished();
             end
-            local defenderDifference = maxDefenderLevel - maxAttackerLevel;
-            -- Defender battle effects
-
-
-            local attackerDifference = maxAttackerLevel - maxDefenderLevel;
-            -- Attacker battle effects
-            --[[local battle_effects = cm:create_new_custom_effect_bundle("wwl_battle_effects");
-            battle_effects:set_duration(1);
-            battle_effects:add_effect("wh_main_effect_military_force_winds_of_magic_depletion_mod_character", "character_to_force_own_unseen", 2 * attackerDifference);
-            battle_effects:add_effect("wh_main_effect_character_stat_mod_miscast_chance", "character_to_character_own", -2 * wizardLevel);--]]
-
-
-            -- wh_main_effect_military_force_winds_of_magic_depletion_mod_character_enemy
-            -- wh_main_effect_military_force_winds_of_magic_depletion_mod_character_enemy
-            wwl.Logger:Log_Finished();
         end,
         true
     );
