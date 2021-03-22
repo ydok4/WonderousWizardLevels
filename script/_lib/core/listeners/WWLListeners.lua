@@ -376,9 +376,9 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
                         wwl.Logger:Log("Could not find supported LL");
                         WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = 0;
                     else
-                        wwl.Logger:Log("Found LL...using detected value: "..characterWizardLevel.DefaultWizardLevel);
-                        subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardLevel.DefaultWizardLevel);
-                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevel.DefaultWizardLevel;
+                        wwl.Logger:Log("Found LL...using detected value: "..characterWizardLevel);
+                        subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardLevel);
+                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevel;
                         subtypeComponent:SetVisible(true);
                     end
                 elseif WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] > 0 then

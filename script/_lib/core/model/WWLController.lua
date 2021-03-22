@@ -182,15 +182,20 @@ function WWLController:GetWizardLevel(character)
     if defaultWizardData == nil then
         return nil;
     end
-    local maxWizardLevel = defaultWizardData.DefaultWizardLevel;
-    for i = maxWizardLevel, 5 do
+    local defaultWizardLevelToCheck = defaultWizardData.DefaultWizardLevel + 1;
+    local maxLevelToCheck = defaultWizardData.DefaultWizardLevel + 1;
+    if character:character_subtype_key() == "vmp_lord" then
+            maxLevelToCheck = 4;
+    end
+    local characterWizardLevel = defaultWizardData.DefaultWizardLevel;
+    for i = defaultWizardLevelToCheck, maxLevelToCheck do
         if character:has_skill("wwl_skill_wizard_level_0"..tostring(i)) then
-            maxWizardLevel = i;
+            characterWizardLevel = i;
         else
             break;
         end
     end
-    return maxWizardLevel;
+    return characterWizardLevel;
 end
 
 function WWLController:SetSpellsForCharacter(character, forceGeneration)
@@ -240,11 +245,8 @@ function WWLController:SetSpellsForCharacter(character, forceGeneration)
         end
         -- Remove all disable spell skills
         local unlockedSpells = self:GetSpellsForCharacter(character, defaultWizardData.Lore);
-        self.Logger:Log("#unlockedSpells: "..#unlockedSpells);
-        local numberOfSpells = defaultWizardData.DefaultWizardLevel;
-        if character:has_skill("wwl_skill_wizard_level_0"..tostring(defaultWizardData.DefaultWizardLevel + 1)) then
-            numberOfSpells = defaultWizardData.DefaultWizardLevel + 1;
-        end
+        local wizardLevel = self:GetWizardLevel(character);
+        local numberOfSpells = wizardLevel;
         -- Then we disable spells required for our wizard level
         -- The remaining spells will equal our wizard level
         local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
@@ -501,7 +503,7 @@ function WWLController:GetCharacterWizardLevelWithName(nameText, faction, checkF
                 if llNameKeyData.Surname == "" or string.match(nameText, surname) then
                     self.Logger:Log("Found matching LL by name key(s)! Subtype is: "..llNameKeyData.Subtype);
                     local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(llNameKeyData.Subtype, subcultureKey);
-                    return defaultWizardData;
+                    return defaultWizardData.DefaultWizardLevel;
                 end
             end
         end

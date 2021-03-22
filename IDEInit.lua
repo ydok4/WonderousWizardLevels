@@ -3,7 +3,7 @@ testCharacter = {
     cqi = function() return 123 end,
     get_forename = function() return "Direfan"; end,
     get_surname = function() return "Cylostra"; end,
-    character_subtype_key = function() return "wh2_main_hef_loremaster_of_hoeth"; end,
+    character_subtype_key = function() return "vmp_lord"; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -101,7 +101,7 @@ testFaction = {
         return "wh2_main_def_dark_elves";
     end,
     subculture = function()
-        return "wh2_main_sc_hef_high_elves";
+        return "wh_main_sc_vmp_vampire_counts";
     end,
     character_list = function()
         return {
@@ -453,7 +453,7 @@ mock_dy_name_ui_component = {
     Resize = function() return; end,
     SetCanResizeWidth = function() return; end,
     SimulateMouseOn = function() return; end,
-    GetStateText = function() return "The Red Duke"; end,
+    GetStateText = function() return "Legendary Lord Legendary Lord"; end,
     SetCanResizeHeight = function() end;
     SetCanResizeWidth = function() end;
 }
