@@ -2,11 +2,19 @@
 -- map them back to their subtype
 function GetMixuLegendaryLordNameKeys()
     return {
+        -- Beastmen
+        wh_dlc03_sc_bst_beastmen = {
+            -- Slugtongue
+            names_name_6450684057 = {
+                Surname = "",
+                Subtype = "bst_slugtongue",
+            },
+        },
         -- Chaos
         wh_main_sc_chs_chaos = {
             -- Egrimm van Horstmann
             names_name_6450684033 = {
-                Surname = "names_name_6450684034n",
+                Surname = "names_name_6450684034",
                 Subtype = "chs_egrimm_van_horstmann",
             },
         },

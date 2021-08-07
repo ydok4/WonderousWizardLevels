@@ -4,7 +4,8 @@ function GetCataphWizardsPoolData()
         wh2_main_sc_hef_high_elves = {
             AK_hef_dragonmage = {
                 DefaultWizardLevel = 1,
-                Lore = "wh_main_lore_fire",
+                --Lore = "wh_main_lore_fire",
+                Lore = "lore_fire_dragon_mage",
             },
         },
         -- TEB

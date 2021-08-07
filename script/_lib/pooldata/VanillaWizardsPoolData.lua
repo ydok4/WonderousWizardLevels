@@ -6,8 +6,8 @@ function GetVanillaWizardsPoolDataResources()
         };
     end
     return {
+        -- Beastmen
         wh_dlc03_sc_bst_beastmen = {
-            -- Beastmen
             dlc03_bst_bray_shaman_beasts = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc03_lore_beasts",
@@ -22,6 +22,22 @@ function GetVanillaWizardsPoolDataResources()
             },
             dlc03_bst_bray_shaman_wild = {
                 DefaultWizardLevel = 1,
+                Lore = "wh_dlc03_lore_wild",
+            },
+            wh2_twa04_bst_great_bray_shaman_beasts = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_dlc03_lore_beasts",
+            },
+            wh2_twa04_bst_great_bray_shaman_death = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_death",
+            },
+            wh2_twa04_bst_great_bray_shaman_shadows = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_dlc05_lore_shadows",
+            },
+            wh2_twa04_bst_great_bray_shaman_wild = {
+                DefaultWizardLevel = 3,
                 Lore = "wh_dlc03_lore_wild",
             },
             dlc03_bst_malagor = {
@@ -161,7 +177,18 @@ function GetVanillaWizardsPoolDataResources()
         },
         -- Dwarfs
         wh_main_sc_dwf_dwarfs = {
-
+            wh2_dlc17_dwf_thorek = {
+                DefaultWizardLevel = 4,
+                Lore = "wh2_dlc17_lore_rune",
+            },
+            dlc06_dwf_runelord = {
+                DefaultWizardLevel = 3,
+                Lore = "wh2_dlc17_lore_rune",
+            },
+            dwf_runesmith = {
+                DefaultWizardLevel = 1,
+                Lore = "wh2_dlc17_lore_rune",
+            },
         },
         -- Empire
         wh_main_sc_emp_empire = {
@@ -349,6 +376,10 @@ function GetVanillaWizardsPoolDataResources()
             wh2_main_lzd_skink_priest_heavens = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_heavens",
+            },
+            wh2_dlc17_lzd_skink_oracle_troglodon = {
+                DefaultWizardLevel = 1,
+                Lore = { "wh2_dlc17_lore_oracle_beasts", "wh2_dlc17_lore_oracle_fire", "wh2_dlc17_lore_oracle_heavens", "wh2_dlc17_lore_oracle_life", },
             },
             wh2_dlc12_lzd_tehenhauin = {
                 DefaultWizardLevel = 3,

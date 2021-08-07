@@ -1,5 +1,13 @@
 function GetMixuWizardsPoolData()
     return {
+        -- Beastmen
+        wh_dlc03_sc_bst_beastmen = {
+            bst_slugtongue = {
+                DefaultWizardLevel = 2,
+                Lore = { "wh_dlc03_lore_wild", "wh_dlc05_lore_shadows", },
+            },
+        },
+
         -- Chaos
         wh_main_sc_chs_chaos = {
             chs_egrimm_van_horstmann = {
@@ -105,6 +113,13 @@ function GetMixuWizardsPoolData()
             nor_shaman_sorcerer_lord_metal = {
                    DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_metal",
+            },
+        },
+        -- Skaven
+        wh2_main_sc_skv_skaven = {
+            skv_grey_seer_death = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_death",
             },
         },
         -- Tomb Kings

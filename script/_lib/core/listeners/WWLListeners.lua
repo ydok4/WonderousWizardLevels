@@ -102,14 +102,19 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
                                     local characterSubtype = character:character_subtype_key();
                                     wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
                                     wwl:SetSpellsForCharacter(character);
+                                    local characterSubculture = character:faction():subculture();
+                                    local wizardLevelPrefix = "wwl_skill_wizard_level_0";
+                                    if characterSubculture == "wh_main_sc_dwf_dwarfs" then
+                                        wizardLevelPrefix = "wwl_skill_rune_level_0";
+                                    end
                                     local wizardLevel = 1;
-                                    if character:has_skill("wwl_skill_wizard_level_02") then
+                                    if character:has_skill(wizardLevelPrefix.."2") then
                                         wizardLevel = 2;
-                                    elseif character:has_skill("wwl_skill_wizard_level_03") then
+                                    elseif character:has_skill(wizardLevelPrefix.."3") then
                                         wizardLevel = 3;
-                                    elseif character:has_skill("wwl_skill_wizard_level_04") then
+                                    elseif character:has_skill(wizardLevelPrefix.."4") then
                                         wizardLevel = 4;
-                                    elseif character:has_skill("wwl_skill_wizard_level_05") then
+                                    elseif character:has_skill(wizardLevelPrefix.."5") then
                                         wizardLevel = 5;
                                     end
                                     if wizardLevel > maxDefenderLevel then
@@ -139,14 +144,19 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
                                     local characterSubtype = character:character_subtype_key();
                                     wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
                                     wwl:SetSpellsForCharacter(character);
+                                    local characterSubculture = character:faction():subculture();
+                                    local wizardLevelPrefix = "wwl_skill_wizard_level_0";
+                                    if characterSubculture == "wh_main_sc_dwf_dwarfs" then
+                                        wizardLevelPrefix = "wwl_skill_rune_level_0";
+                                    end
                                     local wizardLevel = 1;
-                                    if character:has_skill("wwl_skill_wizard_level_02") then
+                                    if character:has_skill(wizardLevelPrefix.."2") then
                                         wizardLevel = 2;
-                                    elseif character:has_skill("wwl_skill_wizard_level_03") then
+                                    elseif character:has_skill(wizardLevelPrefix.."3") then
                                         wizardLevel = 3;
-                                    elseif character:has_skill("wwl_skill_wizard_level_04") then
+                                    elseif character:has_skill(wizardLevelPrefix.."4") then
                                         wizardLevel = 4;
-                                    elseif character:has_skill("wwl_skill_wizard_level_05") then
+                                    elseif character:has_skill(wizardLevelPrefix.."5") then
                                         wizardLevel = 5;
                                     end
                                     if wizardLevel > maxDefenderLevel then
@@ -159,16 +169,12 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
                 end
                 local defenderDifference = maxDefenderLevel - maxAttackerLevel;
                 -- Defender battle effects
-    
-    
                 local attackerDifference = maxAttackerLevel - maxDefenderLevel;
                 -- Attacker battle effects
                 --[[local battle_effects = cm:create_new_custom_effect_bundle("wwl_battle_effects");
                 battle_effects:set_duration(1);
                 battle_effects:add_effect("wh_main_effect_military_force_winds_of_magic_depletion_mod_character", "character_to_force_own_unseen", 2 * attackerDifference);
                 battle_effects:add_effect("wh_main_effect_character_stat_mod_miscast_chance", "character_to_character_own", -2 * wizardLevel);--]]
-    
-    
                 -- wh_main_effect_military_force_winds_of_magic_depletion_mod_character_enemy
                 -- wh_main_effect_military_force_winds_of_magic_depletion_mod_character_enemy
                 wwl.Logger:Log_Finished();
@@ -352,6 +358,10 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
     local numGenerals = pathToGenerals:ChildCount() - 1;
     if numGenerals >= 0 then
         local playerSubculture = wwl.HumanFaction:subculture();
+        local wizardLevelUIText = " - Wizard level ";
+        if playerSubculture == "wh_main_sc_dwf_dwarfs" then
+            wizardLevelUIText = " - Rune level ";
+        end
         for i = 0, numGenerals do
             wwl.Logger:Log("Checking general: "..i);
             local generalPanel = UIComponent(pathToGenerals:Find(i));
@@ -377,12 +387,12 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
                         WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = 0;
                     else
                         wwl.Logger:Log("Found LL...using detected value: "..characterWizardLevel);
-                        subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardLevel);
+                        subtypeComponent:SetStateText(subtypeComponentText..wizardLevelUIText..characterWizardLevel);
                         WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevel;
                         subtypeComponent:SetVisible(true);
                     end
                 elseif WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] > 0 then
-                    subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText]);
+                    subtypeComponent:SetStateText(subtypeComponentText..wizardLevelUIText..WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText]);
                 end
             elseif WWL_UICache[subtypeComponentText] == nil then
                 if subtypeComponentText == "dy_subtype" and buttonContext ~= nil then
@@ -411,11 +421,11 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
                             -- If we can't find a character with any active data, then we probably haven't recruited them yet
                             if characterWizardLevel == nil then
                                 wwl.Logger:Log("Character is not active. Using default values: "..subTypeData.DefaultWizardLevel);
-                                subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..subTypeData.DefaultWizardLevel);
+                                subtypeComponent:SetStateText(subtypeComponentText..wizardLevelUIText..subTypeData.DefaultWizardLevel);
                                 WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = subTypeData.DefaultWizardLevel;
                             else
                                 wwl.Logger:Log("Character is active. Using value: "..characterWizardLevel);
-                                subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardLevel);
+                                subtypeComponent:SetStateText(subtypeComponentText..wizardLevelUIText..characterWizardLevel);
                                 WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevel;
                             end
                             subtypeComponent:SetVisible(true);
@@ -443,15 +453,15 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
                     -- If we can't find a character with any active data, then we probably haven't recruited them yet
                     if characterWizardLevel == nil then
                         local defaultWizardLevel = WWL_UICache[subtypeComponentText].DefaultWizardLevel;
-                        subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..defaultWizardLevel);
+                        subtypeComponent:SetStateText(subtypeComponentText..wizardLevelUIText..defaultWizardLevel);
                         WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = defaultWizardLevel;
                     else
-                        subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..characterWizardLevel);
+                        subtypeComponent:SetStateText(subtypeComponentText..wizardLevelUIText..characterWizardLevel);
                         WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevel;
                     end
                 else
                     wwl.Logger:Log("Found wizard cache by name");
-                    subtypeComponent:SetStateText(subtypeComponentText.." - Wizard level "..WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText]);
+                    subtypeComponent:SetStateText(subtypeComponentText..wizardLevelUIText..WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText]);
                 end
                 subtypeComponent:SetVisible(true);
             else

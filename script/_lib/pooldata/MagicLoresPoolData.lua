@@ -184,6 +184,44 @@ function GetMagicLorePoolDataResources()
             Level1DefaultSpells = {"wh2_dlc14_skill_all_magic_stealth_03_skitterleap", "wh2_dlc14_skill_all_magic_stealth_04_armour_of_darkness", "wh2_dlc14_skill_all_magic_stealth_05_veil_of_shadows", },
             Level3DefaultSpells = {"wh2_dlc14_skill_all_magic_stealth_06_brittle_bone", "wh2_dlc14_skill_all_magic_stealth_07_black_whirlwind", },
         },
+        -- Dwarf rune 'magic'
+        wh2_dlc17_lore_rune = {
+            InnateSkill = {"wh_main_skill_dwf_runesmith_self_damping",},
+            SignatureSpell = {"wh2_dlc17_skill_dwf_runesmith_self_rune_of_speed", },
+            Level1DefaultSpells = {"wh_main_skill_dwf_runesmith_self_rune_of_wrath_&_ruin", "wh_main_skill_dwf_runesmith_self_rune_of_oath_&_steel", "wh2_dlc17_skill_dwf_runesmith_self_rune_of_slowness", },
+            Level3DefaultSpells = {"wh2_dlc17_skill_dwf_runesmith_self_rune_of_breaking", "wh_main_skill_dwf_runesmith_self_rune_of_negation", },
+        },
+        -- Skink Oracle unique lore
+        wh2_dlc17_lore_oracle_beasts = {
+            InnateSkill = {"wh_dlc03_skill_magic_beasts_wild_heart",},
+            SignatureSpell = {"wh_dlc03_skill_magic_beasts_wyssans_wildform", },
+            Level1DefaultSpells = {"wh_dlc03_skill_magic_beasts_flock_of_doom", },
+            Level3DefaultSpells = {},
+        },
+        wh2_dlc17_lore_oracle_fire = {
+            InnateSkill = {"wh_main_skill_all_magic_fire_04_kindleflame",},
+            SignatureSpell = {"wh_main_skill_all_magic_fire_01_fireball",},
+            Level1DefaultSpells = {"wh_main_skill_all_magic_fire_02_cascading_fire-cloak", },
+            Level3DefaultSpells = {},
+        },
+        wh2_dlc17_lore_oracle_heavens = {
+            InnateSkill = {"wh_main_skill_all_magic_heavens_03_rolling_skies",},
+            SignatureSpell = {"wh_main_skill_all_magic_heavens_01_harmonic_convergence",},
+            Level1DefaultSpells = {"wh_main_skill_all_magic_heavens_02_wind_blast", },
+            Level3DefaultSpells = {},
+        },
+        wh2_dlc17_lore_oracle_life = {
+            InnateSkill = {"wh_dlc05_skill_magic_life_life_bloom",},
+            SignatureSpell = {"wh_dlc05_skill_magic_life_wizard_awakening_of_the_wood", },
+            Level1DefaultSpells = {"wh_dlc05_skill_magic_life_wizard_earth_blood", },
+            Level3DefaultSpells = {},
+        },
+        --[[wh2_dlc17_lore_oracle = {
+            InnateSkill = {"wh_dlc05_skill_magic_life_life_bloom", "wh_dlc03_skill_magic_beasts_wild_heart", "wh_main_skill_all_magic_heavens_03_rolling_skies", },
+            SignatureSpell = {"wh_main_skill_all_magic_fire_01_fireball", },
+            Level1DefaultSpells = {"wh_dlc03_skill_magic_beasts_wyssans_wildform", "wh_dlc05_skill_magic_life_wizard_earth_blood", "wh_main_skill_all_magic_heavens_01_harmonic_convergence", },
+            Level3DefaultSpells = {"wh_dlc03_skill_magic_beasts_flock_of_doom", "wh_main_skill_all_magic_heavens_02_wind_blast", },
+        },--]]
         --[[wh_pro03_lore_kemmler = {
 
         },--]]
@@ -218,6 +256,12 @@ function GetMagicLorePoolDataResources()
             SignatureSpell = {"deco_ice_shield_of_cold", },
             Level1DefaultSpells = { "deco_ice_frost_blade", "deco_ice_crisping_cold", "deco_ice_shattering_frost", },
             Level3DefaultSpells = { "deco_ice_chill", "deco_ice_blinding_blizzard", },
+        },
+        lore_fire_dragon_mage = {
+            InnateSkill = {"wh_main_skill_all_magic_fire_04_kindleflame",},
+            SignatureSpell = {"wh_main_skill_all_magic_fire_03_flaming_sword_of_rhuin",},
+            Level1DefaultSpells = {"wh_main_skill_all_magic_fire_01_fireball", "wh_main_skill_all_magic_fire_02_cascading_fire-cloak", "wh_main_skill_all_magic_fire_05_the_burning_head", },
+            Level3DefaultSpells = {"wh_main_skill_all_magic_fire_09_piercing_bolts_of_burning", "wh_main_skill_all_magic_fire_10_flame_storm",},
         },
     };
 end
