@@ -1,3 +1,7 @@
+local global_character_skill_cache = {};
+local global_effects_cache = {};
+local global_effect_bonus_values_cache = {};
+
 function CreateDBData(databaseData)
     print("\n\nCreating DB Data...");
     -- Load our existing resources based on the files specified
@@ -72,39 +76,54 @@ function GenerateWWLSignatureSkills(databaseData)
                     local characterSkillsTables = databaseData["character_skills_tables"];
                     local characterSkillsMatchingLore = characterSkillsTables:GetRowsMatchingColumnValues("key", { spellKey, });
                     if next(characterSkillsMatchingLore) then
-                        local clonedSkill = characterSkillsTables:CloneRow(1, characterSkillsMatchingLore);
-                        characterSkillsTables:SetColumnValue(clonedSkill, 'key', "wwl_"..spellKey);
-                        characterSkillsTables:SetColumnValue(clonedSkill, 'localised_description', "");
-                        table.insert(characterSkillsToExport, clonedSkill);
+                        if global_character_skill_cache["wwl_"..spellKey] == nil then
+                            local clonedSkill = characterSkillsTables:CloneRow(1, characterSkillsMatchingLore);
+                            characterSkillsTables:SetColumnValue(clonedSkill, 'key', "wwl_"..spellKey);
+                            characterSkillsTables:SetColumnValue(clonedSkill, 'localised_description', "");
+                            table.insert(characterSkillsToExport, clonedSkill);
+                            global_character_skill_cache["wwl_"..spellKey] = true;
 
-                        local characterSkillLoc = databaseData["character_skills_loc"];
-                        local characterSkillNameLoc = characterSkillLoc:GetRowsMatchingColumnValues("key", { "character_skills_localised_name_"..spellKey, });
-                        local clonedNameLoc = characterSkillLoc:CloneRow(1, characterSkillNameLoc);
-                        characterSkillLoc:SetColumnValue(clonedNameLoc, 'key', "character_skills_localised_name_wwl_"..spellKey);
-                        table.insert(characterSkillLocToExport, clonedNameLoc);
-                        local characterSkillDescriptionLoc = characterSkillLoc:GetRowsMatchingColumnValues("key", { "character_skills_localised_description_"..spellKey, });
-                        if next(characterSkillDescriptionLoc) then
-                            local clonedDescriptionLoc = characterSkillLoc:CloneRow(1, characterSkillDescriptionLoc);
-                            characterSkillLoc:SetColumnValue(clonedDescriptionLoc, 'key', "character_skills_localised_description_wwl_"..spellKey);
-                            table.insert(characterSkillLocToExport, clonedDescriptionLoc);
-                        end
-
-                        local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
-                        local characterSkillEffectsMatchingLore = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", { spellKey, });
-                        for effectIndex, effectData in pairs(characterSkillEffectsMatchingLore) do
-                            if effectIndex == 1 then
-                                local clonedBaseEffect = characterSkillLevelToEffectsTable:CloneRow(effectIndex, characterSkillEffectsMatchingLore);
-                                characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'character_skill_key', "wwl_"..spellKey);
-                                characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'value', 1);
-                                characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'effect_key', spellKey.."_enabled");
-                                characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'level', 1);
-                                table.insert(characterSkillsToEffectsToExport, clonedBaseEffect);
+                            local characterSkillLoc = databaseData["character_skills_loc"];
+                            local characterSkillNameLoc = characterSkillLoc:GetRowsMatchingColumnValues("key", { "character_skills_localised_name_"..spellKey, });
+                            local clonedNameLoc = characterSkillLoc:CloneRow(1, characterSkillNameLoc);
+                            characterSkillLoc:SetColumnValue(clonedNameLoc, 'key', "character_skills_localised_name_wwl_"..spellKey);
+                            table.insert(characterSkillLocToExport, clonedNameLoc);
+                            local characterSkillDescriptionLoc = characterSkillLoc:GetRowsMatchingColumnValues("key", { "character_skills_localised_description_"..spellKey, });
+                            if next(characterSkillDescriptionLoc) then
+                                local clonedDescriptionLoc = characterSkillLoc:CloneRow(1, characterSkillDescriptionLoc);
+                                characterSkillLoc:SetColumnValue(clonedDescriptionLoc, 'key', "character_skills_localised_description_wwl_"..spellKey);
+                                table.insert(characterSkillLocToExport, clonedDescriptionLoc);
                             end
-                            local clonedEffect = characterSkillLevelToEffectsTable:CloneRow(effectIndex, characterSkillEffectsMatchingLore);
-                            local skillLevelString = characterSkillLevelToEffectsTable:GetColumnValuesForRows("level", { clonedEffect, });
-                            characterSkillLevelToEffectsTable:SetColumnValue(clonedEffect, 'character_skill_key', "wwl_"..spellKey);
-                            characterSkillLevelToEffectsTable:SetColumnValue(clonedEffect, 'level', tonumber(skillLevelString[1]) + 1);
-                            table.insert(characterSkillsToEffectsToExport, clonedEffect);
+
+                            local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
+                            local characterSkillEffectsMatchingLore = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", { spellKey, });
+                            for effectIndex, effectData in pairs(characterSkillEffectsMatchingLore) do
+                                if effectIndex == 1 then
+                                    local clonedBaseEffect = characterSkillLevelToEffectsTable:CloneRow(effectIndex, characterSkillEffectsMatchingLore);
+                                    characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'character_skill_key', "wwl_"..spellKey);
+                                    characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'value', 1);
+                                    characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'effect_key', spellKey.."_enabled");
+                                    characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffect, 'level', 1);
+                                    table.insert(characterSkillsToEffectsToExport, clonedBaseEffect);
+                                end
+                                local clonedEffect = characterSkillLevelToEffectsTable:CloneRow(effectIndex, characterSkillEffectsMatchingLore);
+                                local skillLevelString = characterSkillLevelToEffectsTable:GetColumnValuesForRows("level", { clonedEffect, });
+                                    local skillLevel = tonumber(skillLevelString[1]);
+                                    if spellKey == "wh_dlc03_skill_magic_wild_viletide"
+                                    or spellKey == "wh_main_skill_all_magic_fire_03_flaming_sword_of_rhuin"
+                                    or spellKey == "wh_main_skill_vmp_magic_vampires_02_vanhels_danse_macabre" then
+                                        if skillLevel > 1 then
+                                            characterSkillLevelToEffectsTable:SetColumnValue(clonedEffect, 'character_skill_key', "wwl_"..spellKey);
+                                            characterSkillLevelToEffectsTable:SetColumnValue(clonedEffect, 'level', skillLevel);
+                                            table.insert(characterSkillsToEffectsToExport, clonedEffect);
+                                        end
+                                    else
+                                        characterSkillLevelToEffectsTable:SetColumnValue(clonedEffect, 'character_skill_key', "wwl_"..spellKey);
+                                        characterSkillLevelToEffectsTable:SetColumnValue(clonedEffect, 'level', skillLevel + 1);
+                                        table.insert(characterSkillsToEffectsToExport, clonedEffect);
+                                    end
+
+                            end
                         end
                     else
                         local missingSkill = "";
@@ -253,7 +272,6 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         table.insert(newAgentSkills, clonedRow);
     end
     -- Then we create new skills
-
     local agentSkillSetKey = agentSkillSetKeys[1];
     local newAgentLinkSkills = {};
     local clonedMagicLoreSkills = {};
@@ -603,37 +621,47 @@ function GenerateWWLEffects(databaseData)
             ConcatTable(allSpellsForLore, magicLoreData.Level3DefaultSpells);
             for spellIndex, spellKey in pairs(allSpellsForLore) do
                 if spellKey ~= "wh_main_skill_dwf_runesmith_self_damping" then -- Need to hardcode the exception for dwarfs
-                    local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
-                    local effectsMatchingCharacterSkill = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", {spellKey});
-                    local effectKeysMatchingCharacterSkill = characterSkillLevelToEffectsTable:GetColumnValuesForRows("effect_key", effectsMatchingCharacterSkill);
-                    local matchingSpellEnabledKeys = effectBonusValueAbilityJunctionsTable:GetRowsMatchingColumnValues("effect", effectKeysMatchingCharacterSkill);
-                    local matchingSpellEnabledKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'unit_ability', matchingSpellEnabledKeys);
-                    local newEnabledEffectRow = {};
-                    effectTables:SetColumnValue(newEnabledEffectRow, 'effect', spellKey.."_enabled");
-                    effectTables:SetColumnValue(newEnabledEffectRow, 'icon', '');
-                    effectTables:SetColumnValue(newEnabledEffectRow, 'priority', '0');
-                    effectTables:SetColumnValue(newEnabledEffectRow, 'icon_negative', '');
-                    effectTables:SetColumnValue(newEnabledEffectRow, 'category', 'both');
-                    effectTables:SetColumnValue(newEnabledEffectRow, 'is_positive_value_good', 'true');
-                    table.insert(effectsToExport, newEnabledEffectRow);
-                    local clonedBonusValueRow = effectBonusValueAbilityJunctionsTable:CloneRow(1, enabledSpellEffects);
-                    effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'effect', spellKey.."_enabled");
-                    effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'bonus_value_id', "enable");
-                    effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'unit_ability', matchingSpellEnabledKey);
-                    table.insert(effectBonusValuesToExport, clonedBonusValueRow);
-                    local newDisabledEffectRow = {};
-                    effectTables:SetColumnValue(newDisabledEffectRow, 'effect', spellKey.."_disabled");
-                    effectTables:SetColumnValue(newDisabledEffectRow, 'icon', '');
-                    effectTables:SetColumnValue(newDisabledEffectRow, 'priority', '0');
-                    effectTables:SetColumnValue(newDisabledEffectRow, 'icon_negative', '');
-                    effectTables:SetColumnValue(newDisabledEffectRow, 'category', 'both');
-                    effectTables:SetColumnValue(newDisabledEffectRow, 'is_positive_value_good', 'false');
-                    table.insert(effectsToExport, newDisabledEffectRow);
-                    local clonedBonusValueRow = effectBonusValueAbilityJunctionsTable:CloneRow(1, enabledSpellEffects);
-                    effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'effect', spellKey.."_disabled");
-                    effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'bonus_value_id', "disable");
-                    effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'unit_ability', matchingSpellEnabledKey);
-                    table.insert(effectBonusValuesToExport, clonedBonusValueRow);
+                    if global_effects_cache[spellKey.."_enabled"] == nil then
+                        local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
+                        local effectsMatchingCharacterSkill = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", {spellKey});
+                        local effectKeysMatchingCharacterSkill = characterSkillLevelToEffectsTable:GetColumnValuesForRows("effect_key", effectsMatchingCharacterSkill);
+                        local effectsMatchingSpellBonusValues = effectBonusValueAbilityJunctionsTable:GetRowsMatchingColumnValues("effect", effectKeysMatchingCharacterSkill);
+                        local enableBonusValuesForSpell = effectBonusValueAbilityJunctionsTable:GetRowsMatchingColumnValues("bonus_value_id", { "enable" }, effectsMatchingSpellBonusValues);
+                        local matchingSpellEnabledKey = "";
+                        if next(enableBonusValuesForSpell) then
+                            matchingSpellEnabledKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'unit_ability', enableBonusValuesForSpell);
+                        else
+                            matchingSpellEnabledKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'unit_ability', effectsMatchingSpellBonusValues);
+                        end
+                        local newEnabledEffectRow = {};
+                        effectTables:SetColumnValue(newEnabledEffectRow, 'effect', spellKey.."_enabled");
+                        effectTables:SetColumnValue(newEnabledEffectRow, 'icon', 'spell_ability.png');
+                        effectTables:SetColumnValue(newEnabledEffectRow, 'priority', '3');
+                        effectTables:SetColumnValue(newEnabledEffectRow, 'icon_negative', 'spell_ability.png');
+                        effectTables:SetColumnValue(newEnabledEffectRow, 'category', 'both');
+                        effectTables:SetColumnValue(newEnabledEffectRow, 'is_positive_value_good', 'true');
+                        table.insert(effectsToExport, newEnabledEffectRow);
+                        local clonedBonusValueRow = effectBonusValueAbilityJunctionsTable:CloneRow(1, enabledSpellEffects);
+                        effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'effect', spellKey.."_enabled");
+                        effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'bonus_value_id', "enable");
+                        effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'unit_ability', matchingSpellEnabledKey);
+                        table.insert(effectBonusValuesToExport, clonedBonusValueRow);
+                        local newDisabledEffectRow = {};
+                        effectTables:SetColumnValue(newDisabledEffectRow, 'effect', spellKey.."_disabled");
+                        effectTables:SetColumnValue(newDisabledEffectRow, 'icon', 'spell_ability.png');
+                        effectTables:SetColumnValue(newDisabledEffectRow, 'priority', '3');
+                        effectTables:SetColumnValue(newDisabledEffectRow, 'icon_negative', 'spell_ability.png');
+                        effectTables:SetColumnValue(newDisabledEffectRow, 'category', 'both');
+                        effectTables:SetColumnValue(newDisabledEffectRow, 'is_positive_value_good', 'false');
+                        table.insert(effectsToExport, newDisabledEffectRow);
+                        local clonedBonusValueRow = effectBonusValueAbilityJunctionsTable:CloneRow(1, enabledSpellEffects);
+                        effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'effect', spellKey.."_disabled");
+                        effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'bonus_value_id', "disable");
+                        effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'unit_ability', matchingSpellEnabledKey);
+                        table.insert(effectBonusValuesToExport, clonedBonusValueRow);
+
+                        global_effects_cache[spellKey.."_enabled"] = true;
+                    end
                 end
             end
         end
@@ -698,6 +726,11 @@ function GenerateMultiLoreCharacterSkills(databaseData)
             characterSkillLoc:SetColumnValue(newLocDescription, 'tooltip', 'true');
             newCharacterSkillsLoc[i * 2 - 1] = newLocDescription;
         end
+        local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
+        local agentLoresData = {};
+        -- We need to do a prepass so we know what the max level is before we start attempting to generate
+        local maxLevelForSpellSlots = {};
+        local signatureSpells = {};
         for loreIndex, loreKey in pairs(agentData.Lore) do
             local magicLoreData = _G.WWLResources.MagicLores[loreKey];
             local allSpellsForLore = {};
@@ -705,15 +738,30 @@ function GenerateMultiLoreCharacterSkills(databaseData)
             ConcatTable(allSpellsForLore, magicLoreData.SignatureSpell);
             ConcatTable(allSpellsForLore, magicLoreData.Level1DefaultSpells);
             ConcatTable(allSpellsForLore, magicLoreData.Level3DefaultSpells);
-            -- Then we make the link the effects for the custom skills by coping existing character skills
-            local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
-            local characterSkillEffectsMatchingLore = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", allSpellsForLore);
-            local maxLevelForSpellSlots = {};
             for spellIndex, spellKey in pairs(allSpellsForLore) do
-                local lastAddedSignatureSpellLevel = 1;
                 if maxLevelForSpellSlots[spellIndex] == nil then
                     maxLevelForSpellSlots[spellIndex] = 1;
                 end
+                -- We change generation behaviour slightly if it is a signature spell
+                if Contains(magicLoreData.SignatureSpell, spellKey) then
+                    signatureSpells[spellKey] = true;
+                end
+                local effectsForSpell = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", { spellKey, }, characterSkillEffectsMatchingLore);
+                for index, effectData in pairs(effectsForSpell) do
+                    local effectLevel = characterSkillLevelToEffectsTable:GetColumnValueForRow(effectData, 'level');
+                    if tonumber(effectLevel) > maxLevelForSpellSlots[spellIndex] then
+                        maxLevelForSpellSlots[spellIndex] = tonumber(effectLevel);
+                    end
+                end
+            end
+            agentLoresData[loreKey] = allSpellsForLore;
+        end
+        local addedKeys = {};
+        for loreKey, allSpellsForLore in pairs(agentLoresData) do
+            -- Then we make the link the effects for the custom skills by coping existing character skills
+            local characterSkillEffectsMatchingLore = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", allSpellsForLore);
+            -- Now we know the max level for the slot, so we can generate
+            for spellIndex, spellKey in pairs(allSpellsForLore) do
                 -- Now we generate loc
                 local locForSpells = characterSkillLoc:GetRowsMatchingColumnValues("key", {"character_skills_localised_name_"..spellKey});
                 local locSpellName = characterSkillLoc:GetColumnValueForRow(locForSpells[1], 'text');
@@ -723,66 +771,169 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                 table.insert(temporaryCharacterSkillName[spellIndex], locSpellName);
                 -- Now we clone each effect for the spell. This is so we can make them invisible
                 local effectsForSpell = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", { spellKey, }, characterSkillEffectsMatchingLore);
+                local maxLevelEffectForSpell = 0;
                 for effectIndex, effectData in pairs(effectsForSpell) do
                     local effectLevel = characterSkillLevelToEffectsTable:GetColumnValueForRow(effectData, 'level');
-                    if tonumber(effectLevel) > maxLevelForSpellSlots[spellIndex] then
-                        maxLevelForSpellSlots[spellIndex] = tonumber(effectLevel);
+                    if tonumber(effectLevel) > maxLevelEffectForSpell then
+                        maxLevelEffectForSpell = tonumber(effectLevel);
                     end
                     local oldEffectKey = characterSkillLevelToEffectsTable:GetColumnValueForRow(effectData, 'effect_key');
                     local effectsTable = databaseData["effects_tables"];
                     local matchingEffect = effectsTable:GetRowsMatchingColumnValues("effect", { oldEffectKey, });
                     local clonedEffect = effectsTable:CloneRow(1, matchingEffect);
                     local newEffectKey = agentKey.."_"..oldEffectKey;
-                    effectsTable:SetColumnValue(clonedEffect, 'effect', newEffectKey);
-                    if not string.match(oldEffectKey, "_enable") then
-                        effectsTable:SetColumnValue(clonedEffect, 'priority', '0');
-                    end
-                    table.insert(effectsToExport, clonedEffect);
-                    local effectBonusValueUnitAbilitiesTable = databaseData["effect_bonus_value_unit_ability_junctions_tables"];
-                    local effectsBonusValuesForSpell = effectBonusValueUnitAbilitiesTable:GetRowsMatchingColumnValues("effect", { oldEffectKey, });
-                    for bonusValueIndex, effectBonusValue in pairs(effectsBonusValuesForSpell) do
-                        local clonedBonusValue = effectBonusValueUnitAbilitiesTable:CloneRow(bonusValueIndex, effectsBonusValuesForSpell);
-                        effectBonusValueUnitAbilitiesTable:SetColumnValue(clonedBonusValue, 'effect', newEffectKey);
-                        table.insert(effectBonusValuesToExport, clonedBonusValue);
-                    end
-                    local clonedEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, effectsForSpell);
-                    characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
-                    characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'effect_key', newEffectKey);
-                    if Contains(magicLoreData.SignatureSpell, spellKey) then
-                        if effectIndex == 1 then
-                            local clonedBaseEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, effectsForSpell);
-                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
-                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'effect_key', spellKey..'_enabled');
-                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'level', 1);
-                            table.insert(characterSkillsToEffectsToExport, clonedBaseEffectToSkill);
+                    if addedKeys[spellIndex.."_"..newEffectKey.."_"..effectLevel] == nil then
+                        if global_effects_cache[newEffectKey] == nil then
+                            effectsTable:SetColumnValue(clonedEffect, 'effect', newEffectKey);
+                            --[[if not string.match(oldEffectKey, "_enable") then
+                                effectsTable:SetColumnValue(clonedEffect, 'priority', '0');
+                                effectsTable:SetColumnValue(clonedEffect, 'icon', '');
+                                effectsTable:SetColumnValue(clonedEffect, 'icon_negative', '');
+                            end--]]
+                            effectsTable:SetColumnValue(clonedEffect, 'priority', '0');
+                            effectsTable:SetColumnValue(clonedEffect, 'icon', '');
+                            effectsTable:SetColumnValue(clonedEffect, 'icon_negative', '');
+                            table.insert(effectsToExport, clonedEffect);
+                            global_effects_cache[newEffectKey] = true;
                         end
-                        local newEffectLevel = tonumber(effectLevel) + 1;
-                        -- Probably not needed but will confirm
-                        --[[if newEffectLevel > lastAddedSignatureSpellLevel then
-                            local clonedBaseEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, effectsForSpell);
-                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
-                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'effect_key', spellKey..'_enabled');
-                            characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'level', newEffectLevel);
-                            table.insert(characterSkillsToEffectsToExport, clonedBaseEffectToSkill);
-                            lastAddedSignatureSpellLevel = newEffectLevel;
-                        end--]]
-                        characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'level', newEffectLevel);
-                        maxLevelForSpellSlots[spellIndex] = newEffectLevel;
+
+                        local effectBonusValueUnitAbilitiesTable = databaseData["effect_bonus_value_unit_ability_junctions_tables"];
+                        local effectsBonusValuesForSpell = effectBonusValueUnitAbilitiesTable:GetRowsMatchingColumnValues("effect", { oldEffectKey, });
+                        for bonusValueIndex, effectBonusValue in pairs(effectsBonusValuesForSpell) do
+                            local bonusValueId = effectBonusValueUnitAbilitiesTable:GetColumnValueForRow(effectBonusValue, 'bonus_value_id');
+                            local unitAbility = effectBonusValueUnitAbilitiesTable:GetColumnValueForRow(effectBonusValue, 'unit_ability');
+                            if global_effect_bonus_values_cache[newEffectKey.."_"..bonusValueId.."_"..unitAbility] == nil then
+                                local clonedBonusValue = effectBonusValueUnitAbilitiesTable:CloneRow(bonusValueIndex, effectsBonusValuesForSpell);
+                                effectBonusValueUnitAbilitiesTable:SetColumnValue(clonedBonusValue, 'effect', newEffectKey);
+                                table.insert(effectBonusValuesToExport, clonedBonusValue);
+                                global_effect_bonus_values_cache[newEffectKey.."_"..bonusValueId.."_"..unitAbility] = true;
+                            end
+                        end
+                        local clonedEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, effectsForSpell);
+                        characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
+                        characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'effect_key', newEffectKey);
+                        local newEffectLevel = tonumber(effectLevel);
+                        if signatureSpells[spellKey] == true then
+                            if effectIndex == 1 then
+                                local clonedBaseEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, effectsForSpell);
+                                characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
+                                characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'effect_key', spellKey..'_enabled');
+                                characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'level', 1);
+                                table.insert(characterSkillsToEffectsToExport, clonedBaseEffectToSkill);
+                            end
+                            newEffectLevel = tonumber(effectLevel) + 1;
+                            if (spellKey == "wh_dlc03_skill_magic_wild_viletide"
+                            or spellKey == "wh_main_skill_all_magic_fire_03_flaming_sword_of_rhuin"
+                            or spellKey == "wh_main_skill_vmp_magic_vampires_02_vanhels_danse_macabre") then
+                                if tonumber(effectLevel) > 1 then
+                                    newEffectLevel = tonumber(effectLevel);
+                                else
+                                    newEffectLevel = 0;
+                                end
+                            end
+                            characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'level', newEffectLevel);
+                            maxLevelForSpellSlots[spellIndex] = tonumber(newEffectLevel);
+                        end
+                        if addedKeys[spellIndex.."_"..newEffectKey.."_"..newEffectLevel] == nil
+                        and newEffectLevel > 0 then
+                            table.insert(characterSkillsToEffectsToExport, clonedEffectToSkill);
+                            addedKeys[spellIndex.."_"..newEffectKey.."_"..newEffectLevel] = true;
+                        end
                     end
-                    table.insert(characterSkillsToEffectsToExport, clonedEffectToSkill);
+                end
+                -- We adjust the spell level manually for signature spells
+                -- because the vanilla behaviour has been changed.
+                if signatureSpells[spellKey] == true then
+                    maxLevelEffectForSpell = maxLevelEffectForSpell + 1;
+                end
+                -- If the effect level generated for the spell is less than the max in the slot
+                -- Then we should duplicate the max level and fill in for max
+                local maxlevelForSpellSlot = maxLevelForSpellSlots[spellIndex];
+                if maxLevelEffectForSpell < maxlevelForSpellSlot then
+                    local maxLevelEffectsForSpell = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("level", { tostring(maxLevelEffectForSpell), }, effectsForSpell);
+                    for additionalLevel = (maxLevelEffectForSpell + 1), maxlevelForSpellSlot do
+                        for effectIndex, effectData in pairs(maxLevelEffectsForSpell) do
+                            local effectLevel = additionalLevel;
+                            local oldEffectKey = characterSkillLevelToEffectsTable:GetColumnValueForRow(effectData, 'effect_key');
+                            local effectsTable = databaseData["effects_tables"];
+                            local matchingEffect = effectsTable:GetRowsMatchingColumnValues("effect", { oldEffectKey, });
+                            local clonedEffect = effectsTable:CloneRow(1, matchingEffect);
+                            local newEffectKey = agentKey.."_"..oldEffectKey;
+                            if addedKeys[spellIndex.."_"..newEffectKey.."_"..effectLevel] == nil then
+                                if global_effects_cache[newEffectKey] == nil then
+                                    effectsTable:SetColumnValue(clonedEffect, 'effect', newEffectKey);
+                                    --[[if not string.match(oldEffectKey, "_enable") then
+                                        effectsTable:SetColumnValue(clonedEffect, 'priority', '0');
+                                        effectsTable:SetColumnValue(clonedEffect, 'icon', '');
+                                        effectsTable:SetColumnValue(clonedEffect, 'icon_negative', '');
+                                    end--]]
+                                    effectsTable:SetColumnValue(clonedEffect, 'priority', '0');
+                                    effectsTable:SetColumnValue(clonedEffect, 'icon', '');
+                                    effectsTable:SetColumnValue(clonedEffect, 'icon_negative', '');
+                                    table.insert(effectsToExport, clonedEffect);
+                                    global_effects_cache[newEffectKey] = true;
+                                end
+                                local effectBonusValueUnitAbilitiesTable = databaseData["effect_bonus_value_unit_ability_junctions_tables"];
+                                local effectsBonusValuesForSpell = effectBonusValueUnitAbilitiesTable:GetRowsMatchingColumnValues("effect", { oldEffectKey, });
+                                for bonusValueIndex, effectBonusValue in pairs(effectsBonusValuesForSpell) do
+                                    local bonusValueId = effectBonusValueUnitAbilitiesTable:GetColumnValueForRow(effectBonusValue, 'bonus_value_id');
+                                    local unitAbility = effectBonusValueUnitAbilitiesTable:GetColumnValueForRow(effectBonusValue, 'unit_ability');
+                                    if global_effect_bonus_values_cache[newEffectKey.."_"..bonusValueId.."_"..unitAbility] == nil then
+                                        local clonedBonusValue = effectBonusValueUnitAbilitiesTable:CloneRow(bonusValueIndex, effectsBonusValuesForSpell);
+                                        effectBonusValueUnitAbilitiesTable:SetColumnValue(clonedBonusValue, 'effect', newEffectKey);
+                                        table.insert(effectBonusValuesToExport, clonedBonusValue);
+                                        global_effect_bonus_values_cache[newEffectKey.."_"..bonusValueId.."_"..unitAbility] = true;
+                                    end
+                                end
+                                local clonedEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, maxLevelEffectsForSpell);
+                                characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
+                                characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'effect_key', newEffectKey);
+                                characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'level', effectLevel);
+                                local newEffectLevel = tonumber(effectLevel);
+                                if signatureSpells[spellKey] == true then
+                                    if effectIndex == 1 then
+                                        local clonedBaseEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, maxLevelEffectsForSpell);
+                                        characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
+                                        characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'effect_key', spellKey..'_enabled');
+                                        characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'level', 1);
+                                        table.insert(characterSkillsToEffectsToExport, clonedBaseEffectToSkill);
+                                    end
+                                    newEffectLevel = tonumber(effectLevel) + 1;
+                                    if (spellKey == "wh_dlc03_skill_magic_wild_viletide"
+                                    or spellKey == "wh_main_skill_all_magic_fire_03_flaming_sword_of_rhuin"
+                                    or spellKey == "wh_main_skill_vmp_magic_vampires_02_vanhels_danse_macabre") then
+                                        if tonumber(effectLevel) > 1 then
+                                            newEffectLevel = tonumber(effectLevel);
+                                        else
+                                            newEffectLevel = 0 ;
+                                        end
+                                    end
+                                    characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'level', newEffectLevel);
+                                end
+                                if addedKeys[spellIndex.."_"..newEffectKey.."_"..newEffectLevel] == nil
+                                and newEffectLevel > 0 then
+                                    table.insert(characterSkillsToEffectsToExport, clonedEffectToSkill);
+                                    addedKeys[spellIndex.."_"..newEffectKey.."_"..newEffectLevel] = true;
+                                end
+                            end
+                        end
+                    end
                 end
             end
             -- We only need to add this effect once
             for spellIndex, maxLevelForSpellSlot in pairs(maxLevelForSpellSlots) do
                 if maxLevelForSpellSlot > 1 then
                     for spellLevel = 2, maxLevelForSpellSlot do
-                        local increasedSpellEffects = {};
-                        characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
-                        characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'effect_key', "wwl_increased_spell_effects");
-                        characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'effect_scope', "character_to_character_own");
-                        characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'level', spellLevel);
-                        characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'value', "1");
-                        table.insert(characterSkillsToEffectsToExport, increasedSpellEffects);
+                        if addedKeys[spellIndex.."_wwl_increased_spell_effects_"..spellLevel] == nil then
+                            local increasedSpellEffects = {};
+                            characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
+                            characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'effect_key', "wwl_increased_spell_effects");
+                            characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'effect_scope', "character_to_character_own");
+                            characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'level', spellLevel);
+                            characterSkillLevelToEffectsTable:SetColumnValue(increasedSpellEffects, 'value', "1");
+                            table.insert(characterSkillsToEffectsToExport, increasedSpellEffects);
+                            addedKeys[spellIndex.."_wwl_increased_spell_effects_"..spellLevel] = true;
+                        end
                     end
                 end
             end
