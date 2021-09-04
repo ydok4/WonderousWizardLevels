@@ -315,11 +315,11 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         cm:apply_custom_effect_bundle_to_character(customEffectBundleLoremaster, character);
     -- Last case is multi lore characters
     else
-        self.Logger:Log("Found multi lore character: "..character:character_subtype_key());
+        local characterSubtype = character:character_subtype_key();
+        self.Logger:Log("Found multi lore character: "..characterSubtype);
         -- Grab the magic lore data for each lore and deep copy them
         local magicLoresData = {};
         local innateSkills = {};
-        local hasLevel3Spells = true; -- At this stage only the Skink Oracle doesn't have level 3 spells
         for index, loreKey in pairs(defaultWizardData.Lore) do
             local remappedMagicLore = {};
             local magicLoreData = self:GetMagicLoreData(loreKey);
@@ -330,23 +330,24 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             for index, signatureSpellKey in pairs(magicLoreData.SignatureSpell) do
                 signatureSpells[#signatureSpells + 1] = signatureSpellKey;
             end
+            local nonSignatureSpells = {};
             local level1Spells = {};
             for index, level1SpellsKey in pairs(magicLoreData.Level1DefaultSpells) do
                 level1Spells[#level1Spells + 1] = level1SpellsKey;
+                nonSignatureSpells[#nonSignatureSpells + 1] = level1SpellsKey;
             end
             local level3Spells = {};
             for index, level3SpellsKey in pairs(magicLoreData.Level3DefaultSpells) do
                 level3Spells[#level3Spells + 1] = level3SpellsKey;
+                nonSignatureSpells[#nonSignatureSpells + 1] = level3SpellsKey;
             end
             magicLoresData[#magicLoresData + 1] = {
                 InnateSkill = innateSkills,
                 SignatureSpell = signatureSpells,
                 Level1DefaultSpells = level1Spells,
                 Level3DefaultSpells = level3Spells,
+                NonSignatureSpells = nonSignatureSpells,
             };
-            if next(level3Spells) == nil then
-                hasLevel3Spells = false;
-            end
         end
         local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
         customEffectBundle:set_duration(1);
@@ -368,7 +369,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         self.Logger:Log("Enabling spell: "..selectedSignatureSpell);
         selectedSpells[#selectedSpells + 1] = selectedSignatureSpell;
         -- Now disable the other signature spells (except for mannfred)
-        if character:character_subtype_key() ~= "vmp_mannfred_von_carstein" then
+        if characterSubtype ~= "vmp_mannfred_von_carstein" then
             for index, magicLore in pairs(magicLoresData) do
                 for index, signatureSpell in pairs(magicLore.SignatureSpell) do
                     if signatureSpell ~= selectedSignatureSpell then
@@ -381,35 +382,59 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         -- Check how many of each spell we need
         local numberOfLevel1Spells = 0;
         local numberOfLevel3Spells = 0;
-        local numberOfSpells = defaultWizardData.DefaultWizardLevel;
+        local currentWizardLevel = defaultWizardData.DefaultWizardLevel;
         if character:has_skill(wizardLevelPrefix..tostring(defaultWizardData.DefaultWizardLevel + 1)) then
-            numberOfSpells = defaultWizardData.DefaultWizardLevel + 1;
-            numberOfLevel1Spells = 1;
+            currentWizardLevel = defaultWizardData.DefaultWizardLevel + 1;
         end
-        if defaultWizardData.DefaultWizardLevel > 1 then
-            numberOfLevel1Spells = 1;
-            if defaultWizardData.IsLoremaster == true
-            and character:has_skill(defaultWizardData.LoremasterCharacterSkillKey) then
-                numberOfLevel1Spells = 2;
-                numberOfLevel3Spells = 1;
-            elseif character:character_subtype_key() == "wh2_main_hef_teclis" then
-                numberOfLevel1Spells = 2;
-                numberOfLevel3Spells = 1;
-            elseif defaultWizardData.DefaultWizardLevel == 5 then
-                numberOfLevel3Spells = numberOfLevel3Spells + 2;
-            elseif defaultWizardData.DefaultWizardLevel > 3
-            or numberOfSpells > 3 then
+        local spellAmounts = {
+            [4] = {
+                Level3Spells = 1,
+            },
+            [5] = {
+                Level3Spells = 2,
+            },
+        };
+        if spellAmounts[characterSubtype] ~= nil then
+            numberOfLevel3Spells = spellAmounts[characterSubtype].Level3Spells;
+        elseif spellAmounts[currentWizardLevel] ~= nil then
+            numberOfLevel3Spells = spellAmounts[currentWizardLevel].Level3Spells;
+        end
+        local meetsLoremasterCriteria = false;
+        if defaultWizardData.IsLoremaster == true
+        and character:has_skill(defaultWizardData.LoremasterCharacterSkillKey) then
+            numberOfLevel3Spells = 2;
+            meetsLoremasterCriteria = true;
+        end
+        if numberOfLevel3Spells == 2 then
+            numberOfLevel1Spells = currentWizardLevel - 2;
+        else
+            local minNumberOfRandomSpells = currentWizardLevel - numberOfLevel3Spells;
+            for i = 1, minNumberOfRandomSpells do
                 if Roll100(50) then
                     numberOfLevel1Spells = numberOfLevel1Spells + 1;
                 else
                     numberOfLevel3Spells = numberOfLevel3Spells + 1;
                 end
+                if numberOfLevel3Spells == 2 then
+                    numberOfLevel1Spells = currentWizardLevel - 2;
+                    break;
+                end
             end
         end
-
-        -- Get the level 1 spells
         local selectedLevel1Spells = {};
-        for i = 0, numberOfLevel1Spells do
+        local selectedLevel3Spells = {};
+        -- 'Bonus' loremaster spell
+        if meetsLoremasterCriteria == true
+        -- We skip mannfred because he gets 2 signature spells
+        and characterSubtype ~= "vmp_mannfred_von_carstein" then
+            local loremasterLore = magicLoresData[1];
+            local activeLevel1Spell = GetAndRemoveRandomObjectFromList(loremasterLore.Level1DefaultSpells);
+            selectedLevel1Spells[#selectedLevel1Spells + 1] = activeLevel1Spell;
+            self.Logger:Log("Giving character bonus loremaster level 1 spell: "..activeLevel1Spell);
+            selectedSpells[#selectedSpells + 1] = activeLevel1Spell;
+        end
+        -- Get the level 1 spells
+        for i = 1, numberOfLevel1Spells do
             local level1SpellLoreData = GetRandomObjectFromList(magicLoresData);
             local activeLevel1Spell = GetAndRemoveRandomObjectFromList(level1SpellLoreData.Level1DefaultSpells);
             selectedLevel1Spells[#selectedLevel1Spells + 1] = activeLevel1Spell;
@@ -425,23 +450,20 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
                 end
             end
         end
-        if hasLevel3Spells == true then
-            -- Get the level 3 spells
-            local selectedLevel3Spells = {};
-            for i = 0, numberOfLevel3Spells do
-                local level3SpellLoreData = GetRandomObjectFromList(magicLoresData);
-                local activeLevel3Spell = GetAndRemoveRandomObjectFromList(level3SpellLoreData.Level3DefaultSpells);
-                selectedLevel3Spells[#selectedLevel3Spells + 1] = activeLevel3Spell;
-                self.Logger:Log("Giving character level 3 spell: "..activeLevel3Spell);
-                selectedSpells[#selectedSpells + 1] = activeLevel3Spell;
-            end
-            -- Now disable the other level 3 spells
-            for index, magicLore in pairs(magicLoresData) do
-                for index, level3Spell in pairs(magicLore.Level3DefaultSpells) do
-                    if Contains(selectedLevel3Spells, level3Spell) == false then
-                        self.Logger:Log("Disabling spell: "..level3Spell);
-                        customEffectBundle:add_effect(level3Spell.."_disabled", "character_to_character_own", 1);
-                    end
+        -- Get the level 3 spells
+        for i = 1, numberOfLevel3Spells do
+            local level3SpellLoreData = GetRandomObjectFromList(magicLoresData);
+            local activeLevel3Spell = GetAndRemoveRandomObjectFromList(level3SpellLoreData.Level3DefaultSpells);
+            selectedLevel3Spells[#selectedLevel3Spells + 1] = activeLevel3Spell;
+            self.Logger:Log("Giving character level 3 spell: "..activeLevel3Spell);
+            selectedSpells[#selectedSpells + 1] = activeLevel3Spell;
+        end
+        -- Now disable the other level 3 spells
+        for index, magicLore in pairs(magicLoresData) do
+            for index, level3Spell in pairs(magicLore.Level3DefaultSpells) do
+                if Contains(selectedLevel3Spells, level3Spell) == false then
+                    self.Logger:Log("Disabling spell: "..level3Spell);
+                    customEffectBundle:add_effect(level3Spell.."_disabled", "character_to_character_own", 1);
                 end
             end
         end

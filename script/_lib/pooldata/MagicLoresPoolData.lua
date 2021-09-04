@@ -55,7 +55,7 @@ function GetMagicLorePoolDataResources()
             Level1DefaultSpells = {"wh_dlc05_skill_magic_shadow_enfeebling_foe",  "wh_dlc05_skill_magic_shadow_the_withering", "wh_dlc05_skill_magic_shadow_penumbral_pendulum", },
             Level3DefaultSpells = {"wh_dlc05_skill_magic_shadow_pit_of_shades", "wh_dlc05_skill_magic_shadow_okkams_mindrazor", },
         },
-        -- Unique lores
+        -- Non-battle lores
         wh_main_lore_vampires = {
             InnateSkill = {"wh_main_skill_vmp_magic_vampires_03_the_curse_of_undeath",},
             SignatureSpell = {"wh_main_skill_vmp_magic_vampires_01_invocation_of_nehek", },
@@ -142,6 +142,7 @@ function GetMagicLorePoolDataResources()
             Level3DefaultSpells = {},
             Level3DefaultSpellsLord = {},
         },
+        -- Lore variants (pseudo mixed)
         wh_dlc05_lore_branchwraith = {
             InnateSkill = {"wh_dlc05_skill_magic_shadow_smoke_and_mirrors", },
             SignatureSpell = {"wh_dlc05_skill_magic_shadow_mystifying_miasma", },

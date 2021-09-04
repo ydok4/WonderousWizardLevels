@@ -4,7 +4,7 @@ function GetMixuWizardsPoolData()
         wh_dlc03_sc_bst_beastmen = {
             bst_slugtongue = {
                 DefaultWizardLevel = 2,
-                Lore = { "wh_dlc03_lore_wild", "wh_dlc05_lore_shadows", },
+                Lore = { "wh_dlc03_lore_wild", "wh_main_lore_death", },
             },
         },
 
