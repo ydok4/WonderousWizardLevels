@@ -25,14 +25,8 @@ end
 -- This exists to convert the human faction list to just an object.
 -- This also means it will only work for one player.
 function WWLController:GetHumanFaction()
-    local allHumanFactions = cm:get_human_factions();
-    if allHumanFactions == nil then
-        return allHumanFactions;
-    end
-    for key, humanFaction in pairs(allHumanFactions) do
-        local faction = cm:model():world():faction_by_key(humanFaction);
-        return faction;
-    end
+    local localFaction = cm:get_local_faction(true);
+    return localFaction;
 end
 
 function WWLController:IsExcludedFaction(faction)
@@ -161,7 +155,7 @@ function WWLController:GetDefaultSpellsForWizard(wizardData)
     return defaultSpells;
 end
 
-function WWLController:GetSpellsForCharacter(character, lore)
+function WWLController:GetSpellsForCharacter(character, lore, includeSignatureSpell)
     local magicLoreData = self:GetMagicLoreData(lore);
     local spellsForCharacterLore = {};
     ConcatTable(spellsForCharacterLore, magicLoreData.Level1DefaultSpells);
@@ -173,6 +167,12 @@ function WWLController:GetSpellsForCharacter(character, lore)
             --cm:remove_effect_bundle_from_character(spellKey.."_disabled", character);
             table.insert(unlockedSpells, spellKey);
         end
+    end
+    if includeSignatureSpell == true
+    and magicLoreData.SignatureSpell ~= nil then
+        self.Logger:Log("Adding signature spell");
+        self.Logger:Log("Signature spell: "..magicLoreData.SignatureSpell[1]);
+        table.insert(unlockedSpells, magicLoreData.SignatureSpell[1]);
     end
     --self.Logger:Log("# of unlocked spells is: "..#unlockedSpells);
     return unlockedSpells;
@@ -217,7 +217,7 @@ function WWLController:SetSpellsForCharacter(character, forceGeneration)
     end
     local characterCqi = character:command_queue_index();
     local characterSubtype = character:character_subtype_key();
-    --self.Logger:Log("Character subtype: ".. characterSubtype.." character cqi: "..characterCqi);
+    self.Logger:Log("Character subtype: ".. characterSubtype.." character cqi: "..characterCqi);
     local characterSubculture = character:faction():subculture();
     local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype, characterSubculture);
     if self:HasSpecialSpellGenerationRules(defaultWizardData) then
@@ -244,28 +244,38 @@ function WWLController:SetSpellsForCharacter(character, forceGeneration)
         end,
         specialCallbackTimeout);
     else
+        self.Logger:Log("Standard generation rules");
         if defaultWizardData.IsLoremaster == true
         and character:has_skill(defaultWizardData.LoremasterCharacterSkillKey) then
             self.Logger:Log("Character has loremaster skill. Not generating spells.");
             return;
         end
         -- Remove all disable spell skills
-        local unlockedSpells = self:GetSpellsForCharacter(character, defaultWizardData.Lore);
+        --self.Logger:Log("Got spells for character");
+        local includeSignatureSpell = false;
         local wizardLevel = self:GetWizardLevel(character);
+        self.Logger:Log("Character wizard level is: "..wizardLevel);
+        if wizardLevel == 0 then
+            includeSignatureSpell = true;
+            wizardLevel = 1;
+        end
+        local unlockedSpells = self:GetSpellsForCharacter(character, defaultWizardData.Lore, includeSignatureSpell);
         local numberOfSpells = wizardLevel;
+        self.Logger:Log("unlockedSpells is: "..#unlockedSpells);
         -- Then we disable spells required for our wizard level
         -- The remaining spells will equal our wizard level
         local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
         customEffectBundle:set_duration(1);
-        --self.Logger:Log("unlockedSpells is: "..#unlockedSpells);
-        self.Logger:Log("Character wizard level is: "..wizardLevel);
+        --self.Logger:Log("Custom bundle created");
+
         for i = 1, #unlockedSpells - numberOfSpells do
             local spellKey = GetAndRemoveRandomObjectFromList(unlockedSpells);
+            --self.Logger:Log("Got effect bundle");
             local effectKey = spellKey.."_disabled";
             self.Logger:Log("Disabling spell: "..spellKey.." with effect: "..effectKey);
             customEffectBundle:add_effect(effectKey, "character_to_character_own", 1);
+            --self.Logger:Log("Added to bundle");
         end
-        --cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
         -- Any applied effect bundles will expire next turn, which is when we need to regenerate
         local lastGeneratedTurn = cm:create_new_custom_effect_bundle("wwl_character_last_generated_turn");
         lastGeneratedTurn:set_duration(1);
@@ -273,7 +283,6 @@ function WWLController:SetSpellsForCharacter(character, forceGeneration)
         if character:faction():is_human() == true then
             defaultCallbackTime = 0.3;
         end
-        --cm:apply_custom_effect_bundle_to_character(lastGeneratedTurn, character);
         if not character:is_null_interface() then
             cm:callback(function()
                 local grabbedCharacter = cm:get_character_by_cqi(characterCqi);
@@ -368,7 +377,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         local selectedSignatureSpell = GetRandomObjectFromList(signatureSpellLoreData.SignatureSpell);
         self.Logger:Log("Enabling spell: "..selectedSignatureSpell);
         selectedSpells[#selectedSpells + 1] = selectedSignatureSpell;
-        -- Now disable the other signature spells (except for mannfred)
+        -- Now disable the other signature spells (except for mannfred) he always gets both
         if characterSubtype ~= "vmp_mannfred_von_carstein" then
             for index, magicLore in pairs(magicLoresData) do
                 for index, signatureSpell in pairs(magicLore.SignatureSpell) do
@@ -380,7 +389,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             end
         end
         -- Check how many of each spell we need
-        local numberOfLevel1Spells = 0;
+        local numberOfLevel1Spells = 1;
         local numberOfLevel3Spells = 0;
         local currentWizardLevel = defaultWizardData.DefaultWizardLevel;
         if character:has_skill(wizardLevelPrefix..tostring(defaultWizardData.DefaultWizardLevel + 1)) then
@@ -425,7 +434,10 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         local selectedLevel3Spells = {};
         -- 'Bonus' loremaster spell
         if meetsLoremasterCriteria == true
-        -- We skip mannfred because he gets 2 signature spells
+        -- If we're not already at the max number of level 1 spells
+        and numberOfLevel1Spells ~= 3
+        -- We skip mannfred because he gets 2 signature spells, so he doesn't have the room
+        -- for an extra level 1 spell.
         and characterSubtype ~= "vmp_mannfred_von_carstein" then
             local loremasterLore = magicLoresData[1];
             local activeLevel1Spell = GetAndRemoveRandomObjectFromList(loremasterLore.Level1DefaultSpells);
@@ -524,8 +536,8 @@ function WWLController:GetCharacterWizardLevelWithName(nameText, faction, checkF
         if character:is_null_interface() == false
         and not character:character_type("colonel") then
             if character:military_force():is_null_interface() or character:military_force():is_armed_citizenry() == false then
-                local forename = effect.get_localised_string(character:get_forename());
-                local surname = effect.get_localised_string(character:get_surname());
+                local forename = common.get_localised_string(character:get_forename());
+                local surname = common.get_localised_string(character:get_surname());
                 self.Logger:Log("Checking: "..forename.." "..surname.." subtype: "..character:character_subtype_key());
                 if (forename ~= "" or surname ~= "")
                 and string.match(nameText, forename.." "..surname) then
@@ -541,10 +553,10 @@ function WWLController:GetCharacterWizardLevelWithName(nameText, faction, checkF
         local subcultureKey = faction:subculture();
         local llNameKeys = self:GetLegendaryLordNameKeysForSubculture(subcultureKey);
         for llForeNameKey, llNameKeyData in pairs(llNameKeys) do
-            local forename = effect.get_localised_string(llForeNameKey);
+            local forename = common.get_localised_string(llForeNameKey);
             if string.match(nameText, forename) then
                 self.Logger:Log("Found matching LL by forename key!");
-                local surname = effect.get_localised_string(llNameKeyData.Surname);
+                local surname = common.get_localised_string(llNameKeyData.Surname);
                 if llNameKeyData.Surname == "" or string.match(nameText, surname) then
                     self.Logger:Log("Found matching LL by name key(s)! Subtype is: "..llNameKeyData.Subtype);
                     local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(llNameKeyData.Subtype, subcultureKey);
@@ -555,4 +567,43 @@ function WWLController:GetCharacterWizardLevelWithName(nameText, faction, checkF
     end
     -- If we still can't find them, then they aren't supported or aren't recruited
     return nil;
+end
+
+function WWLController:DoUnitUpgrades(character)
+    local faction = character:faction();
+    local subculture = faction:subculture();
+    local unitUpgradeData = _G.WWLResources.UnitData[subculture];
+    if unitUpgradeData ~= nil then
+        local unit_list = character:military_force():unit_list();
+        for i = 0, unit_list:num_items() - 1 do
+            local unit_interface = unit_list:item_at(i);
+            local unit_key = unit_interface:unit_key();
+            local unitUpgrades = unitUpgradeData[unit_key];
+            if unitUpgrades ~= nil then
+                local numberOfSpells = unitUpgrades.DefaultWizardLevel;
+                local experienceLevel = common.get_context_value("CcoCampaignUnit", unit_interface:command_queue_index(), "ExperienceLevel");
+                local bonusSpells = math.floor(experienceLevel / 3);
+                numberOfSpells = numberOfSpells + bonusSpells;
+
+
+                local magicLoreData = self:GetMagicLoreData(unitUpgrades.Lore);
+                local spellsForLore = {};
+                ConcatTable(spellsForLore, magicLoreData.Level1DefaultSpells);
+                ConcatTable(spellsForLore, magicLoreData.Level3DefaultSpells);
+
+                local chosenSpells = {};
+                for j = 0, numberOfSpells do
+                    local spellKey = GetAndRemoveRandomObjectFromList(spellsForLore);
+                    chosenSpells[spellKey] = true;
+                end
+
+                --[[local unit_purchasable_effect_list = unit_interface:get_unit_purchasable_effects();
+                if unit_purchasable_effect_list:num_items() ~= 0 then
+                    local rand = cm:random_number(unit_purchasable_effect_list:num_items()) - 1;
+                    local effect_interface = unit_purchasable_effect_list:item_at(rand);
+                    cm:faction_purchase_unit_effect(faction, unit_interface, effect_interface);
+                end--]]
+            end
+        end
+    end
 end

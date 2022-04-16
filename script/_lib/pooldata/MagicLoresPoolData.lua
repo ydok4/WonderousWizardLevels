@@ -217,6 +217,59 @@ function GetMagicLorePoolDataResources()
             Level1DefaultSpells = {"wh_dlc05_skill_magic_life_wizard_earth_blood", },
             Level3DefaultSpells = {},
         },
+        -- Lore of the Great Maw
+        wh3_main_lore_of_great_maw = {
+            InnateSkill = { "wh3_main_skill_ogr_magic_great_maw_05_bloodgruel",},
+            SignatureSpell = {"wh3_main_skill_ogr_magic_great_maw_01_bullgorger", },
+            Level1DefaultSpells = { "wh3_main_skill_ogr_magic_great_maw_02_braingobbler", "wh3_main_skill_ogr_magic_great_maw_03_toothcracker", "wh3_main_skill_ogr_magic_great_maw_04_bonecrusher", },
+            Level3DefaultSpells = { "wh3_main_skill_ogr_magic_great_maw_07_trollguts", "wh3_main_skill_ogr_magic_great_maw_08_the_maw", },
+        },
+        -- Cathayan Lore
+        wh3_main_lore_of_yang = {
+            InnateSkill = { "wh3_main_skill_cth_magic_yang_05_strength_of_yang", },
+            SignatureSpell = {"wh3_main_skill_cth_magic_yang_02_jade_shield", },
+            Level1DefaultSpells = { "wh3_main_skill_cth_magic_yang_01_dragons_breath", "wh3_main_skill_cth_magic_yang_03_wall_of_wind_and_fire", "wh3_main_skill_cth_magic_yang_04_stone_ground_stance", },
+            Level3DefaultSpells = { "wh3_main_skill_cth_magic_yang_07_might_of_heaven_and_earth", "wh3_main_skill_cth_magic_yang_08_constellation_of_the_dragon", },
+        },
+        wh3_main_lore_of_yin = {
+            InnateSkill = { "wh3_main_skill_cth_magic_yin_05_power_of_yin", },
+            SignatureSpell = {"wh3_main_skill_cth_magic_yin_02_storm_of_shadows", },
+            Level1DefaultSpells = { "wh3_main_skill_cth_magic_yin_01_cloak_of_jet", "wh3_main_skill_cth_magic_yin_03_blossom_wind", "wh3_main_skill_cth_magic_yin_04_missile_mirror", },
+            Level3DefaultSpells = { "wh3_main_skill_cth_magic_yin_07_talons_of_night", "wh3_main_skill_cth_magic_yin_08_ancestral_warriors", },
+        },
+        -- Daemons of Chaos Lore
+        wh3_main_lore_nurgle = {
+            InnateSkill = { "wh3_main_skill_nur_magic_nurgle_05_children_of_nurgle",},
+            SignatureSpell = {"wh3_main_skill_nur_magic_nurgle_01_miasma_of_pestilence", },
+            Level1DefaultSpells = { "wh3_main_skill_nur_magic_nurgle_02_stream_of_corruption", "wh3_main_skill_nur_magic_nurgle_03_curse_of_the_leper", "wh3_main_skill_nur_magic_nurgle_04_rancid_visitations", },
+            Level3DefaultSpells = { "wh3_main_skill_nur_magic_nurgle_06_fleshy_abundance", "wh3_main_skill_nur_magic_nurgle_07_blight_boil", },
+        },
+        wh3_main_lore_slaanesh = {
+            InnateSkill = { "wh3_main_skill_sla_magic_slaanesh_05_blissful_rapture",},
+            SignatureSpell = {"wh3_main_skill_sla_magic_slaanesh_02_acquiescence", },
+            Level1DefaultSpells = { "wh3_main_skill_sla_magic_slaanesh_01_lash_of_slaanesh", "wh3_main_skill_sla_magic_slaanesh_03_pavane_of_slaanesh", "wh3_main_skill_sla_magic_slaanesh_04_hysterical_frenzy", },
+            Level3DefaultSpells = { "wh3_main_skill_sla_magic_slaanesh_06_slicing_shards", "wh3_main_skill_sla_magic_slaanesh_07_phantasmagoria", },
+        },
+        wh3_main_lore_tzeentch = {
+            InnateSkill = { "wh3_main_skill_tze_magic_tzeentch_05_fires_of_change",},
+            SignatureSpell = {"wh3_main_skill_tze_magic_tzeentch_01_blue_fire_of_tzeentch", },
+            Level1DefaultSpells = { "wh3_main_skill_tze_magic_tzeentch_02_pink_fire_of_tzeentch", "wh3_main_skill_tze_magic_tzeentch_03_glean_magic", "wh3_main_skill_tze_magic_tzeentch_04_treason_of_tzeentch", },
+            Level3DefaultSpells = { "wh3_main_skill_tze_magic_tzeentch_06_tzeentchs_firestorm", "wh3_main_skill_tze_magic_tzeentch_07_infernal_gateway", },
+        },
+        -- Kislev Lore
+        wh3_main_lore_of_ice = {
+            InnateSkill = {"wh3_main_skill_ksl_magic_ice_02_ice_sheet",},
+            SignatureSpell = { "wh3_main_skill_ksl_magic_ice_05_frost_shield", },
+            Level1DefaultSpells = { "wh3_main_skill_ksl_magic_ice_01_ice_maidens_kiss", "wh3_main_skill_ksl_magic_ice_03_frost_blades", "wh3_main_skill_ksl_magic_ice_04_death_frost", },
+            Level3DefaultSpells = { "wh3_main_skill_ksl_magic_ice_07_crystal_sanctuary", "wh3_main_skill_ksl_magic_ice_08_heart_of_winter", },
+        },
+        wh3_main_lore_of_tempest = {
+            InnateSkill = { "wh3_main_skill_ksl_magic_tempest_05_freezing_winds",},
+            SignatureSpell = { "wh3_main_skill_ksl_magic_tempest_02_gust_of_true_flight", },
+            Level1DefaultSpells = { "wh3_main_skill_ksl_magic_tempest_01_hailstorm", "wh3_main_skill_ksl_magic_tempest_03_swiftwing", "wh3_main_skill_ksl_magic_tempest_04_biting_wind", },
+            Level3DefaultSpells = { "wh3_main_skill_ksl_magic_tempest_07_hawks_of_miska", "wh3_main_skill_ksl_magic_tempest_07_blizzard", },
+        },
+
         --[[wh2_dlc17_lore_oracle = {
             InnateSkill = {"wh_dlc05_skill_magic_life_life_bloom", "wh_dlc03_skill_magic_beasts_wild_heart", "wh_main_skill_all_magic_heavens_03_rolling_skies", },
             SignatureSpell = {"wh_main_skill_all_magic_fire_01_fireball", },
@@ -240,7 +293,7 @@ function GetMagicLorePoolDataResources()
             Level3DefaultSpells = {},
         },--]]
         -- Non Vanilla
-        mixu_lore_of_ice = {
+        --[[mixu_lore_of_ice = {
             InnateSkill = {"mixu_all_lord_spell_lore_of_ice_passive",},
             SignatureSpell = {"mixu_all_lord_spell_lore_of_ice_glacial_barrier", },
             Level1DefaultSpells = { "mixu_all_lord_spell_lore_of_ice_shield_of_cold", "mixu_all_lord_spell_lore_of_ice_midwinters_kiss", "mixu_all_lord_spell_lore_of_ice_wind_of_ice", },
@@ -251,7 +304,7 @@ function GetMagicLorePoolDataResources()
             SignatureSpell = {"deco_ice_ice_shards", },
             Level1DefaultSpells = { "deco_ice_storm_strike", "deco_ice_chill_blast", "deco_ice_ice_blizzard", },
             Level3DefaultSpells = { "deco_ice_tempest", "deco_ice_hailstorm", },
-        },
+        },--]]
         deco_lore_of_hags = {
             InnateSkill = { "skill_all_deco_ice_cold", },
             SignatureSpell = {"deco_ice_shield_of_cold", },
@@ -263,6 +316,18 @@ function GetMagicLorePoolDataResources()
             SignatureSpell = {"wh_main_skill_all_magic_fire_03_flaming_sword_of_rhuin",},
             Level1DefaultSpells = {"wh_main_skill_all_magic_fire_01_fireball", "wh_main_skill_all_magic_fire_02_cascading_fire-cloak", "wh_main_skill_all_magic_fire_05_the_burning_head", },
             Level3DefaultSpells = {"wh_main_skill_all_magic_fire_09_piercing_bolts_of_burning", "wh_main_skill_all_magic_fire_10_flame_storm",},
+        },
+        ws_lore_lil_waaagh_forest_goblins = {
+            InnateSkill = {"wh_main_skill_grn_magic_little_waaagh_03_sneaky_stealin", },
+            SignatureSpell = {"wh_main_skill_grn_magic_little_waaagh_01_sneaky_stabbin",},
+            Level1DefaultSpells = {"wh_main_skill_grn_magic_little_waaagh_02_vindictive_glare", "wh_main_skill_grn_magic_little_waaagh_04_itchy_nuisance", "wh_main_skill_grn_magic_little_waaagh_05_gorkll_fix_it", },
+            Level3DefaultSpells = {"wh_main_skill_grn_magic_little_waaagh_09_night_shroud", "wh_main_skill_grn_magic_little_waaagh_10_curse_of_da_bad_moon", },
+        },
+        ws_lore_spider = {
+            InnateSkill = {"ws_skill_magic_spider_crazy_legz",},
+            SignatureSpell = {"ws_skill_magic_spider_sneaky_distraction",},
+            Level1DefaultSpells = {"ws_skill_magic_spider_venomous_sneeze", "ws_skill_magic_spider_great_green_spite", "ws_skill_magic_spider_nasty_webbin", },
+            Level3DefaultSpells = {"ws_skill_magic_spider_gift_of_the_spider_god", "ws_skill_magic_spider_itzy_bitzy_spiderz",},
         },
     };
 end

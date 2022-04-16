@@ -3,7 +3,7 @@ testCharacter = {
     cqi = function() return 123 end,
     get_forename = function() return "Direfan"; end,
     get_surname = function() return "Cylostra"; end,
-    character_subtype_key = function() return "wh2_dlc10_hef_alarielle"; end, --
+    character_subtype_key = function() return "wh3_main_nur_plagueridden_death"; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -52,7 +52,7 @@ humanFaction = {
         return "wh_main_grn_greenskins";
     end,
     subculture = function()
-        return "wh2_main_sc_hef_high_elves";
+        return "wh3_main_sc_nur_nurgle";
     end,
     character_list = function()
         return {
@@ -101,7 +101,7 @@ testFaction = {
         return "wh2_main_def_dark_elves";
     end,
     subculture = function()
-        return "wh2_main_sc_hef_high_elves";
+        return "wh3_main_sc_nur_nurgle";
     end,
     character_list = function()
         return {
@@ -188,6 +188,12 @@ test_unit = {
 }
 
 effect = {
+    get_localised_string = function()
+        return "Legendary Lord";
+    end,
+}
+
+common = {
     get_localised_string = function()
         return "Legendary Lord";
     end,
@@ -281,6 +287,7 @@ function get_cm()
         callback = function(self, callbackFunction, delay) callbackFunction() end,
         transfer_region_to_faction = function() end,
         get_faction = function() return testFaction; end,
+        get_local_faction= function() return humanFaction; end,
         lift_all_shroud = function() end,
         kill_all_armies_for_faction = function() end,
         get_region = function()

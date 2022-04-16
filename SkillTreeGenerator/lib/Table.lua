@@ -1,5 +1,6 @@
 Table = {
     Name = "",
+    Metadata = "",
     Header = {},
     Columns = {},
     Data = {},
@@ -14,6 +15,10 @@ end
 
 function Table:AddToHeader(header)
     table.insert(self.Header, header);
+end
+
+function Table:SetMetadata(metadata)
+    self.Metadata = metadata;
 end
 
 function Table:AddColumns(columnHeadingIndexes)
@@ -114,6 +119,7 @@ end
 function Table:PrepareRowsForOutput(rows)
     local tableToOutput = {};
     ConcatTable(tableToOutput, self.Header);
+    ConcatTable(tableToOutput, { { self.Metadata, }, });
     ConcatTable(tableToOutput, rows);
     return tableToOutput;
 end

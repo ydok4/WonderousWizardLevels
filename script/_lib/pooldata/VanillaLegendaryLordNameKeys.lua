@@ -25,6 +25,19 @@ function GetVanillaLegendaryLordNameKeys()
                 Subtype = "chs_archaon",
             },
         },
+        -- Cathay
+        wh3_main_sc_cth_cathay = {
+            -- Miao Ying, the Storm Dragon
+            names_name_1909115770 = {
+                Surname = "",
+                Subtype = "wh3_main_cth_miao_ying",
+            },
+            -- Zhao Ming, the Iron Dragon
+            names_name_806936419 = {
+                Surname = "",
+                Subtype = "wh3_main_cth_zhao_ming",
+            },
+        },
         -- Dark Elves
         wh2_main_sc_def_dark_elves = {
             -- Morathi
@@ -72,6 +85,14 @@ function GetVanillaLegendaryLordNameKeys()
                 Subtype = "wh2_dlc10_hef_alarielle",
             },
         },
+        -- Kislev
+        wh3_main_sc_ksl_kislev = {
+            -- Tzarina Katarin
+            names_name_651938448 = {
+                Surname = "",
+                Subtype = "wh3_main_ksl_katarin",
+            },
+        },
         -- Lizardmen
         wh2_main_sc_lzd_lizardmen = {
             -- Tehenhauin
@@ -85,9 +106,25 @@ function GetVanillaLegendaryLordNameKeys()
                 Subtype = "wh2_main_lzd_lord_mazdamundi",
             },
         },
+        -- Ogre Kingdoms
+        wh3_main_sc_ogr_ogre_kingdoms = {
+            -- Skrag the Slaughterer
+            names_name_699708189 = {
+                Surname = "",
+                Subtype = "wh3_main_ogr_skrag_the_slaughterer",
+            },
+        },
         -- Norsca
         wh_main_sc_nor_norsca = {
 
+        },
+        -- Nurgle
+        wh3_main_sc_nur_nurgle = {
+            -- Ku'gath Plaguefather
+            names_name_2059659072 = {
+                Surname = "",
+                Subtype = "wh3_main_nur_kugath",
+            },
         },
         -- Skaven
         wh2_main_sc_skv_skaven = {
@@ -100,6 +137,22 @@ function GetVanillaLegendaryLordNameKeys()
             names_name_2147359289 = {
                 Surname = "names_name_2147359296",
                 Subtype = "wh2_main_skv_lord_skrolk",
+            },
+        },
+        -- Slaanesh
+        wh3_main_sc_sla_slaanesh = {
+            -- N'Kari
+            names_name_1637310637 = {
+                Surname = "",
+                Subtype = "wh3_main_lore_slaanesh",
+            },
+        },
+        -- Tzeentch
+        wh3_main_sc_tze_tzeentch = {
+            -- Kairos Fateweaver
+            names_name_2107401518 = {
+                Surname = "",
+                Subtype = "wh3_main_tze_kairos",
             },
         },
         -- TEB

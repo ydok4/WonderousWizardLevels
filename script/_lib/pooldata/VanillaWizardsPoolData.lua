@@ -8,19 +8,19 @@ function GetVanillaWizardsPoolDataResources()
     return {
         -- Beastmen
         wh_dlc03_sc_bst_beastmen = {
-            dlc03_bst_bray_shaman_beasts = {
+            wh_dlc03_bst_bray_shaman_beasts = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc03_lore_beasts",
             },
-            dlc03_bst_bray_shaman_death = {
+            wh_dlc03_bst_bray_shaman_death = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_death",
             },
-            dlc03_bst_bray_shaman_shadows = {
+            wh_dlc03_bst_bray_shaman_shadows = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_shadows",
             },
-            dlc03_bst_bray_shaman_wild = {
+            wh_dlc03_bst_bray_shaman_wild = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc03_lore_wild",
             },
@@ -40,87 +40,118 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 3,
                 Lore = "wh_dlc03_lore_wild",
             },
-            dlc03_bst_malagor = {
+            wh_dlc03_bst_malagor = {
                 DefaultWizardLevel = 4,
                 Lore = {"wh_dlc03_lore_wild", "wh_main_lore_death", "wh_dlc05_lore_shadows", "wh_dlc03_lore_beasts", },
             },
         },
         -- Bretonnia
         wh_main_sc_brt_bretonnia = {
-            brt_damsel = {
+            wh_main_brt_damsel_heavens = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_heavens",
             },
-            brt_damsel_beasts = {
+            wh_dlc07_brt_damsel_beasts = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc03_lore_beasts",
             },
-            brt_damsel_life = {
+            wh_dlc07_brt_damsel_life = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_life",
             },
-            dlc07_brt_prophetess_beasts = {
+            wh_dlc07_brt_prophetess_beasts = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_dlc03_lore_beasts",
             },
-            dlc07_brt_prophetess_heavens = {
+            wh_dlc07_brt_prophetess_heavens = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_heavens",
             },
-            dlc07_brt_prophetess_life = {
+            wh_dlc07_brt_prophetess_life = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_dlc05_lore_life",
             },
             -- Fay enchantress
-            dlc07_brt_fay_enchantress = {
+            wh_dlc07_brt_fay_enchantress = {
                 DefaultWizardLevel = 4,
                 IsLoremaster = true,
                 LoremasterCharacterSkillKey = "wh_dlc07_skill_brt_lord_unique_fay_enchantress_loremaster_lore_of_life",
                 Lore = {"wh_dlc05_lore_life", "wh_dlc03_lore_beasts", "wh_main_lore_heavens", },
             },
         },
+        -- Cathay
+        wh3_main_sc_cth_cathay = {
+            wh3_main_cth_alchemist = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_metal",
+            },
+            wh3_main_cth_astromancer = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_heavens",
+            },
+            wh3_main_cth_dragon_blooded_shugengan_yang = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_main_lore_of_yang",
+            },
+            wh3_main_cth_dragon_blooded_shugengan_yin = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_main_lore_of_yin",
+            },
+            wh3_main_cth_miao_ying = {
+                DefaultWizardLevel = 4,
+                Lore = { "wh3_main_lore_of_yin", "wh_dlc05_lore_life", },
+            },
+            wh3_main_cth_zhao_ming = {
+                DefaultWizardLevel = 4,
+                Lore = { "wh3_main_lore_of_yang", "wh_main_lore_metal", },
+            },
+        },
         -- Chaos
         wh_main_sc_chs_chaos = {
-            chs_archaon = {
+            wh_main_chs_archaon = {
                 DefaultWizardLevel = 2,
                 Lore = "wh_main_lore_fire",
             },
-            chs_chaos_sorcerer_death = {
+            wh_main_chs_chaos_sorcerer_death = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_death",
             },
-            chs_chaos_sorcerer_fire = {
+            wh_main_chs_chaos_sorcerer_fire = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_fire",
             },
-            chs_chaos_sorcerer_metal = {
+            wh_main_chs_chaos_sorcerer_metal = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_metal",
             },
-            dlc07_chs_chaos_sorcerer_shadow = {
+            wh_dlc07_chs_chaos_sorcerer_shadow = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_shadows",
             },
-            chs_sorcerer_lord_death = {
+            wh_dlc01_chs_sorcerer_lord_death = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_death",
             },
-            chs_sorcerer_lord_fire = {
+            wh_dlc01_chs_sorcerer_lord_fire = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_fire",
             },
-            chs_sorcerer_lord_metal = {
+            wh_dlc01_chs_sorcerer_lord_metal = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_metal",
             },
-            dlc07_chs_sorcerer_lord_shadow = {
+            wh_dlc07_chs_sorcerer_lord_shadow = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_dlc05_lore_shadows",
             },
-            chs_lord_of_change = {
+            wh_main_chs_lord_of_change = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_metal",
             },
+        },
+        -- Daemons of Chaos
+        wh3_main_sc_dae_daemons = {
+            -- Draws from Khorne, Nurgle, Slaanesh and Tzeentch
         },
         -- Dark Elves
         wh2_main_sc_def_dark_elves = {
@@ -181,33 +212,33 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 4,
                 Lore = "wh2_dlc17_lore_rune",
             },
-            dlc06_dwf_runelord = {
+            wh_dlc06_dwf_runelord = {
                 DefaultWizardLevel = 3,
                 Lore = "wh2_dlc17_lore_rune",
             },
-            dwf_runesmith = {
+            wh_main_dwf_runesmith = {
                 DefaultWizardLevel = 1,
                 Lore = "wh2_dlc17_lore_rune",
             },
         },
         -- Empire
         wh_main_sc_emp_empire = {
-            dlc05_emp_grey_wizard = {
+            wh_dlc05_emp_grey_wizard = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_shadows",
             },
-            dlc05_emp_jade_wizard = {
+            wh_dlc05_emp_jade_wizard = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_life",
             },
-            emp_bright_wizard = {
+            wh_main_emp_bright_wizard = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_fire",
             },
-            emp_celestial_wizard = {
+            wh_main_emp_celestial_wizard = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_heavens",
@@ -217,17 +248,17 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_death",
             },
-            dlc03_emp_amber_wizard = {
+            wh_dlc03_emp_amber_wizard = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc03_lore_beasts",
             },
-            emp_light_wizard = {
+            wh_main_emp_light_wizard = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_light",
             },
-            emp_balthasar_gelt = {
+            wh_main_emp_balthasar_gelt = {
                 IsLord = true,
                 IsLoremaster = true,
                 LoremasterCharacterSkillKey = "wh_main_skill_emp_lord_unique_balthasar_loremaster_lore_of_metal",
@@ -237,15 +268,15 @@ function GetVanillaWizardsPoolDataResources()
         },
         -- Greenskins
         wh_main_sc_grn_greenskins = {
-            grn_orc_shaman = {
+            wh_main_grn_orc_shaman = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_big_waaagh",
             },
-            grn_night_goblin_shaman = {
+            wh_main_grn_night_goblin_shaman = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_lil_waaagh",
             },
-            grn_goblin_great_shaman = {
+            wh_main_grn_goblin_great_shaman = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_lil_waaagh",
             },
@@ -253,11 +284,11 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 4,
                 Lore = "wh_main_lore_lil_waaagh",
             },
-            dlc06_grn_wurrzag_da_great_prophet = {
+            wh_dlc06_grn_wurrzag_da_great_prophet = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_big_waaagh",
             },
-            grn_azhag_the_slaughterer = {
+            wh_main_grn_azhag_the_slaughterer = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_death",
             },
@@ -359,6 +390,33 @@ function GetVanillaWizardsPoolDataResources()
                 Lore = "wh_dlc05_lore_shadows",
             },
         },
+        -- Kislev
+        wh3_main_sc_ksl_kislev = {
+            wh3_main_ksl_frost_maiden_ice = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_main_lore_of_ice",
+            },
+            wh3_main_ksl_frost_maiden_tempest = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_main_lore_of_tempest",
+            },
+            wh3_main_ksl_ice_witch_ice = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_main_lore_of_ice",
+            },
+            wh3_main_ksl_ice_witch_tempest = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_main_lore_of_tempest",
+            },
+            wh3_main_ksl_katarin = {
+                DefaultWizardLevel = 4,
+                Lore = "wh3_main_lore_of_ice",
+            },
+        },
+        -- Khorne
+        wh3_main_sc_kho_khorne = {
+            -- KHORNE HATES MAGIC!!!
+        },
         -- Lizardmen
         wh2_main_sc_lzd_lizardmen = {
             wh2_dlc12_lzd_tlaqua_skink_priest_beasts = {
@@ -422,6 +480,33 @@ function GetVanillaWizardsPoolDataResources()
                 Lore = "wh_dlc05_lore_life",
             },
         },
+        -- Ogre Kingdoms
+        wh3_main_sc_ogr_ogre_kingdoms = {
+            wh3_main_ogr_butcher_beasts = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc03_lore_beasts",
+            },
+            wh3_main_ogr_butcher_great_maw = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_main_lore_of_great_maw",
+            },
+            wh3_main_ogr_firebelly = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_fire",
+            },
+            wh3_main_ogr_slaughtermaster_beasts = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_dlc03_lore_beasts",
+            },
+            wh3_main_ogr_slaughtermaster_great_maw = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_main_lore_of_great_maw",
+            },
+            wh3_main_ogr_skrag_the_slaughterer = {
+                DefaultWizardLevel = 4,
+                Lore = "wh3_main_lore_of_great_maw",
+            },
+        },
         -- Norsca
         wh_main_sc_nor_norsca = {
             wh_dlc08_nor_fimir_balefiend_fire = {
@@ -448,6 +533,37 @@ function GetVanillaWizardsPoolDataResources()
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_metal",
+            },
+        },
+        -- Nurgle
+        wh3_main_sc_nur_nurgle = {
+            wh3_main_nur_plagueridden_death = {
+                DefaultWizardLevel = 0,
+                Lore = "wh_main_lore_death",
+            },
+            wh3_main_nur_plagueridden_nurgle = {
+                DefaultWizardLevel = 0,
+                Lore = "wh3_main_lore_nurgle",
+            },
+            wh3_main_nur_herald_of_nurgle_death = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_death",
+            },
+            wh3_main_nur_herald_of_nurgle_nurgle = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_main_lore_nurgle",
+            },
+            wh3_main_nur_exalted_great_unclean_one_death = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_death",
+            },
+            wh3_main_nur_exalted_great_unclean_one_nurgle = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_main_lore_nurgle",
+            },
+            wh3_main_nur_kugath = {
+                DefaultWizardLevel = 2,
+                Lore = "wh3_main_lore_nurgle",
             },
         },
         -- Skaven
@@ -493,6 +609,37 @@ function GetVanillaWizardsPoolDataResources()
                 Lore = "wh2_main_lore_plague",
             },
         },
+        -- Slaanesh
+        wh3_main_sc_sla_slaanesh = {
+            wh3_main_sla_alluress_shadow = {
+                DefaultWizardLevel = 0,
+                Lore = "wh_dlc05_lore_shadows",
+            },
+            wh3_main_sla_alluress_slaanesh = {
+                DefaultWizardLevel = 0,
+                Lore = "wh3_main_lore_slaanesh",
+            },
+            wh3_main_sla_herald_of_slaanesh_shadow = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc05_lore_shadows",
+            },
+            wh3_main_sla_herald_of_slaanesh_slaanesh = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_main_lore_slaanesh",
+            },
+            wh3_main_sla_exalted_keeper_of_secrets_shadow = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_dlc05_lore_shadows",
+            },
+            wh3_main_sla_exalted_keeper_of_secrets_slaanesh = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_main_lore_slaanesh",
+            },
+            wh3_main_sla_nkari = {
+                DefaultWizardLevel = 2,
+                Lore = "wh3_main_lore_slaanesh",
+            },
+        },
         -- Tomb Kings
         wh2_dlc09_sc_tmb_tomb_kings = {
             wh2_dlc09_tmb_liche_priest_death = {
@@ -531,9 +678,40 @@ function GetVanillaWizardsPoolDataResources()
                 Lore = "wh2_dlc09_lore_nehekhara",
             },
         },
+        -- Tzeentch
+        wh3_main_sc_tze_tzeentch = {
+            wh3_main_tze_iridescent_horror_metal = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_metal",
+            },
+            wh3_main_tze_iridescent_horror_tzeentch = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_main_lore_tzeentch",
+            },
+            wh3_main_tze_herald_of_tzeentch_metal = {
+                DefaultWizardLevel = 2,
+                Lore = "wh_main_lore_metal",
+            },
+            wh3_main_tze_herald_of_tzeentch_tzeentch = {
+                DefaultWizardLevel = 2,
+                Lore = "wh3_main_lore_tzeentch",
+            },
+            wh3_main_tze_exalted_lord_of_change_metal = {
+                DefaultWizardLevel = 4,
+                Lore = "wh_main_lore_metal",
+            },
+            wh3_main_tze_exalted_lord_of_change_tzeentch = {
+                DefaultWizardLevel = 4,
+                Lore = "wh3_main_lore_tzeentch",
+            },
+            wh3_main_tze_kairos = {
+                DefaultWizardLevel = 4,
+                Lore = { "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh3_main_lore_tzeentch", },
+            },
+        },
         -- Vampire Coast
         wh2_dlc11_sc_cst_vampire_coast = {
-            wh2_dlc11_cst_fleet_captain = {
+            wh2_dlc11_cst_fleet_captain_vampires = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh2_dlc11_lore_vampire_pirates",
@@ -548,7 +726,7 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 1,
                 Lore = "wh2_dlc11_lore_deep",
             },
-            wh2_dlc11_cst_admiral = {
+            wh2_dlc11_cst_admiral_vampires = {
                 IsLord = true,
                 DefaultWizardLevel = 2,
                 Lore = "wh2_dlc11_lore_vampire_pirates",
@@ -563,7 +741,7 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 2,
                 Lore = "wh2_dlc11_lore_deep",
             },
-            wh2_dlc11_cst_admiral_fem = {
+            wh2_dlc11_cst_admiral_fem_vampires = {
                 IsLord = true,
                 DefaultWizardLevel = 2,
                 Lore = "wh2_dlc11_lore_vampire_pirates",
@@ -611,11 +789,11 @@ function GetVanillaWizardsPoolDataResources()
         },
         -- Vampire Counts
         wh_main_sc_vmp_vampire_counts = {
-            vmp_necromancer = {
+            wh_main_vmp_necromancer = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_vampires",
             },
-            vmp_vampire = {
+            wh_main_vmp_vampire_death = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_death",
             },
@@ -623,15 +801,15 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_shadows",
             },
-            vmp_master_necromancer = {
+            wh_main_vmp_master_necromancer = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_vampires",
             },
-            vmp_lord = {
+            wh_main_vmp_lord = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_vampires",
             },
-            dlc04_vmp_strigoi_ghoul_king = {
+            wh_dlc04_vmp_strigoi_ghoul_king = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc04_lore_strigoi",
             },
@@ -655,23 +833,23 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 2,
                 Lore = "wh2_dlc11_vmp_lore_von_carstein",
             },
-            dlc04_vmp_helman_ghorst = {
+            wh_dlc04_vmp_helman_ghorst = {
                 DefaultWizardLevel = 2,
                 Lore = "wh_dlc04_lore_helman_ghorst",
             },
-            vmp_mannfred_von_carstein = {
+            wh_main_vmp_mannfred_von_carstein = {
                 DefaultWizardLevel = 4,
                 IsLoremaster = true,
                 LoremasterCharacterSkillKey = "wwl_skill_mannfred_dual_loremaster",
                 Lore = { "wh_main_lore_vampires", "wh_main_lore_death", },
             },
-            vmp_heinrich_kemmler = {
+            wh_main_vmp_heinrich_kemmler = {
                 IsLoremaster = true,
                 LoremasterCharacterSkillKey = "wh_main_skill_vmp_lord_unique_loremaster_lore_of_vampires",
                 DefaultWizardLevel = 4,
                 Lore = "wh_main_lore_vampires",
             },
-            dlc04_vmp_vlad_con_carstein = {
+            wh_dlc04_vmp_vlad_con_carstein = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_vampires",
             },
@@ -679,29 +857,29 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 2,
                 Lore = "wh_main_lore_vampires",
             },
-            pro02_vmp_isabella_von_carstein = {
+            wh_pro02_vmp_isabella_von_carstein = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_vampires",
             },
         },
         -- Wood Elves
         wh_dlc05_sc_wef_wood_elves = {
-            dlc05_wef_spellsinger_beasts = {
+            wh_dlc05_wef_spellsinger_beasts = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh2_dlc15_lore_beasts_eagle",
             },
-            dlc05_wef_spellsinger_life = {
+            wh_dlc05_wef_spellsinger_life = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_life",
             },
-            dlc05_wef_spellsinger_shadow = {
+            wh_dlc05_wef_spellsinger_shadow = {
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_shadows",
             },
-            dlc05_wef_ancient_treeman = {
+            wh_dlc05_wef_ancient_treeman = {
                 IsLord = true,
                 DefaultWizardLevel = 2,
                 Lore = "wh_dlc05_lore_life",
@@ -736,7 +914,7 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 3,
                 Lore = "wh_dlc05_lore_shadows",
             },
-            dlc05_wef_durthu = {
+            wh_dlc05_wef_durthu = {
                 IsLord = true,
                 DefaultWizardLevel = 1,
                 Lore = "wh2_dlc15_lore_beasts_eagle",

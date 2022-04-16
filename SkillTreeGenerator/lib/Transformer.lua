@@ -241,12 +241,18 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     local rowIndents = characterSkillNodesTable:GetUniqueColumnValuesForRows("indent", knownAgentSkillNodes);
     local rowIndent = rowIndents[1];
     if rowIndent == nil then
-        print("Agent: "..agentKey.." Is missing data");
-        return {
-            character_skill_nodes_tables = {},
-            character_skill_node_links_tables = {},
-            character_skill_level_to_effects_junctions_tables = {},
-        };
+        -- If for some reason the lore of magic is completely different then we need
+        -- to have specified the RowIdent so we know what row to go on.
+        if agentData.RowIndent ~= nil then
+            rowIndent = agentData.RowIndent;
+        else
+            print("Agent: "..agentKey.." Is missing data");
+            return {
+                character_skill_nodes_tables = {},
+                character_skill_node_links_tables = {},
+                character_skill_level_to_effects_junctions_tables = {},
+            };
+        end
     end
     if #rowIndents > 1 then
         if rowIndents[1] == '1.0'
@@ -454,6 +460,7 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     or agentKey == "wh2_main_lzd_lord_mazdamundi"
     or agentKey == "dlc03_bst_malagor"
     or agentKey == "wh2_dlc16_wef_ariel"
+    or agentKey == "wh3_main_tze_kairos"
     or agentKey == "lzd_lord_huinitenuchli"
     or agentKey == "hef_belannaer"
     or string.match(agentKey, "slann")
@@ -774,15 +781,28 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                 local maxLevelEffectForSpell = 0;
                 for effectIndex, effectData in pairs(effectsForSpell) do
                     local effectLevel = characterSkillLevelToEffectsTable:GetColumnValueForRow(effectData, 'level');
-                    if tonumber(effectLevel) > maxLevelEffectForSpell then
-                        maxLevelEffectForSpell = tonumber(effectLevel);
+                    local newEffectLevel = tonumber(effectLevel);
+                    if signatureSpells[spellKey] == true then
+                        newEffectLevel = tonumber(effectLevel) + 1;
+                        if (spellKey == "wh_dlc03_skill_magic_wild_viletide"
+                        or spellKey == "wh_main_skill_all_magic_fire_03_flaming_sword_of_rhuin"
+                        or spellKey == "wh_main_skill_vmp_magic_vampires_02_vanhels_danse_macabre") then
+                            if tonumber(effectLevel) > 1 then
+                                newEffectLevel = tonumber(effectLevel);
+                            else
+                                newEffectLevel = 0;
+                            end
+                        end
+                    end
+                    if tonumber(newEffectLevel) > maxLevelEffectForSpell then
+                        maxLevelEffectForSpell = tonumber(newEffectLevel);
                     end
                     local oldEffectKey = characterSkillLevelToEffectsTable:GetColumnValueForRow(effectData, 'effect_key');
                     local effectsTable = databaseData["effects_tables"];
                     local matchingEffect = effectsTable:GetRowsMatchingColumnValues("effect", { oldEffectKey, });
                     local clonedEffect = effectsTable:CloneRow(1, matchingEffect);
                     local newEffectKey = agentKey.."_"..oldEffectKey;
-                    if addedKeys[spellIndex.."_"..newEffectKey.."_"..effectLevel] == nil then
+                    if addedKeys[spellIndex.."_"..newEffectKey.."_"..newEffectLevel] == nil then
                         if global_effects_cache[newEffectKey] == nil then
                             effectsTable:SetColumnValue(clonedEffect, 'effect', newEffectKey);
                             --[[if not string.match(oldEffectKey, "_enable") then
@@ -812,7 +832,6 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                         local clonedEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, effectsForSpell);
                         characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
                         characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'effect_key', newEffectKey);
-                        local newEffectLevel = tonumber(effectLevel);
                         if signatureSpells[spellKey] == true then
                             if effectIndex == 1 then
                                 local clonedBaseEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, effectsForSpell);
@@ -820,16 +839,6 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                                 characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'effect_key', spellKey..'_enabled');
                                 characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'level', 1);
                                 table.insert(characterSkillsToEffectsToExport, clonedBaseEffectToSkill);
-                            end
-                            newEffectLevel = tonumber(effectLevel) + 1;
-                            if (spellKey == "wh_dlc03_skill_magic_wild_viletide"
-                            or spellKey == "wh_main_skill_all_magic_fire_03_flaming_sword_of_rhuin"
-                            or spellKey == "wh_main_skill_vmp_magic_vampires_02_vanhels_danse_macabre") then
-                                if tonumber(effectLevel) > 1 then
-                                    newEffectLevel = tonumber(effectLevel);
-                                else
-                                    newEffectLevel = 0;
-                                end
                             end
                             characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'level', newEffectLevel);
                             maxLevelForSpellSlots[spellIndex] = tonumber(newEffectLevel);
@@ -854,12 +863,25 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                     for additionalLevel = (maxLevelEffectForSpell + 1), maxlevelForSpellSlot do
                         for effectIndex, effectData in pairs(maxLevelEffectsForSpell) do
                             local effectLevel = additionalLevel;
+                            local newEffectLevel = tonumber(effectLevel);
+                            if signatureSpells[spellKey] == true then
+                                newEffectLevel = tonumber(effectLevel) + 1;
+                                if (spellKey == "wh_dlc03_skill_magic_wild_viletide"
+                                or spellKey == "wh_main_skill_all_magic_fire_03_flaming_sword_of_rhuin"
+                                or spellKey == "wh_main_skill_vmp_magic_vampires_02_vanhels_danse_macabre") then
+                                    if tonumber(effectLevel) > 1 then
+                                        newEffectLevel = tonumber(effectLevel);
+                                    else
+                                        newEffectLevel = 0;
+                                    end
+                                end
+                            end
                             local oldEffectKey = characterSkillLevelToEffectsTable:GetColumnValueForRow(effectData, 'effect_key');
                             local effectsTable = databaseData["effects_tables"];
                             local matchingEffect = effectsTable:GetRowsMatchingColumnValues("effect", { oldEffectKey, });
                             local clonedEffect = effectsTable:CloneRow(1, matchingEffect);
                             local newEffectKey = agentKey.."_"..oldEffectKey;
-                            if addedKeys[spellIndex.."_"..newEffectKey.."_"..effectLevel] == nil then
+                            if addedKeys[spellIndex.."_"..newEffectKey.."_"..newEffectLevel] == nil then
                                 if global_effects_cache[newEffectKey] == nil then
                                     effectsTable:SetColumnValue(clonedEffect, 'effect', newEffectKey);
                                     --[[if not string.match(oldEffectKey, "_enable") then
@@ -888,8 +910,7 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                                 local clonedEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, maxLevelEffectsForSpell);
                                 characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'character_skill_key', 'wwl_'..agentKey.."_mixed_magic_"..spellIndex);
                                 characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'effect_key', newEffectKey);
-                                characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'level', effectLevel);
-                                local newEffectLevel = tonumber(effectLevel);
+                                characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'level', newEffectLevel);
                                 if signatureSpells[spellKey] == true then
                                     if effectIndex == 1 then
                                         local clonedBaseEffectToSkill = characterSkillLevelToEffectsTable:CloneRow(effectIndex, maxLevelEffectsForSpell);
@@ -898,17 +919,7 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                                         characterSkillLevelToEffectsTable:SetColumnValue(clonedBaseEffectToSkill, 'level', 1);
                                         table.insert(characterSkillsToEffectsToExport, clonedBaseEffectToSkill);
                                     end
-                                    newEffectLevel = tonumber(effectLevel) + 1;
-                                    if (spellKey == "wh_dlc03_skill_magic_wild_viletide"
-                                    or spellKey == "wh_main_skill_all_magic_fire_03_flaming_sword_of_rhuin"
-                                    or spellKey == "wh_main_skill_vmp_magic_vampires_02_vanhels_danse_macabre") then
-                                        if tonumber(effectLevel) > 1 then
-                                            newEffectLevel = tonumber(effectLevel);
-                                        else
-                                            newEffectLevel = 0 ;
-                                        end
-                                    end
-                                    characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'level', newEffectLevel);
+                                      characterSkillLevelToEffectsTable:SetColumnValue(clonedEffectToSkill, 'level', newEffectLevel);
                                 end
                                 if addedKeys[spellIndex.."_"..newEffectKey.."_"..newEffectLevel] == nil
                                 and newEffectLevel > 0 then

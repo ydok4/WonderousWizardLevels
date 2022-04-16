@@ -94,7 +94,7 @@ end
 
 function GetMatchingKeyMatchingLocalisedString(keys, stringToMatch, keyPrefix)
     for index, key in pairs(keys) do
-        if stringToMatch == effect.get_localised_string(keyPrefix..key) then
+        if stringToMatch == common.get_localised_string(keyPrefix..key) then
             return key;
         end
     end
