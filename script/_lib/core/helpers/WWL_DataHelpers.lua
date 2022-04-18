@@ -28,6 +28,17 @@ function Random(limit, start)
     return cm:random_number(limit, start);
 end
 
+function GetObjectFromListByPropertyValue(objectList, property, valueToCheck)
+    local tempTable = {}
+    for key, value in pairs(objectList) do
+        if value[property] ~= nil
+        and value[property] == valueToCheck then
+            return value;
+        end
+    end
+    return nil;
+end
+
 function GetRandomObjectFromList(objectList)
     local tempTable = {}
     for key, value in pairs(objectList) do

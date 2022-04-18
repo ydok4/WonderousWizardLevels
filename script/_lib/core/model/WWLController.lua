@@ -329,8 +329,18 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         -- Grab the magic lore data for each lore and deep copy them
         local magicLoresData = {};
         local innateSkills = {};
+        local guaranteedLore = nil;
         for index, loreKey in pairs(defaultWizardData.Lore) do
             local remappedMagicLore = {};
+            if defaultWizardData.HasAccessToFragements == true
+            and _G.WWLResources.AncillaryData[loreKey] ~= nil then
+                local loreFragment = _G.WWLResources.AncillaryData[loreKey];
+                local fragmentForLore = loreFragment.Ancillary;
+                if character:has_ancillary(fragmentForLore) then
+                    self.Logger:Log("Character has ancillary: "..fragmentForLore);
+                    guaranteedLore = loreKey;
+                end
+            end
             local magicLoreData = self:GetMagicLoreData(loreKey);
             for index, innateSpellKey in pairs(magicLoreData.InnateSkill) do
                 innateSkills[#innateSkills + 1] = innateSpellKey;
@@ -351,6 +361,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
                 nonSignatureSpells[#nonSignatureSpells + 1] = level3SpellsKey;
             end
             magicLoresData[#magicLoresData + 1] = {
+                Lore = loreKey,
                 InnateSkill = innateSkills,
                 SignatureSpell = signatureSpells,
                 Level1DefaultSpells = level1Spells,
@@ -446,8 +457,17 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             selectedSpells[#selectedSpells + 1] = activeLevel1Spell;
         end
         -- Get the level 1 spells
+        local giveGuaranteedLoreOnce = true;
         for i = 1, numberOfLevel1Spells do
-            local level1SpellLoreData = GetRandomObjectFromList(magicLoresData);
+            local level1SpellLoreData = nil;
+            if guaranteedLore ~= nil
+            and giveGuaranteedLoreOnce == true then
+                level1SpellLoreData = GetObjectFromListByPropertyValue(magicLoresData, "Lore", guaranteedLore);
+                giveGuaranteedLoreOnce = false;
+            else
+                level1SpellLoreData = GetRandomObjectFromList(magicLoresData);
+            end
+
             local activeLevel1Spell = GetAndRemoveRandomObjectFromList(level1SpellLoreData.Level1DefaultSpells);
             selectedLevel1Spells[#selectedLevel1Spells + 1] = activeLevel1Spell;
             self.Logger:Log("Giving character level 1 spell: "..activeLevel1Spell);
@@ -463,8 +483,16 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             end
         end
         -- Get the level 3 spells
+        giveGuaranteedLoreOnce = true;
         for i = 1, numberOfLevel3Spells do
-            local level3SpellLoreData = GetRandomObjectFromList(magicLoresData);
+            local level3SpellLoreData = nil;
+            if guaranteedLore ~= nil
+            and giveGuaranteedLoreOnce == true then
+                level3SpellLoreData = GetObjectFromListByPropertyValue(magicLoresData, "Lore", guaranteedLore);
+                giveGuaranteedLoreOnce = false;
+            else
+                level3SpellLoreData = GetRandomObjectFromList(magicLoresData);
+            end
             local activeLevel3Spell = GetAndRemoveRandomObjectFromList(level3SpellLoreData.Level3DefaultSpells);
             selectedLevel3Spells[#selectedLevel3Spells + 1] = activeLevel3Spell;
             self.Logger:Log("Giving character level 3 spell: "..activeLevel3Spell);

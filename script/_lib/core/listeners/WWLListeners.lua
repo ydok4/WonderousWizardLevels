@@ -438,7 +438,8 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
                     end
                 elseif WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] > 0 then
                     local wizardLevelTextComponent = InitialiseClonedSubTypeComponent(wwl, generalPanel, subtypeComponent, subtypeComponentText);
-                    wizardLevelTextComponent:SetStateText(wizardLevelUIText..WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText]);
+                    local agentSubtypeWizardLevelText = wizardLevelUIText..WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText];
+                    wizardLevelTextComponent:SetStateText(agentSubtypeWizardLevelText);
                 end
             elseif WWL_UICache[subtypeComponentText] == nil then
                 if subtypeComponentText == "dy_subtype" and buttonContext ~= nil then
@@ -536,6 +537,7 @@ function InitialiseClonedSubTypeComponent(wwl, generalPanel, subtypeComponent, t
         local xPos, yPos = subtypeComponent:Position();
         -- Needs a little bit of extra space to look right
         wizardLevelTextComponent:MoveTo(xPos + subtypeComponent:WidthOfTextLine(textToApply.." "), yPos);
+        wizardLevelTextComponent:PropagatePriority(150);
         return wizardLevelTextComponent;
     end
     return existingWizardLevel;

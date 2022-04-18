@@ -468,6 +468,24 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         conduitKey = "wh2_dlc14_skilll_all_magic_all_greater_arcane_conduit";
     elseif agentKey == "wh2_main_hef_teclis" then
         conduitKey = "wh2_main_skill_hef_teclis_flames_of_the_phoenix";
+    elseif agentKey == "wh3_main_tze_herald_of_tzeentch_metal"
+    or agentKey == "wh3_main_tze_herald_of_tzeentch_tzeentch"
+    or agentKey == "wh3_main_tze_iridescent_horror_metal"
+    or agentKey == "wh3_main_tze_iridescent_horror_tzeentch"
+    or agentKey == "wh3_main_tze_exalted_lord_of_change_metal"
+    or agentKey == "wh3_main_tze_exalted_lord_of_change_tzeentch" then
+        if agentKey == "wh3_main_tze_exalted_lord_of_change_metal"
+        or agentKey == "wh3_main_tze_exalted_lord_of_change_tzeentch" then
+            conduitKey = "wh2_dlc14_skilll_all_magic_all_greater_arcane_conduit";
+        else
+            conduitKey = "wh_main_skill_all_magic_all_11_arcane_conduit";
+        end
+
+        bonusSkills = {
+            "wh3_main_skill_tze_all_magic_prismatic_plurality",
+            "wh_main_skill_all_magic_all_07_earthing",
+            "wh_main_skill_all_magic_all_08_power_drain",
+        };
     elseif agentKey == "wh2_dlc17_dwf_thorek"
     or agentKey == "dlc06_dwf_runelord"
     or agentKey == "dwf_runesmith" then
@@ -971,7 +989,7 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                 characterSkillLoc:SetColumnValue(newCharacterSkillsLoc[i * 2 - 1], 'text', textForSkill);
             end
         end
-        local characterSkillsAndLinks = GenerateSkillTreeForAgent(databaseData, nil, agentKey, agentData, { "wh_main_skill_all_magic_all_06_evasion", "wh_main_skill_all_magic_all_07_earthing", "wh_main_skill_all_magic_all_08_power_drain", "wh_main_skill_all_magic_all_11_arcane_conduit", "wh2_main_skill_magic_dark_flock_of_doom_teclis", "wh2_main_skill_all_magic_high_09_arcane_unforging_lord", });
+        local characterSkillsAndLinks = GenerateSkillTreeForAgent(databaseData, nil, agentKey, agentData, { "wh_main_skill_all_magic_all_06_evasion", "wh_main_skill_all_magic_all_07_earthing", "wh_main_skill_all_magic_all_08_power_drain", "wh_main_skill_all_magic_all_11_arcane_conduit", "wh2_main_skill_magic_dark_flock_of_doom_teclis", "wh2_main_skill_all_magic_high_09_arcane_unforging_lord", "wh3_main_skill_tze_all_magic_prismatic_plurality", });
         ConcatTable(characterSkillNodesToExport, characterSkillsAndLinks["character_skill_nodes_tables"]);
         ConcatTable(characterSkillNodeLinksToExport, characterSkillsAndLinks["character_skill_node_links_tables"]);
         ConcatTable(characterSkillsToEffectsToExport, characterSkillsAndLinks["character_skill_level_to_effects_junctions_tables"]);

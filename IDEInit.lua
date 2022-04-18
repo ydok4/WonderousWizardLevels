@@ -3,7 +3,7 @@ testCharacter = {
     cqi = function() return 123 end,
     get_forename = function() return "Direfan"; end,
     get_surname = function() return "Cylostra"; end,
-    character_subtype_key = function() return "wh3_main_nur_plagueridden_death"; end,
+    character_subtype_key = function() return "wh3_main_tze_kairos"; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -52,7 +52,7 @@ humanFaction = {
         return "wh_main_grn_greenskins";
     end,
     subculture = function()
-        return "wh3_main_sc_nur_nurgle";
+        return "wh3_main_sc_tze_tzeentch";
     end,
     character_list = function()
         return {
@@ -101,7 +101,7 @@ testFaction = {
         return "wh2_main_def_dark_elves";
     end,
     subculture = function()
-        return "wh3_main_sc_nur_nurgle";
+        return "wh3_main_sc_tze_tzeentch";
     end,
     character_list = function()
         return {

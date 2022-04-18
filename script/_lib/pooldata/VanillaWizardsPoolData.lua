@@ -707,6 +707,7 @@ function GetVanillaWizardsPoolDataResources()
             wh3_main_tze_kairos = {
                 DefaultWizardLevel = 4,
                 Lore = { "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh3_main_lore_tzeentch", },
+                HasAccessToFragements = true,
             },
         },
         -- Vampire Coast

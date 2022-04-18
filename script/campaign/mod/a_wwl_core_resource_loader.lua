@@ -1,10 +1,12 @@
 require 'script/_lib/pooldata/MagicLoresPoolData'
+require 'script/_lib/pooldata/SpellFragmentsForLoresPoolData'
 require 'script/_lib/pooldata/VanillaWizardsPoolData'
 require 'script/_lib/pooldata/VanillaUnitWizardsPoolData'
 require 'script/_lib/pooldata/VanillaLegendaryLordNameKeys'
 
 _G.WWLResources = {
     WizardData = GetVanillaWizardsPoolDataResources(),
+    AncillaryData = GetSpellFragmentsForLores(),
     UnitData = GetVanillaUnitWizardPoolDataResources(),
     MagicLores = GetMagicLorePoolDataResources(),
     LegendaryLordNameKeys = GetVanillaLegendaryLordNameKeys(),
