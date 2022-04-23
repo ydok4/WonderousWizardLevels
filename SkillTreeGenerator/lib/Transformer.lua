@@ -190,8 +190,8 @@ function GenerateWWLSkillTrees(databaseData)
         -- Finally we find the agents that match our lore
         local agentsWithMatchingLore = {};
         local agentKeysWithMatchingLore = {};
-        for subcultureKey, subcultureAgents in pairs(_G.WWLResources.WizardData) do
-            for agentKey, agentData in pairs(subcultureAgents) do
+        --for subcultureKey, subcultureAgents in pairs(_G.WWLResources.WizardData) do
+            for agentKey, agentData in pairs(_G.WWLResources.WizardData) do
                 if type(agentData.Lore) == "string"
                 and groupKey == agentData.Lore then
                     print("Found agent: "..agentKey.." for Lore: "..groupKey);
@@ -199,7 +199,7 @@ function GenerateWWLSkillTrees(databaseData)
                     table.insert(agentKeysWithMatchingLore, agentKey);
                 end
             end
-        end
+        --end
 
         -- Match them to their character skill sets, then their character skill nodes
         --[[local characterSkillSetsForAgents = characterSkillSetsTable:GetRowsMatchingColumnValues("agent_subtype_key", agentKeysWithMatchingLore);
@@ -473,7 +473,8 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     or agentKey == "wh3_main_tze_iridescent_horror_metal"
     or agentKey == "wh3_main_tze_iridescent_horror_tzeentch"
     or agentKey == "wh3_main_tze_exalted_lord_of_change_metal"
-    or agentKey == "wh3_main_tze_exalted_lord_of_change_tzeentch" then
+    or agentKey == "wh3_main_tze_exalted_lord_of_change_tzeentch"
+    or agentKey == "wh3_main_tze_cultist" then
         if agentKey == "wh3_main_tze_exalted_lord_of_change_metal"
         or agentKey == "wh3_main_tze_exalted_lord_of_change_tzeentch" then
             conduitKey = "wh2_dlc14_skilll_all_magic_all_greater_arcane_conduit";
@@ -702,13 +703,13 @@ end
 
 function GenerateMultiLoreCharacterSkills(databaseData)
     local multiLoreCasters = {};
-    for subcultureKey, subcultureCasters in pairs(_G.WWLResources.WizardData) do
-        for agentKey, agentData in pairs(subcultureCasters) do
+    --for subcultureKey, subcultureCasters in pairs(_G.WWLResources.WizardData) do
+        for agentKey, agentData in pairs(_G.WWLResources.WizardData) do
             if type(agentData.Lore) == "table" then
                 multiLoreCasters[agentKey] = agentData;
             end
         end
-    end
+    --end
     local effectsToExport = {};
     local effectBonusValuesToExport = {};
     local characterSkillsToExport = {};

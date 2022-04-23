@@ -2,6 +2,15 @@
 -- map them back to their subtype
 function GetVanillaLegendaryLordNameKeys()
     return {
+        -- All
+        all = {
+            -- Be'lakor
+            names_name_1088515835 = {
+                Surname = "names_name_1088515835",
+                Subtype = "wh3_main_dae_belakor",
+            },
+        },
+        -- Beastmen
         wh_dlc03_sc_bst_beastmen = {
             -- Malagor
             names_name_2147357619 = {
@@ -24,6 +33,11 @@ function GetVanillaLegendaryLordNameKeys()
                 Surname = "names_name_2147357364",
                 Subtype = "chs_archaon",
             },
+        },
+        -- Daemons of Chaos
+        wh3_main_sc_dae_daemons = {
+            -- The daemon prince won't actually show up in the Generals panel
+            -- so we don't need to come up with a solution (phew).
         },
         -- Cathay
         wh3_main_sc_cth_cathay = {

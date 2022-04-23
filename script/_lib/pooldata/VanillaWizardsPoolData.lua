@@ -99,11 +99,11 @@ function GetVanillaWizardsPoolDataResources()
             },
             wh3_main_cth_miao_ying = {
                 DefaultWizardLevel = 4,
-                Lore = { "wh3_main_lore_of_yin", "wh_dlc05_lore_life", },
+                Lore = { "wh_dlc05_lore_life", "wh3_main_lore_of_yin", },
             },
             wh3_main_cth_zhao_ming = {
                 DefaultWizardLevel = 4,
-                Lore = { "wh3_main_lore_of_yang", "wh_main_lore_metal", },
+                Lore = { "wh_main_lore_metal", "wh3_main_lore_of_yang", },
             },
         },
         -- Chaos
@@ -151,7 +151,17 @@ function GetVanillaWizardsPoolDataResources()
         },
         -- Daemons of Chaos
         wh3_main_sc_dae_daemons = {
-            -- Draws from Khorne, Nurgle, Slaanesh and Tzeentch
+            --wh3_main_dae_daemon_prince
+            -- Belakor isn't exclusive to any faction but needs to be defined somewhere
+            -- Because he will always exist when he is spawned, it doesn't matter what subculture he is in
+            -- Keeping him in Undivided Daemons because he is one
+            wh3_main_dae_belakor = {
+                DefaultWizardLevel = 4,
+                Lore = "wh_dlc05_lore_shadows",
+            },
+            -- Also draws from Khorne, Nurgle, Slaanesh and Tzeentch
+            -- These overwrites are defined in the loader script
+
         },
         -- Dark Elves
         wh2_main_sc_def_dark_elves = {
@@ -341,7 +351,7 @@ function GetVanillaWizardsPoolDataResources()
             },
             wh2_main_hef_teclis = {
                 DefaultWizardLevel = 4,
-                Lore = { "wh2_dlc15_lore_beasts_eagle", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh2_main_lore_high_magic", },
+                Lore = { "wh2_main_lore_high_magic", "wh2_dlc15_lore_beasts_eagle", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", },
             },
             wh2_dlc10_hef_alarielle = {
                 DefaultWizardLevel = 4,
@@ -445,7 +455,7 @@ function GetVanillaWizardsPoolDataResources()
             },
             wh2_main_lzd_lord_mazdamundi = {
                 DefaultWizardLevel = 5,
-                Lore = { "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh2_main_lore_high_magic", },
+                Lore = { "wh2_main_lore_high_magic", "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", },
             },
             wh2_main_lzd_slann_mage_priest = {
                 DefaultWizardLevel = 5,
@@ -680,6 +690,10 @@ function GetVanillaWizardsPoolDataResources()
         },
         -- Tzeentch
         wh3_main_sc_tze_tzeentch = {
+            wh3_main_tze_cultist = {
+                DefaultWizardLevel = 0,
+                Lore = "wh_main_lore_fire",
+            },
             wh3_main_tze_iridescent_horror_metal = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_metal",
@@ -706,7 +720,7 @@ function GetVanillaWizardsPoolDataResources()
             },
             wh3_main_tze_kairos = {
                 DefaultWizardLevel = 4,
-                Lore = { "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh3_main_lore_tzeentch", },
+                Lore = { "wh3_main_lore_tzeentch", "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", },
                 HasAccessToFragements = true,
             },
         },
@@ -923,7 +937,7 @@ function GetVanillaWizardsPoolDataResources()
             wh2_dlc16_wef_ariel = {
                 IsLord = false,
                 DefaultWizardLevel = 4,
-                Lore = { "wh_dlc05_lore_life", "wh2_main_lore_dark_magic", "wh2_main_lore_high_magic", },
+                Lore = { "wh2_main_lore_high_magic", "wh_dlc05_lore_life", "wh2_main_lore_dark_magic", },
             },
             wh2_dlc16_wef_drycha = {
                 IsLord = true,

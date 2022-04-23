@@ -244,7 +244,8 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
             or context.string == "spy" -- None in vanilla but included just in case
             or context.string == "button_cycle_left"
             or context.string == "button_cycle_right"
-            or wwl:GetDefaultWizardDataForCharacterSubtype(context.string, wwl.HumanFaction:subculture());
+            --or wwl:GetMagicLoreData(context.string) ~= nil -- When clicking the lore buttons
+            or wwl:GetDefaultWizardDataForCharacterSubtype(context.string); -- When selecting different lord types
         end,
         function(context)
             local stringContext = context.string;
@@ -252,9 +253,6 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
                 if lockUISetup == false then
                     lockUISetup = true;
                     wwl.Logger:Log("WWL_CharacterRecruitmentButtons: "..stringContext);
-                    --local listView = find_uicomponent(core:get_ui_root(), "character_panel", "character_panel_info_holder", "general_selection_panel", "main_holder", "character_list_parent", "character_list", "listview", "list_clip", "list_box");
-                    --listView:SetCanResizeWidth(true);
-                    --listView:Resize(listView:Width() + 20, listView:Height());
                     local generalsList = find_uicomponent(core:get_ui_root(), "character_panel", "character_panel_info_holder", "general_selection_panel", "main_holder", "character_list_parent", "character_list", "listview", "list_clip", "list_box");
                     SetWizardLevelUI(wwl, generalsList, stringContext);
                     lockUISetup = false;
@@ -326,9 +324,6 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
                 cm:callback(function(context)
                     if lockUISetup == false then
                         lockUISetup = true;
-                        --local listView = find_uicomponent(core:get_ui_root(), "character_panel", "character_panel_info_holder", "general_selection_panel", "main_holder", "character_list_parent", "character_list", "listview", "list_clip", "list_box");
-                        --listView:SetCanResizeWidth(true);
-                        --listView:Resize(listView:Width() + 20, listView:Height());
                         local generalsList = find_uicomponent(core:get_ui_root(), "character_panel", "character_panel_info_holder", "general_selection_panel", "main_holder", "character_list_parent", "character_list", "listview", "list_clip", "list_box");
                         SetWizardLevelUI(wwl, generalsList);
                         lockUISetup = false;
@@ -354,13 +349,16 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
         function(context)
             wwl.Logger:Log("Panel closed\n");
             panelOpened = false;
+            -- Failsafe in case the UI logic breaks
+            lockUISetup = false;
             wwl.Logger:Log_Finished();
         end,
         true
     );
 
     -- Manage Unit Upgrade UI
-    local playerSubculture = wwl.HumanFaction:subculture();
+    -- Note: Disabled, idea wasn't possible
+    --[[local playerSubculture = wwl.HumanFaction:subculture();
     if _G.WWLResources.UnitData[playerSubculture] ~= nil then
         core:add_listener(
             "WWL_UnitSelected",
@@ -388,7 +386,7 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
             end,
             true
         );
-    end
+    end--]]
 end
 
 function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
@@ -399,14 +397,24 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
     end
     local numGenerals = pathToGenerals:ChildCount() - 1;
     if numGenerals >= 0 then
-        wwl.Logger:Log("numGenerals > 0: "..numGenerals);
+        --wwl.Logger:Log("numGenerals > 0: "..numGenerals);
         local playerSubculture = wwl.HumanFaction:subculture();
+        local playerFaction = wwl.HumanFaction;
+        wwl.Logger:Log("Checking for subculture supported subtypes");
+        local supportedSubtypes = wwl:GetSuppportedSubtypesForFaction(playerFaction);
+        if supportedSubtypes == nil then
+            wwl.Logger:Log("No supported subtypes found");
+            return;
+        end
         wwl.Logger:Log("Got player subculture: "..playerSubculture);
         local wizardLevelUIText = common.get_localised_string("wwl_wizard_level_ui");
-        wwl.Logger:Log("Got loc");
+        --wwl.Logger:Log("Got loc");
         if playerSubculture == "wh_main_sc_dwf_dwarfs" then
             wizardLevelUIText = common.get_localised_string("wwl_rune_level_ui");
         end
+        -- Note: We deliberately do not check the visibility of the component because we can cache all the updates up front.
+        -- This saves us from having to setup extra data when determining if we've selected a UI element where the general
+        -- list is visible
         for i = 0, numGenerals do
             wwl.Logger:Log("Checking general: "..i);
             local generalPanel = UIComponent(pathToGenerals:Find(i));
@@ -425,61 +433,66 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
                 end
                 if WWL_UICache[subtypeComponentText] == nil or WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] == nil then
                     wwl.Logger:Log("Checking for Legendary Lord by name: "..nameText);
-                    local characterWizardLevel = wwl:GetCharacterWizardLevelWithName(nameText, wwl.HumanFaction, true);
+                    local characterWizardLevelUIData = wwl:GetCharacterWizardLevelUIDataWithName(nameText, wwl.HumanFaction, true);
                     -- If we can't find a Legendary Character by their name then they aren't a wizard or aren't supported
-                    if characterWizardLevel == nil then
+                    if characterWizardLevelUIData == nil then
                         wwl.Logger:Log("Could not find supported LL");
-                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = 0;
+                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = {
+                            WizardLevel = nil,
+                            ImagePath = nil,
+                        };
                     else
-                        wwl.Logger:Log("Found LL...using detected value: "..characterWizardLevel);
-                        local wizardLevelTextComponent = InitialiseClonedSubTypeComponent(wwl, generalPanel, subtypeComponent, subtypeComponentText);
-                        wizardLevelTextComponent:SetStateText(wizardLevelUIText..characterWizardLevel);
-                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevel;
+                        wwl.Logger:Log("Found LL...using detected value: "..characterWizardLevelUIData.WizardLevel);
+                        local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, characterWizardLevelUIData.ImagePath);
+                        SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
+                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevelUIData;
                     end
-                elseif WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] > 0 then
-                    local wizardLevelTextComponent = InitialiseClonedSubTypeComponent(wwl, generalPanel, subtypeComponent, subtypeComponentText);
-                    local agentSubtypeWizardLevelText = wizardLevelUIText..WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText];
-                    wizardLevelTextComponent:SetStateText(agentSubtypeWizardLevelText);
+                elseif WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText].WizardLevel ~= nil then
+                    local characterWizardLevelUIData = WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText];
+                    local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, characterWizardLevelUIData.ImagePath);
+                    SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
                 end
             elseif WWL_UICache[subtypeComponentText] == nil then
                 if subtypeComponentText == "dy_subtype" and buttonContext ~= nil then
                     subtypeComponentText = common.get_localised_string("agent_subtypes_onscreen_name_override_"..buttonContext);
                 end
                 local foundWizard = false;
-                wwl.Logger:Log("Checking for subculture supported subtypes");
-                local supportedSubtypes = wwl:GetSuppportedSubtypesForSubculture(playerSubculture);
-                wwl.Logger:Log("Subculture is: "..playerSubculture);
-                if supportedSubtypes ~= nil then
-                    for subtypeKey, subTypeData in pairs(supportedSubtypes) do
-                        wwl.Logger:Log("Checking subtype: "..subtypeKey);
-                        local localisedSubtypeName = common.get_localised_string("agent_subtypes_onscreen_name_override_"..subtypeKey);
-                        wwl.Logger:Log("localisedSubtypeName is: "..localisedSubtypeName);
-                        if localisedSubtypeName == subtypeComponentText then
-                            wwl.Logger:Log("Found match!");
-                            -- Set cached data
-                            WWL_UICache[subtypeComponentText] = {
-                                DefaultWizardLevel = subTypeData.DefaultWizardLevel,
-                                TrackedWizardNames = {},
-                                IsSupportedWizard = true,
+                for subtypeKey, subTypeData in pairs(supportedSubtypes) do
+                    --wwl.Logger:Log("Checking subtype: "..subtypeKey);
+                    local localisedSubtypeName = common.get_localised_string("agent_subtypes_onscreen_name_override_"..subtypeKey);
+                    --wwl.Logger:Log("localisedSubtypeName is: "..localisedSubtypeName);
+                    if localisedSubtypeName == subtypeComponentText then
+                        wwl.Logger:Log("Found match: ".. localisedSubtypeName);
+                        -- Set cached data
+                        local imagePath = wwl:GetImagePathForSubtype(subtypeKey);
+                        local fullImagePath = wwl.Skin..imagePath;
+                        WWL_UICache[subtypeComponentText] = {
+                            DefaultWizardLevel = subTypeData.DefaultWizardLevel,
+                            TrackedWizardNames = {},
+                            IsSupportedWizard = true,
+                            IconImage = fullImagePath,
+                        };
+                        local nameComponent = find_uicomponent(generalPanel, "info_holder", "details_holder", "dy_name");
+                        local nameText = nameComponent:GetStateText();
+                        wwl.Logger:Log("Looking for: "..nameText);
+                        local characterWizardLevelUIData = wwl:GetCharacterWizardLevelUIDataWithName(nameText, wwl.HumanFaction, false);
+                        local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, fullImagePath);
+                        -- If we can't find a character with any active data, then we probably haven't recruited them yet
+                        if characterWizardLevelUIData == nil then
+                            wwl.Logger:Log("Character is not active. Using default values: "..subTypeData.DefaultWizardLevel);
+                            SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, subTypeData.DefaultWizardLevel);
+                            WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = {
+                                WizardLevel = subTypeData.DefaultWizardLevel,
+                                ImagePath = fullImagePath,
                             };
-                            local nameComponent = find_uicomponent(generalPanel, "info_holder", "details_holder", "dy_name");
-                            local nameText = nameComponent:GetStateText();
-                            local characterWizardLevel = wwl:GetCharacterWizardLevelWithName(nameText, wwl.HumanFaction, false);
-                            local wizardLevelTextComponent = InitialiseClonedSubTypeComponent(wwl, generalPanel, subtypeComponent, subtypeComponentText);
-                            -- If we can't find a character with any active data, then we probably haven't recruited them yet
-                            if characterWizardLevel == nil then
-                                wwl.Logger:Log("Character is not active. Using default values: "..subTypeData.DefaultWizardLevel);
-                                wizardLevelTextComponent:SetStateText(wizardLevelUIText..subTypeData.DefaultWizardLevel);
-                                WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = subTypeData.DefaultWizardLevel;
-                            else
-                                wwl.Logger:Log("Character is active. Using value: "..characterWizardLevel);
-                                wizardLevelTextComponent:SetStateText(wizardLevelUIText..characterWizardLevel);
-                                WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevel;
-                            end
-
-                            foundWizard = true;
-                            break;
+                        else
+                            wwl.Logger:Log("Character is active. Using value: "..characterWizardLevelUIData.WizardLevel);
+                            SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
+                            WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevelUIData;
                         end
+
+                        foundWizard = true;
+                        break;
                     end
                 end
                 -- If we haven't found a subtype match, then the character probably isn't a wizard
@@ -497,22 +510,29 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
                 wwl.Logger:Log("Using cached match!");
                 local nameComponent = find_uicomponent(generalPanel, "info_holder", "details_holder", "dy_name");
                 local nameText = nameComponent:GetStateText();
-                local characterWizardLevel = wwl:GetCharacterWizardLevelWithName(nameText, wwl.HumanFaction, false);
-                local wizardLevelTextComponent = InitialiseClonedSubTypeComponent(wwl, generalPanel, subtypeComponent, subtypeComponentText);
+                local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, WWL_UICache[subtypeComponentText].IconImage);
+
+                local characterWizardLevelUIData = wwl:GetCharacterWizardLevelUIDataWithName(nameText, wwl.HumanFaction, false);
                 if WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] == nil then
                     wwl.Logger:Log("Wizard is not cached by name");
                     -- If we can't find a character with any active data, then we probably haven't recruited them yet
-                    if characterWizardLevel == nil then
+                    if characterWizardLevelUIData == nil then
+                        wwl.Logger:Log("Not recruited");
                         local defaultWizardLevel = WWL_UICache[subtypeComponentText].DefaultWizardLevel;
-                        wizardLevelTextComponent:SetStateText(wizardLevelUIText..defaultWizardLevel);
-                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = defaultWizardLevel;
+                        SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, defaultWizardLevel);
+                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = {
+                            WizardLevel = defaultWizardLevel,
+                            ImagePath = WWL_UICache[subtypeComponentText].IconImage,
+                        };
                     else
-                        wizardLevelTextComponent:SetStateText(wizardLevelUIText..characterWizardLevel);
-                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevel;
+                        wwl.Logger:Log("Using recruited data");
+                        SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
+                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevelUIData;
                     end
                 else
                     wwl.Logger:Log("Found wizard cache by name");
-                    wizardLevelTextComponent:SetStateText(wizardLevelUIText..WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText]);
+                    local cachedWizard = WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText];
+                    SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, cachedWizard.WizardLevel);
                 end
             else
                 wwl.Logger:Log("Character is unsupported");
@@ -531,14 +551,64 @@ end
 function InitialiseClonedSubTypeComponent(wwl, generalPanel, subtypeComponent, textToApply)
     local existingWizardLevel = find_uicomponent(generalPanel, "info_holder", "details_holder", "dy_wizard_level");
     if not existingWizardLevel then
-        wwl.Logger:Log("Cloning Component");
+        --wwl.Logger:Log("Cloning Component");
         subtypeComponent:SetVisible(true);
         local wizardLevelTextComponent = UIComponent(subtypeComponent:CopyComponent("dy_wizard_level"));
         local xPos, yPos = subtypeComponent:Position();
         -- Needs a little bit of extra space to look right
         wizardLevelTextComponent:MoveTo(xPos + subtypeComponent:WidthOfTextLine(textToApply.." "), yPos);
-        wizardLevelTextComponent:PropagatePriority(150);
+        --wizardLevelTextComponent:RegisterTopMost();
+		--wwl.Logger:Log("Priority is: "..wizardLevelTextComponent:Priority());
+        --wizardLevelTextComponent:PropagatePriority(150);
         return wizardLevelTextComponent;
     end
     return existingWizardLevel;
+end
+
+function InitialiseClonedRankComponent(wwl, generalPanel, loreIconPath)
+    local existingRank = find_uicomponent(generalPanel, "info_holder", "wizard_level");
+    if not existingRank then
+        --wwl.Logger:Log("Cloning Component");
+        local rankComponent = find_uicomponent(generalPanel, "info_holder", "rank");
+		-- Clone components
+        local wizardLevelComponent = UIComponent(rankComponent:CopyComponent("wizard_level"));
+		local dyRankComponent = find_uicomponent(wizardLevelComponent, "dy_rank");
+		local wizardLevelText = UIComponent(dyRankComponent:CopyComponent("dy_wizard_level"));
+		-- Cleanup and rearrange children
+		wizardLevelComponent:Divorce(wizardLevelText:Address());
+		wizardLevelComponent:DestroyChildren();
+		wizardLevelComponent:Adopt(wizardLevelText:Address());
+		wizardLevelComponent:SetTooltipText("", true);
+        wizardLevelComponent:SetImagePath(loreIconPath, 0, true);
+        cm:callback(function()
+            -- We need to adjust the icon to ensure it is positioned and scaled
+            -- apropriately
+            local scale = 0.75;
+            local width, height = wizardLevelComponent:Dimensions();
+            local xPos, yPos = rankComponent:Position();
+            local new_xPos = width * ((1 - scale) / 2);
+            local new_yPos = height * ((1 - scale) / 2);
+            local base_xPos = 2;
+            local base_yPos = rankComponent:Height() - 10;
+            wizardLevelComponent:SetDockOffset(new_xPos, new_yPos - base_yPos);
+            -- Reize the state image and keep the aspect ratio
+            local img_w, img_h = wizardLevelComponent:GetCurrentStateImageDimensions(0);
+            local new_width = width * scale;
+            local new_height = new_width * img_h / img_w;
+            wizardLevelComponent:ResizeCurrentStateImage(0, new_width, new_height);
+            -- Finally adjust the position of the number so it is centred
+            wizardLevelText:SetDockOffset(new_xPos - base_xPos - new_width/4, new_yPos - new_height/4 - 2);
+        end,
+        0.1);
+        return wizardLevelComponent;
+    end
+	wwl.Logger:Log("Existing component");
+    return existingRank;
+end
+
+function SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, wizardLevel)
+    wizardLevelComponent:SetTooltipText(wizardLevelUIText..wizardLevel, true);
+
+    local wizardLevelTextComponent = find_uicomponent(wizardLevelComponent, "dy_wizard_level");
+    wizardLevelTextComponent:SetStateText(wizardLevel);
 end

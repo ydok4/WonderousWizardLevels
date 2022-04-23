@@ -5,6 +5,8 @@ WWLController = {
     Logger = {},
     -- Data structures
     WizardData = {},
+    -- Defaults
+    Skin = "ui/skins/warhammer3/",
 }
 
 function WWLController:new (o)
@@ -56,20 +58,14 @@ function WWLController:IsSupportedCharacter(character)
         return false;
     end
     local characterSubtype = character:character_subtype_key();
-    local characterSubculture = character:faction():subculture();
-    local equivalentSubculture = self:GetEquivalentSubculture(characterSubculture);
-    if _G.WWLResources.WizardData[equivalentSubculture] == nil then
-        return false;
-    end
-    return _G.WWLResources.WizardData[equivalentSubculture][characterSubtype] ~= nil;
+    return _G.WWLResources.WizardData[characterSubtype] ~= nil;
 end
 
 function WWLController:SetupNewWizard(character)
     local characterCqi = character:command_queue_index();
     local characterLookupString = "character_cqi:"..characterCqi;
     local characterSubtype = character:character_subtype_key();
-    local characterSubculture = character:faction():subculture()
-    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype, characterSubculture);
+    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype);
     local defaultSpells = self:GetDefaultSpellsForWizard(defaultWizardData);
     self.WizardData[characterLookupString] = {
         NumberOfSpells = defaultWizardData.DefaultWizardLevel,
@@ -81,19 +77,55 @@ end
 
 function WWLController:GetLegendaryLordNameKeysForSubculture(subcultureKey)
     local equivalentSubculture = self:GetEquivalentSubculture(subcultureKey);
-    return _G.WWLResources.LegendaryLordNameKeys[equivalentSubculture];
-end
-function WWLController:GetSuppportedSubtypesForSubculture(characterSubculture)
-    local equivalentSubculture = self:GetEquivalentSubculture(characterSubculture);
-    return _G.WWLResources.WizardData[equivalentSubculture];
+    local subcultureNames = _G.WWLResources.LegendaryLordNameKeys[equivalentSubculture];
+    local all = _G.WWLResources.LegendaryLordNameKeys["all"];
+    local remappedNameKeys = {};
+    ConcatTableWithKeys(remappedNameKeys, subcultureNames);
+    ConcatTableWithKeys(remappedNameKeys, all);
+    return remappedNameKeys;
 end
 
-function WWLController:GetDefaultWizardDataForCharacterSubtype(characterSubtype, characterSubculture)
+function WWLController:GetSuppportedSubtypesForFaction(faction)
+    local characterSubculture = faction:subculture();
     local equivalentSubculture = self:GetEquivalentSubculture(characterSubculture);
-    if equivalentSubculture == nil then
-        return false;
+    local wizardData = _G.WWLResources.WizardsToSubculture[equivalentSubculture];
+    if wizardData == nil then
+        self.Logger:Log("Subculture: "..equivalentSubculture.." is not supported");
+        return nil;
     end
-    return _G.WWLResources.WizardData[equivalentSubculture][characterSubtype];
+    -- This additional check exists to catch any supported wizards that have been converted
+    local character_list = faction:character_list();
+    for i = 0, character_list:num_items() - 1 do
+        local character = character_list:item_at(i);
+        local characterSubtype = character:character_subtype_key();
+        if character:is_null_interface() == false
+        and wizardData[characterSubtype] == nil
+        and self:IsSupportedCharacter(character) then
+            wizardData[characterSubtype] = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype);
+        end
+    end
+    return wizardData;
+end
+
+function WWLController:GetDefaultWizardDataForCharacterSubtype(characterSubtype)
+    return _G.WWLResources.WizardData[characterSubtype];
+end
+
+function WWLController:GetImagePathForSubtype(characterSubtype)
+    local wizardData = _G.WWLResources.WizardData[characterSubtype];
+    if wizardData.ImagePathOverwrite == nil then
+        local loreKey = "";
+        -- Grab the first one by default if multiple are specified
+        -- If we need a particular one then use the overwrite
+        if type(wizardData.Lore) == "table" then
+            loreKey = wizardData.Lore[1];
+        else
+            loreKey = wizardData.Lore
+        end
+        local magicLore = self:GetMagicLoreData(loreKey);
+        return magicLore.ImagePath;
+    end
+    return wizardData.ImagePathOverwrite;
 end
 
 function WWLController:GetEquivalentSubculture(subculture)
@@ -180,7 +212,7 @@ end
 
 function WWLController:GetWizardLevel(character)
     local characterSubculture = character:faction():subculture();
-    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(character:character_subtype_key(), characterSubculture);
+    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(character:character_subtype_key());
     if defaultWizardData == nil then
         return nil;
     end
@@ -219,7 +251,7 @@ function WWLController:SetSpellsForCharacter(character, forceGeneration)
     local characterSubtype = character:character_subtype_key();
     self.Logger:Log("Character subtype: ".. characterSubtype.." character cqi: "..characterCqi);
     local characterSubculture = character:faction():subculture();
-    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype, characterSubculture);
+    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype);
     if self:HasSpecialSpellGenerationRules(defaultWizardData) then
         local specialCallbackTimeout = 0.3;
         --[[if characterSubtype == "wh2_main_hef_loremaster_of_hoeth" then
@@ -332,18 +364,11 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         local guaranteedLore = nil;
         for index, loreKey in pairs(defaultWizardData.Lore) do
             local remappedMagicLore = {};
-            if defaultWizardData.HasAccessToFragements == true
-            and _G.WWLResources.AncillaryData[loreKey] ~= nil then
-                local loreFragment = _G.WWLResources.AncillaryData[loreKey];
-                local fragmentForLore = loreFragment.Ancillary;
-                if character:has_ancillary(fragmentForLore) then
-                    self.Logger:Log("Character has ancillary: "..fragmentForLore);
-                    guaranteedLore = loreKey;
-                end
-            end
             local magicLoreData = self:GetMagicLoreData(loreKey);
+            local innateSkillForLore = '';
             for index, innateSpellKey in pairs(magicLoreData.InnateSkill) do
                 innateSkills[#innateSkills + 1] = innateSpellKey;
+                innateSkillForLore = innateSpellKey;
             end
             local signatureSpells = {};
             for index, signatureSpellKey in pairs(magicLoreData.SignatureSpell) do
@@ -360,6 +385,18 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
                 level3Spells[#level3Spells + 1] = level3SpellsKey;
                 nonSignatureSpells[#nonSignatureSpells + 1] = level3SpellsKey;
             end
+            if defaultWizardData.HasAccessToFragements == true
+            and _G.WWLResources.AncillaryData[loreKey] ~= nil then
+                local loreFragment = _G.WWLResources.AncillaryData[loreKey];
+                local fragmentForLore = loreFragment.Ancillary;
+                if character:has_ancillary(fragmentForLore) then
+                    self.Logger:Log("Character has ancillary: "..fragmentForLore);
+                    guaranteedLore = {
+                        Lore = loreKey,
+                        InnateSkill = innateSkillForLore,
+                    };
+                end
+            end
             magicLoresData[#magicLoresData + 1] = {
                 Lore = loreKey,
                 InnateSkill = innateSkills,
@@ -369,6 +406,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
                 NonSignatureSpells = nonSignatureSpells,
             };
         end
+        local giveGuaranteedLoreOnce = true;
         local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
         customEffectBundle:set_duration(1);
         local selectedSpells = {};
@@ -378,7 +416,14 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             local disabledSkills = {};
             local numberOfSkillsToDisable = numberOfMagicLores - defaultWizardData.DefaultWizardLevel - 1;
             for i = 0, numberOfSkillsToDisable do
-                local innateSkillKey = GetAndRemoveRandomObjectFromList(innateSkills);
+                local innateSkillKey = nil;
+                if guaranteedLore ~= nil then
+                    innateSkillKey = GetRandomObjectFromList(innateSkills, { guaranteedLore.InnateSkill, });
+                else
+                    innateSkillKey = GetRandomObjectFromList(innateSkills);
+                end
+                RemoveObjectFromListByValue(innateSkills, innateSkillKey);
+
                 self.Logger:Log("Disabling skill: "..innateSkillKey);
                 customEffectBundle:add_effect(innateSkillKey.."_disabled", "character_to_character_own", 1);
             end
@@ -457,15 +502,14 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             selectedSpells[#selectedSpells + 1] = activeLevel1Spell;
         end
         -- Get the level 1 spells
-        local giveGuaranteedLoreOnce = true;
         for i = 1, numberOfLevel1Spells do
             local level1SpellLoreData = nil;
             if guaranteedLore ~= nil
             and giveGuaranteedLoreOnce == true then
-                level1SpellLoreData = GetObjectFromListByPropertyValue(magicLoresData, "Lore", guaranteedLore);
+                level1SpellLoreData = GetObjectFromListByPropertyValue(magicLoresData, "Lore", guaranteedLore.Lore);
                 giveGuaranteedLoreOnce = false;
             else
-                level1SpellLoreData = GetRandomObjectFromList(magicLoresData);
+                level1SpellLoreData = GetRandomObjectFromList(magicLoresData, { guaranteedLore.Lore, }, "Lore");
             end
 
             local activeLevel1Spell = GetAndRemoveRandomObjectFromList(level1SpellLoreData.Level1DefaultSpells);
@@ -488,10 +532,10 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             local level3SpellLoreData = nil;
             if guaranteedLore ~= nil
             and giveGuaranteedLoreOnce == true then
-                level3SpellLoreData = GetObjectFromListByPropertyValue(magicLoresData, "Lore", guaranteedLore);
+                level3SpellLoreData = GetObjectFromListByPropertyValue(magicLoresData, "Lore", guaranteedLore.Lore);
                 giveGuaranteedLoreOnce = false;
             else
-                level3SpellLoreData = GetRandomObjectFromList(magicLoresData);
+                level3SpellLoreData = GetRandomObjectFromList(magicLoresData, { guaranteedLore.Lore, }, "Lore");
             end
             local activeLevel3Spell = GetAndRemoveRandomObjectFromList(level3SpellLoreData.Level3DefaultSpells);
             selectedLevel3Spells[#selectedLevel3Spells + 1] = activeLevel3Spell;
@@ -555,7 +599,7 @@ function WWLController:IsValidCharacterSkillKey(skillKey)
     return false;
 end
 
-function WWLController:GetCharacterWizardLevelWithName(nameText, faction, checkForLLNameKeys)
+function WWLController:GetCharacterWizardLevelUIDataWithName(nameText, faction, checkForLLNameKeys)
     self.Logger:Log("Checking for existing wizards");
     -- First we check if we can find the character alive in the faction
     local character_list = faction:character_list();
@@ -566,12 +610,19 @@ function WWLController:GetCharacterWizardLevelWithName(nameText, faction, checkF
             if character:military_force():is_null_interface() or character:military_force():is_armed_citizenry() == false then
                 local forename = common.get_localised_string(character:get_forename());
                 local surname = common.get_localised_string(character:get_surname());
-                self.Logger:Log("Checking: "..forename.." "..surname.." subtype: "..character:character_subtype_key());
+                local subtype = character:character_subtype_key();
+                self.Logger:Log("Checking: "..forename.." "..surname.." subtype: "..subtype);
                 if (forename ~= "" or surname ~= "")
-                and string.match(nameText, forename.." "..surname) then
+                and string.match(nameText, forename.." "..surname)
+                or _G.IsIDE == true then
                     self.Logger:Log("Found match!");
                     local wizardLevel = self:GetWizardLevel(character);
-                    return wizardLevel;
+                    local imagePath = self:GetImagePathForSubtype(subtype);
+                    local wizardLevelUIData = {
+                        WizardLevel = wizardLevel,
+                        ImagePath = self.Skin..imagePath,
+                    };
+                    return wizardLevelUIData;
                 end
             end
         end
@@ -587,8 +638,13 @@ function WWLController:GetCharacterWizardLevelWithName(nameText, faction, checkF
                 local surname = common.get_localised_string(llNameKeyData.Surname);
                 if llNameKeyData.Surname == "" or string.match(nameText, surname) then
                     self.Logger:Log("Found matching LL by name key(s)! Subtype is: "..llNameKeyData.Subtype);
-                    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(llNameKeyData.Subtype, subcultureKey);
-                    return defaultWizardData.DefaultWizardLevel;
+                    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(llNameKeyData.Subtype);
+                    local imagePath = self:GetImagePathForSubtype(llNameKeyData.Subtype);
+                    local wizardLevelUIData = {
+                        WizardLevel = defaultWizardData.DefaultWizardLevel,
+                        ImagePath = self.Skin..imagePath,
+                    };
+                    return wizardLevelUIData;
                 end
             end
         end

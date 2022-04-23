@@ -39,10 +39,35 @@ function GetObjectFromListByPropertyValue(objectList, property, valueToCheck)
     return nil;
 end
 
-function GetRandomObjectFromList(objectList)
+function GetObjectFromListByValue(objectList, valueToCheck)
     local tempTable = {}
     for key, value in pairs(objectList) do
-      tempTable[#tempTable + 1] = key; --Store keys in another table
+        if value == valueToCheck then
+            return value;
+        end
+    end
+    return nil;
+end
+
+function GetRandomObjectFromList(objectList, excludedItems, propertyToCompare)
+    local tempTable = {}
+    for key, value in pairs(objectList) do
+        local validObjectItem = true;
+        if excludedItems ~= nil then
+            for excluedItemkey, excludedItemValue in pairs(excludedItems) do
+                if propertyToCompare == nil
+                and value == excludedItemValue then
+                    validObjectItem = false;
+                    break;
+                elseif value[propertyToCompare] == excludedItemValue then
+                    validObjectItem = false;
+                    break;
+                end
+            end
+        end
+        if validObjectItem == true then
+            tempTable[#tempTable + 1] = key; --Store keys in another table
+        end
     end
     local index = tempTable[Random(#tempTable)];
     return objectList[index];
@@ -68,6 +93,15 @@ function GetAndRemoveRandomObjectFromList(objectList)
     local object = objectList[index];
     objectList[index] = nil;
     return object;
+end
+
+function RemoveObjectFromListByValue(objectList, valueToCheck)
+    local tempTable = {}
+    for key, value in pairs(objectList) do
+        if value == valueToCheck then
+            objectList[key] = nil;
+        end
+    end
 end
 
 function FindTableObjectByKeyPartial(objectList, partialValue)

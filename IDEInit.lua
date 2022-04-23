@@ -1,9 +1,9 @@
 -- Mock Data
 testCharacter = {
     cqi = function() return 123 end,
-    get_forename = function() return "Direfan"; end,
-    get_surname = function() return "Cylostra"; end,
-    character_subtype_key = function() return "wh3_main_tze_kairos"; end,
+    get_forename = function() return "Be'lakor"; end,
+    get_surname = function() return ""; end,
+    character_subtype_key = function() return "wh3_main_dae_belakor"; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -52,7 +52,7 @@ humanFaction = {
         return "wh_main_grn_greenskins";
     end,
     subculture = function()
-        return "wh3_main_sc_tze_tzeentch";
+        return "wh3_main_sc_dae_daemons";
     end,
     character_list = function()
         return {
@@ -101,7 +101,7 @@ testFaction = {
         return "wh2_main_def_dark_elves";
     end,
     subculture = function()
-        return "wh3_main_sc_tze_tzeentch";
+        return "wh3_main_sc_dae_daemons";
     end,
     character_list = function()
         return {
@@ -430,6 +430,7 @@ mock_dy_subtype_ui_component = {
     SetVisible = function() end,
     MoveTo = function() end,
     SetStateText = function() end,
+    SetTooltipText = function() return end,
     SetInteractive = function() end,
     Visible = function() return true; end,
     Position = function() return 0, 1 end,
@@ -452,6 +453,7 @@ mock_dy_name_ui_component = {
     SetVisible = function() end,
     MoveTo = function() end,
     SetStateText = function() end,
+    SetTooltipText = function() return end,
     SetInteractive = function() end,
     Visible = function() return true; end,
     Position = function() return 0, 1 end,
@@ -480,6 +482,7 @@ mock_unit_ui_list_component = {
     MoveTo = function() end,
     SetStateText = function() end,
     SetInteractive = function() end,
+    SetTooltipText = function() return end,
     Visible = function() return true; end,
     Position = function() return 0, 1 end,
     Bounds = function() return 0, 1 end,
@@ -560,6 +563,14 @@ math.randomseed(os.time())
 z_wondrous_wizard_levels();
 
 local WWL = _G.WWL;
+_G.IsIDE = true;
+
+local supportedSubtypes = WWL:GetSuppportedSubtypesForFaction(humanFaction);
+local imagePath = WWL:GetImagePathForSubtype("wh3_main_tze_iridescent_horror_metal");
+local wizardLevelUIData = WWL:GetCharacterWizardLevelUIDataWithName("Be'lakor", humanFaction, false);
+local nameKeys = WWL:GetLegendaryLordNameKeysForSubculture(humanFaction:subculture());
+
+
 local MockContext_WWL_FactionTurnStart = {
     Key = "WWL_FactionTurnStart",
     Context = {

@@ -5,18 +5,51 @@ require 'script/_lib/pooldata/VanillaUnitWizardsPoolData'
 require 'script/_lib/pooldata/VanillaLegendaryLordNameKeys'
 
 _G.WWLResources = {
-    WizardData = GetVanillaWizardsPoolDataResources(),
+    -- When loading resources this allows us to cleanly
+    -- setup reference between subcultures, eg: The daemon prince faction
+    SubculturesToRemap = {
+        wh3_main_sc_nur_nurgle = {
+            "wh3_main_sc_dae_daemons",
+        },
+        wh3_main_sc_sla_slaanesh = {
+            "wh3_main_sc_dae_daemons",
+        },
+        wh3_main_sc_tze_tzeentch = {
+            "wh3_main_sc_dae_daemons",
+        },
+    };
+    -- Wizard data is now blank by default so I can load it with AddAdditionalDataResources
+    -- and use the function to remap the data without changing the structure.
+    -- This allows all wizards to be used for all subcultures without too much additional work.
+    WizardData = {},
+    -- For UI purposes we still need to know the standard wizards for each subculture
+    WizardsToSubculture = {};
     AncillaryData = GetSpellFragmentsForLores(),
+    -- At this stage, unused but if I can get it working, will be used by an addon
     UnitData = GetVanillaUnitWizardPoolDataResources(),
     MagicLores = GetMagicLorePoolDataResources(),
+    -- Note: Name keys are still restricted per subculture
     LegendaryLordNameKeys = GetVanillaLegendaryLordNameKeys(),
     AddAdditionalDataResources = function(self, destination, resources)
         for subcultureKey, dataList in pairs(resources) do
             for dataKey, data in pairs(dataList) do
-                if self[destination][subcultureKey] == nil then
-                    self[destination][subcultureKey] = {};
+                self[destination][dataKey] = data;
+                -- We remap the WizardData so we have an arrangement that is also organised by subculture.
+                -- This is useful for some of the UI checks we're doing.
+                if destination == "WizardData" then
+                    if self.WizardsToSubculture[subcultureKey] == nil then
+                        self.WizardsToSubculture[subcultureKey] = {};
+                    end
+                    self.WizardsToSubculture[subcultureKey][dataKey] = self[destination][dataKey];
+                    if self.SubculturesToRemap[subcultureKey] ~= nil then
+                        for index, mapToSubcultureKey in pairs(self.SubculturesToRemap[subcultureKey]) do
+                            if self.WizardsToSubculture[mapToSubcultureKey] == nil then
+                                self.WizardsToSubculture[mapToSubcultureKey] = {};
+                            end
+                            self.WizardsToSubculture[mapToSubcultureKey][dataKey] = self[destination][dataKey];
+                        end
+                    end
                 end
-                self[destination][subcultureKey][dataKey] = data;
             end
         end
     end,
@@ -34,11 +67,6 @@ function CopySubcultureIntoOtherSubculture(dataSource, fromSubculture, toSubcult
     end
 end
 
--- Copy Daemon Data to Daemons of Chaos
-CopySubcultureIntoOtherSubculture(_G.WWLResources.WizardData, "wh3_main_sc_tze_tzeentch", "wh3_main_sc_dae_daemons");
-CopySubcultureIntoOtherSubculture(_G.WWLResources.WizardData, "wh3_main_sc_sla_slaanesh", "wh3_main_sc_dae_daemons");
-CopySubcultureIntoOtherSubculture(_G.WWLResources.WizardData, "wh3_main_sc_nur_nurgle", "wh3_main_sc_dae_daemons");
-
-CopySubcultureIntoOtherSubculture(_G.WWLResources.UnitData, "wh3_main_sc_tze_tzeentch", "wh3_main_sc_dae_daemons");
-CopySubcultureIntoOtherSubculture(_G.WWLResources.UnitData, "wh3_main_sc_sla_slaanesh", "wh3_main_sc_dae_daemons");
-CopySubcultureIntoOtherSubculture(_G.WWLResources.UnitData, "wh3_main_sc_nur_nurgle", "wh3_main_sc_dae_daemons");
+-- We need to ability to look up any agent in case a mod enables hero/agent conversion, so
+-- now we pump the data through the loader function because it will remap everything nicely for us
+_G.WWLResources:AddAdditionalDataResources("WizardData", GetVanillaWizardsPoolDataResources());
