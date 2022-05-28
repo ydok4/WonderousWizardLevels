@@ -2,7 +2,6 @@ require 'script/_lib/pooldata/MagicLoresPoolData'
 require 'script/_lib/pooldata/SpellFragmentsForLoresPoolData'
 require 'script/_lib/pooldata/VanillaWizardsPoolData'
 require 'script/_lib/pooldata/VanillaUnitWizardsPoolData'
-require 'script/_lib/pooldata/VanillaLegendaryLordNameKeys'
 
 _G.WWLResources = {
     -- When loading resources this allows us to cleanly
@@ -28,8 +27,8 @@ _G.WWLResources = {
     -- At this stage, unused but if I can get it working, will be used by an addon
     UnitData = GetVanillaUnitWizardPoolDataResources(),
     MagicLores = GetMagicLorePoolDataResources(),
-    -- Note: Name keys are still restricted per subculture
-    LegendaryLordNameKeys = GetVanillaLegendaryLordNameKeys(),
+    -- Legacy features, CCOs took care of the need for this
+    LegendaryLordNameKeys = {},
     AddAdditionalDataResources = function(self, destination, resources)
         for subcultureKey, dataList in pairs(resources) do
             for dataKey, data in pairs(dataList) do

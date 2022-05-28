@@ -624,7 +624,9 @@ end
 function GenerateWWLEffects(databaseData)
     local effectsToExport = {};
     local effectBonusValuesToExport = {};
+    local effectLocToExport = {};
     local effectTables = databaseData["effects_tables"];
+    local effectsLoc = databaseData["effects_loc"];
     local specialAbilityGroupsTable = databaseData["special_ability_groups_tables"];
     for specialAbilityGroupIndex, specialAbilityGroupData in pairs(specialAbilityGroupsTable.Data) do
         local groupKey = specialAbilityGroupsTable:GetColumnValueForIndex(specialAbilityGroupIndex, "ability_group");
@@ -653,51 +655,109 @@ function GenerateWWLEffects(databaseData)
                         local effectKeysMatchingCharacterSkill = characterSkillLevelToEffectsTable:GetColumnValuesForRows("effect_key", effectsMatchingCharacterSkill);
                         local effectsMatchingSpellBonusValues = effectBonusValueAbilityJunctionsTable:GetRowsMatchingColumnValues("effect", effectKeysMatchingCharacterSkill);
                         local enableBonusValuesForSpell = effectBonusValueAbilityJunctionsTable:GetRowsMatchingColumnValues("bonus_value_id", { "enable" }, effectsMatchingSpellBonusValues);
-                        local matchingSpellEnabledKey = "";
+                        local matchingSpellAbilityKey = "";
+                        local matchingSpellOriginalKey = "";
                         if next(enableBonusValuesForSpell) then
-                            matchingSpellEnabledKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'unit_ability', enableBonusValuesForSpell);
+                            matchingSpellOriginalKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'effect', enableBonusValuesForSpell);
+                            matchingSpellAbilityKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'unit_ability', enableBonusValuesForSpell);
                         else
-                            matchingSpellEnabledKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'unit_ability', effectsMatchingSpellBonusValues);
+                            --matchingSpellOriginalKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'effect', effectsMatchingSpellBonusValues);
+                            matchingSpellAbilityKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'unit_ability', effectsMatchingSpellBonusValues);
                         end
+                        local enableOverCharge = effectBonusValueAbilityJunctionsTable:GetRowsMatchingColumnValues("bonus_value_id", { "enable_overchage" }, effectsMatchingSpellBonusValues);
+
                         local newEnabledEffectRow = {};
                         effectTables:SetColumnValue(newEnabledEffectRow, 'effect', spellKey.."_enabled");
-                        effectTables:SetColumnValue(newEnabledEffectRow, 'icon', 'spell_ability.png');
-                        effectTables:SetColumnValue(newEnabledEffectRow, 'priority', '3');
-                        effectTables:SetColumnValue(newEnabledEffectRow, 'icon_negative', 'spell_ability.png');
+                        effectTables:SetColumnValue(newEnabledEffectRow, 'icon', 'magic_character.png');
+                        effectTables:SetColumnValue(newEnabledEffectRow, 'priority', '0');
+                        effectTables:SetColumnValue(newEnabledEffectRow, 'icon_negative', 'magic_character.png');
                         effectTables:SetColumnValue(newEnabledEffectRow, 'category', 'both');
                         effectTables:SetColumnValue(newEnabledEffectRow, 'is_positive_value_good', 'true');
                         table.insert(effectsToExport, newEnabledEffectRow);
                         local clonedBonusValueRow = effectBonusValueAbilityJunctionsTable:CloneRow(1, enabledSpellEffects);
                         effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'effect', spellKey.."_enabled");
                         effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'bonus_value_id', "enable");
-                        effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'unit_ability', matchingSpellEnabledKey);
+                        effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'unit_ability', matchingSpellAbilityKey);
+                        
                         table.insert(effectBonusValuesToExport, clonedBonusValueRow);
                         local newDisabledEffectRow = {};
                         effectTables:SetColumnValue(newDisabledEffectRow, 'effect', spellKey.."_disabled");
-                        effectTables:SetColumnValue(newDisabledEffectRow, 'icon', 'spell_ability.png');
-                        effectTables:SetColumnValue(newDisabledEffectRow, 'priority', '3');
-                        effectTables:SetColumnValue(newDisabledEffectRow, 'icon_negative', 'spell_ability.png');
+                        effectTables:SetColumnValue(newDisabledEffectRow, 'icon', 'magic_character.png');
+                        effectTables:SetColumnValue(newDisabledEffectRow, 'priority', '0');
+                        effectTables:SetColumnValue(newDisabledEffectRow, 'icon_negative', 'magic_character.png');
                         effectTables:SetColumnValue(newDisabledEffectRow, 'category', 'both');
                         effectTables:SetColumnValue(newDisabledEffectRow, 'is_positive_value_good', 'false');
                         table.insert(effectsToExport, newDisabledEffectRow);
                         local clonedBonusValueRow = effectBonusValueAbilityJunctionsTable:CloneRow(1, enabledSpellEffects);
                         effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'effect', spellKey.."_disabled");
                         effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'bonus_value_id', "disable");
-                        effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'unit_ability', matchingSpellEnabledKey);
+                        effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueRow, 'unit_ability', matchingSpellAbilityKey);
                         table.insert(effectBonusValuesToExport, clonedBonusValueRow);
 
                         global_effects_cache[spellKey.."_enabled"] = true;
+
+                        if enableOverCharge[1] ~= nil
+                        and global_effects_cache[spellKey.."_enabled_overcharge"] == nil then
+                            local newOverChargeEffectRow = {};
+                            effectTables:SetColumnValue(newOverChargeEffectRow, 'effect', spellKey.."_enabled_overcharge");
+                            effectTables:SetColumnValue(newOverChargeEffectRow, 'icon', 'magic_character.png');
+                            effectTables:SetColumnValue(newOverChargeEffectRow, 'priority', '0');
+                            effectTables:SetColumnValue(newOverChargeEffectRow, 'icon_negative', 'magic_character.png');
+                            effectTables:SetColumnValue(newOverChargeEffectRow, 'category', 'both');
+                            effectTables:SetColumnValue(newOverChargeEffectRow, 'is_positive_value_good', 'true');
+                            table.insert(effectsToExport, newOverChargeEffectRow);
+                            local clonedBonusValueOverChargeRow = effectBonusValueAbilityJunctionsTable:CloneRow(1, enabledSpellEffects);
+                            effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueOverChargeRow, 'effect', spellKey.."_enabled_overcharge");
+                            effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueOverChargeRow, 'bonus_value_id', "enable_overchage"); -- Yep, this is a typo in the game files
+                            effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedBonusValueOverChargeRow, 'unit_ability', matchingSpellAbilityKey);
+                            table.insert(effectBonusValuesToExport, clonedBonusValueOverChargeRow);
+
+                            global_effects_cache[spellKey.."_enabled_overcharge"] = true;
+                        end
+
+                        local effectLoc = effectsLoc:GetRowsMatchingColumnValues("key", { "effects_description_"..matchingSpellOriginalKey, });
+                        local clonedEffectLoc = effectsLoc:CloneRow(1, effectLoc);
+                        local effectDescription = clonedEffectLoc[2];
+                        if effectDescription ~= nil then
+                            local primaryKey = spellKey:gsub('wh3_main_skill_', "");
+                            primaryKey = primaryKey:gsub('wh_main_skill_all_', "");
+                            primaryKey = primaryKey:gsub('wh_dlc05_skill_magic_', "");
+                            effectDescription = effectDescription:gsub('Overcast spell', "Spell");
+                            effectDescription = effectDescription:gsub('Overcast ', "");
+                            effectDescription = effectDescription:gsub(' Upgraded', "");
+                            effectsLoc:SetColumnValue(clonedEffectLoc, 'key', "effects_description_"..primaryKey.."_enabled_visible");
+                            effectsLoc:SetColumnValue(clonedEffectLoc, 'text', effectDescription);
+                            effectsLoc:SetColumnValue(clonedEffectLoc, 'tooltip', 'true');
+                            table.insert(effectLocToExport, clonedEffectLoc);
+
+                            local newEnabledEffectLocRow = {};
+                            effectTables:SetColumnValue(newEnabledEffectLocRow, 'effect', primaryKey.."_enabled_visible");
+                            effectTables:SetColumnValue(newEnabledEffectLocRow, 'icon', 'magic_character.png');
+                            effectTables:SetColumnValue(newEnabledEffectLocRow, 'priority', '292');
+                            effectTables:SetColumnValue(newEnabledEffectLocRow, 'icon_negative', 'magic_character.png');
+                            effectTables:SetColumnValue(newEnabledEffectLocRow, 'category', 'both');
+                            effectTables:SetColumnValue(newEnabledEffectLocRow, 'is_positive_value_good', 'true');
+                            table.insert(effectsToExport, newEnabledEffectLocRow);
+
+                            local clonedVisibleBonusValueRow = effectBonusValueAbilityJunctionsTable:CloneRow(1, enabledSpellEffects);
+                            effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedVisibleBonusValueRow, 'effect', primaryKey.."_enabled_visible");
+                            effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedVisibleBonusValueRow, 'bonus_value_id', "enable");
+                            effectBonusValueAbilityJunctionsTable:SetColumnValue(clonedVisibleBonusValueRow, 'unit_ability', matchingSpellAbilityKey);
+                            table.insert(effectBonusValuesToExport, clonedVisibleBonusValueRow);
+                        end
                     end
                 end
             end
         end
     end
     local finalisedEffects = effectTables:PrepareRowsForOutput(effectsToExport);
+    local finalisedEffectsLoc = effectsLoc:PrepareRowsForOutput(effectLocToExport);
     local effectBonusValuesTables = databaseData["effect_bonus_value_unit_ability_junctions_tables"];
     local finalisedEffectBonusValues = effectBonusValuesTables:PrepareRowsForOutput(effectBonusValuesToExport);
     return {
         effects_tables = finalisedEffects,
         effect_bonus_value_unit_ability_junctions_tables = finalisedEffectBonusValues,
+        effectsLoc = finalisedEffectsLoc,
     };
 end
 
@@ -705,7 +765,9 @@ function GenerateMultiLoreCharacterSkills(databaseData)
     local multiLoreCasters = {};
     --for subcultureKey, subcultureCasters in pairs(_G.WWLResources.WizardData) do
         for agentKey, agentData in pairs(_G.WWLResources.WizardData) do
-            if type(agentData.Lore) == "table" then
+            if type(agentData.Lore) == "table"
+            -- Daemon Prince is unique
+            and agentKey ~= "wh3_main_dae_daemon_prince" then
                 multiLoreCasters[agentKey] = agentData;
             end
         end
@@ -971,13 +1033,6 @@ function GenerateMultiLoreCharacterSkills(databaseData)
         for i = 1, 7 do
             if temporaryCharacterSkillName[i] ~= nil then
                 local textForSkill = "";
-                for j = 1, #temporaryCharacterSkillName[i] do
-                    if j ~= #temporaryCharacterSkillName[i] then
-                        textForSkill = textForSkill..temporaryCharacterSkillName[i][j]..", ";
-                    else
-                        textForSkill = textForSkill..temporaryCharacterSkillName[i][j];
-                    end
-                end
                 local skillNameText = "";
                 if i == 1 then
                     skillNameText = "Innate Spells";
@@ -985,6 +1040,13 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                     skillNameText = "Signature Spells";
                 else
                     skillNameText = "Spell Slot "..tostring(i - 2);
+                end
+                for j = 1, #temporaryCharacterSkillName[i] do
+                    if j ~= #temporaryCharacterSkillName[i] then
+                        textForSkill = textForSkill..temporaryCharacterSkillName[i][j]..", ";
+                    else
+                        textForSkill = textForSkill..temporaryCharacterSkillName[i][j];
+                    end
                 end
                 characterSkillLoc:SetColumnValue(newCharacterSkillsLoc[i * 2], 'text', skillNameText);
                 characterSkillLoc:SetColumnValue(newCharacterSkillsLoc[i * 2 - 1], 'text', textForSkill);

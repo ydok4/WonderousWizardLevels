@@ -9,6 +9,232 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
         wwl.Logger:Log("ERROR: Core is missing");
         return;
     end
+
+    -- Daemon Prince
+    local god_dedication_threshold = 3;
+    -- Overwrite vanilla listeners - Doesn't work
+    --[[core:remove_listener("daemon_prince_tint_listener");
+    core:add_listener(
+		"daemon_prince_tint_listener",
+		"CharacterArmoryItemEquipped",
+		function(context)
+			return context:character():faction():name() == "wh3_main_dae_daemon_prince";
+		end,
+		function(context)
+		
+			--NOTE: If updating any of below logic, please tell UI team to update logic in SETUP_UNIT_CUSTOM_INFO::calculate_character_tint_from_variant_list
+			-- Ideally we would find a way to share up this essentially duplicated logic...
+			local character = context:character();
+            local armory = character:family_member():armory();
+
+            local most_equipped_of_category = 0;
+            local category_equipped = "undivided";
+
+            local daemon_prince_ascension_category = cm:get_saved_value("wwl_daemon_prince_ascension_category");
+            if daemon_prince_ascension_category == nil then
+                local categories = {"khorne", "nurgle", "slaanesh", "tzeentch"};
+                for i = 1, #categories do
+                    local number_of_equipped_items = armory:number_of_equipped_items_of_ui_type(categories[i]);
+                    if number_of_equipped_items > most_equipped_of_category then
+                        category_equipped = categories[i];
+                        most_equipped_of_category = number_of_equipped_items;
+                    end;
+                end;
+            elseif daemon_prince_ascension_category ~= "undivided" then
+                category_equipped = daemon_prince_ascension_category;
+                local number_of_equipped_items = armory:number_of_equipped_items_of_ui_type(category_equipped);
+                most_equipped_of_category = number_of_equipped_items;
+            end
+			
+            if category_equipped == "undivided" then
+                if most_equipped_of_category > god_dedication_threshold then
+                    local tweaker_daemon = common.tweaker_value("daemon_prince_max_equipment_can_equip") or "9";
+                    local max_number_of_daemon_slots = tonumber(tweaker_daemon);
+                    
+                    local colour_amount = 0;
+                    -- Colours get more intense after ascension
+                    if daemon_prince_ascension_category == nil then
+                        colour_amount = math.round(255 / max_number_of_daemon_slots * (most_equipped_of_category - god_dedication_threshold));
+                    else
+                        colour_amount = math.round(255 / max_number_of_daemon_slots * most_equipped_of_category);
+                    end
+
+                    cm:set_tint_colour_for_character(character, "wh3_main_daemon_prince_" .. category_equipped .. "_primary", colour_amount, "wh3_main_daemon_prince_" .. category_equipped .. "_secondary", colour_amount);
+                    cm:set_tint_activity_state_for_character(character, true);
+                end
+            else
+                cm:set_tint_activity_state_for_character(character, false);
+            end
+		end,
+		true
+	);--]]
+
+    -- New Daemon Prince listeners
+    -- Blocks multiple events firing if an item set is equipped.
+    -- Saves some performance
+    local itemEquipLock = false;
+    local ascensionRituals = {
+        wh3_main_ritual_dae_ascend_khorne = "khorne",
+        wh3_main_ritual_dae_ascend_nurgle = "nurgle",
+        wh3_main_ritual_dae_ascend_slaanesh = "slaanesh",
+        wh3_main_ritual_dae_ascend_tzeentch = "tzeentch",
+        wh3_main_ritual_dae_ascend_undivided = "undivided",
+    };
+    core:add_listener(
+		"WWL_DedicationTracker",
+		"RitualCompletedEvent",
+		true,
+		function(context)
+			local faction = context:performing_faction();
+			local faction_name = faction:name();
+			
+			if faction:is_human() and faction_name == "wh3_main_dae_daemon_prince" then
+                local ritualKey = context:ritual():ritual_key();
+				if ascensionRituals[ritualKey] ~= nil then
+                    cm:set_saved_value("wwl_daemon_prince_ascension_category", ascensionRituals[ritualKey]);
+				end;
+			end;
+		end,
+		true
+	);
+
+    core:add_listener(
+		"WWL_DaemonPrinceTraitListener",
+		"CharacterArmoryItemEquipped",
+		function(context)
+			return context:character():faction():name() == "wh3_main_dae_daemon_prince";
+		end,
+		function(context)
+            if itemEquipLock == false then
+                local character = context:character();
+                local armory = character:family_member():armory();
+                local char_str = "character_cqi:"..character:command_queue_index();
+                itemEquipLock = true;
+                cm:callback(function()
+                    itemEquipLock = false;
+                    local categories = {"khorne", "nurgle", "slaanesh", "tzeentch"};
+                    local most_equipped_of_category = 0;
+                    local category_equipped = "undivided";
+
+                    local daemon_prince_ascension_category = cm:get_saved_value("wwl_daemon_prince_ascension_category");
+                    if daemon_prince_ascension_category == nil then
+                        local categories = {"khorne", "nurgle", "slaanesh", "tzeentch"};
+                        for i = 1, #categories do
+                            local number_of_equipped_items = armory:number_of_equipped_items_of_ui_type(categories[i]);
+                            if number_of_equipped_items > most_equipped_of_category then
+                                category_equipped = categories[i];
+                                most_equipped_of_category = number_of_equipped_items;
+                            end;
+                        end;
+                    else
+                        wwl.Logger:Log("Daemon prince has ascended: "..daemon_prince_ascension_category);
+                        category_equipped = daemon_prince_ascension_category;
+                        if daemon_prince_ascension_category ~= "undivided" then
+                            local number_of_equipped_items = armory:number_of_equipped_items_of_ui_type(category_equipped);
+                            most_equipped_of_category = number_of_equipped_items;
+                        end
+                    end
+        
+                    local daemonPrinceWizardData = wwl:GetDefaultWizardDataForCharacterSubtype("wh3_main_dae_daemon_prince");
+                    -- This returns the UI Info key of the armory item
+                    local armoryItems = armory:get_all_active_variant_slot_states();
+                    local numberOfSpellItems = 0;
+                    if daemon_prince_ascension_category ~= nil then
+                        wwl.Logger:Log("Adding ascension bonus");
+                        numberOfSpellItems = numberOfSpellItems + 1;
+                    end
+                    for index, itemKey in pairs(armoryItems) do
+                        if itemKey ~= '' then
+                            wwl.Logger:Log("armory item equipped: "..itemKey);
+                            if daemonPrinceWizardData.ArmoryItems[itemKey] ~= nil then
+                                numberOfSpellItems = numberOfSpellItems + 1;
+                            end
+                        end
+                    end
+                    if numberOfSpellItems > 5 then
+                        numberOfSpellItems = 5;
+                    end
+                    wwl.Logger:Log("god_dedication_threshold: "..god_dedication_threshold);
+                    if daemon_prince_ascension_category == nil then
+                        wwl.Logger:Log("most_equipped_of_category: "..most_equipped_of_category);
+                    end
+                    wwl.Logger:Log("numberOfSpellItems: "..numberOfSpellItems);
+        
+                    local godTraitPoints = {
+                        ["wwl_trait_daemon_prince_undivided"] = character:trait_points("wwl_trait_daemon_prince_undivided") - 1,
+                        ["wwl_trait_daemon_prince_"..category_equipped] = character:trait_points("wwl_trait_daemon_prince_"..category_equipped) - 1,
+                    };
+                    -- If the category with the most is above the dedication threshold and the existing trait doesn't have the right level
+                    -- then we need to reset the traits and add the correct one
+                    local removeTraits = false;
+                    local traitToApply = nil;
+                    -- If we've ascended then there is no threshold
+                    if daemon_prince_ascension_category ~= nil
+                    and godTraitPoints["wwl_trait_daemon_prince_"..daemon_prince_ascension_category] ~= numberOfSpellItems then
+                        removeTraits = true;
+                        traitToApply = "wwl_trait_daemon_prince_"..daemon_prince_ascension_category;
+                    -- Otherwise we need to check if we meet the threshold
+                    elseif most_equipped_of_category > god_dedication_threshold then
+                        if godTraitPoints["wwl_trait_daemon_prince_"..category_equipped] ~= numberOfSpellItems then 
+                            removeTraits = true;
+                            traitToApply = "wwl_trait_daemon_prince_"..category_equipped;
+                        end
+                        -- Otherwise we're Undivided
+                    elseif godTraitPoints["wwl_trait_daemon_prince_undivided"] ~= numberOfSpellItems then
+                        removeTraits = true;
+                        traitToApply = "wwl_trait_daemon_prince_undivided";
+                    end
+
+                    if removeTraits == true then
+                        cm:disable_event_feed_events(true, "all", "", "");
+                        for i = 1, #categories do
+                            cm:force_remove_trait(char_str, "wwl_trait_daemon_prince_"..categories[i]);
+                        end
+                        cm:force_remove_trait(char_str, "wwl_trait_daemon_prince_undivided");
+                        cm:force_remove_trait(char_str, "wwl_trait_daemon_prince_undivided_no_spells");
+                        cm:callback(function() cm:disable_event_feed_events(false, "all", "", ""); end, 1);
+                    end
+                    if traitToApply ~= nil then
+                        wwl.Logger:Log("Adding trait: "..traitToApply);
+                        local traitLevel = numberOfSpellItems + 1;
+                        cm:force_add_trait(char_str, traitToApply, false, traitLevel);
+                        -- Applies an effect bundle which will be used to flag that we need to regenerate spells when the panel is closed
+                        cm:apply_effect_bundle_to_character("wwl_regenerate_spells_hidden", character, 0);
+                    end
+                    wwl.Logger:Log_Finished();
+                end,
+                0.1);
+            end
+
+
+            wwl.Logger:Log_Finished();
+		end,
+		true
+	);
+
+    core:add_listener(
+        "WWL_DaemonPrincePanelClosed",
+        "PanelClosedCampaign",
+        function(context)
+            return context.string == "character_details_panel"
+            and wwl.HumanFaction:name() == "wh3_main_dae_daemon_prince";
+        end,
+        function(context)
+            wwl.Logger:Log("Daemon prince panel closed\n");
+            local faction = cm:get_local_faction();
+            local faction_leader = faction:faction_leader();
+            if faction_leader:has_effect_bundle("wwl_regenerate_spells_hidden") then
+                wwl.Logger:Log("Daemon prince has regenerate spells bundle");
+                wwl:SetSpellsForCharacter(faction_leader, true);
+                cm:remove_effect_bundle_from_character("wwl_regenerate_spells_hidden", faction_leader);
+            end
+
+            wwl.Logger:Log_Finished();
+        end,
+        true
+    );
+
+    -- General WWL events
     -- Log cleanup event
     core:add_listener(
         "WWL_FactionTurnEnd",
@@ -30,7 +256,8 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
         "FactionTurnStart",
         function(context)
             local faction = context:faction();
-            return wwl:IsExcludedFaction(faction) == false;
+            return faction:is_human() == true
+            and wwl:IsExcludedFaction(faction) == false;
         end,
         function(context)
             local faction = context:faction();
@@ -46,8 +273,17 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
                     --wwl.Logger:Log("Checking character type: "..character:character_subtype_key());
                     local isSupportedCharacter = wwl:IsSupportedCharacter(character);
                     if isSupportedCharacter == true then
-                        wwl.Logger:Log("Generating spells for character: "..character:command_queue_index().." subtype: "..character:character_subtype_key());
-                        wwl:SetSpellsForCharacter(character);
+                        if faction:is_human() then
+                            cm:callback(function()
+                                wwl.Logger:Log("Generating spells for character: "..character:command_queue_index().." subtype: "..character:character_subtype_key());
+                                wwl:SetSpellsForCharacter(character);
+                                wwl.Logger:Log_Finished();
+                            end,
+                            1);
+                        else
+                            wwl.Logger:Log("Generating spells for character: "..character:command_queue_index().." subtype: "..character:character_subtype_key());
+                            wwl:SetSpellsForCharacter(character);
+                        end
                     end
                     --wwl:DoUnitUpgrades(character);
                 end
@@ -103,9 +339,15 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
                                 if wwl:IsSupportedCharacter(character) == true then
                                     local characterCqi = character:command_queue_index();
                                     local characterSubtype = character:character_subtype_key();
-                                    wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
-                                    wwl:SetSpellsForCharacter(character);
-                                    local characterSubculture = character:faction():subculture();
+                                    cm:callback(function()
+                                        wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
+                                        wwl:SetSpellsForCharacter(character);
+                                        wwl.Logger:Log_Finished();
+                                    end,
+                                    0.1);
+
+                                    -- Disabled until I decide to do something with it later
+                                    --[[local characterSubculture = character:faction():subculture();
                                     local wizardLevelPrefix = "wwl_skill_wizard_level_0";
                                     if characterSubculture == "wh_main_sc_dwf_dwarfs" then
                                         wizardLevelPrefix = "wwl_skill_rune_level_0";
@@ -122,7 +364,7 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
                                     end
                                     if wizardLevel > maxDefenderLevel then
                                         maxDefenderLevel = wizardLevel;
-                                    end
+                                    end--]]
                                 end
                             end
                         end
@@ -145,26 +387,12 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
                                 if wwl:IsSupportedCharacter(character) == true then
                                     local characterCqi = character:command_queue_index();
                                     local characterSubtype = character:character_subtype_key();
-                                    wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
-                                    wwl:SetSpellsForCharacter(character);
-                                    local characterSubculture = character:faction():subculture();
-                                    local wizardLevelPrefix = "wwl_skill_wizard_level_0";
-                                    if characterSubculture == "wh_main_sc_dwf_dwarfs" then
-                                        wizardLevelPrefix = "wwl_skill_rune_level_0";
-                                    end
-                                    local wizardLevel = 1;
-                                    if character:has_skill(wizardLevelPrefix.."2") then
-                                        wizardLevel = 2;
-                                    elseif character:has_skill(wizardLevelPrefix.."3") then
-                                        wizardLevel = 3;
-                                    elseif character:has_skill(wizardLevelPrefix.."4") then
-                                        wizardLevel = 4;
-                                    elseif character:has_skill(wizardLevelPrefix.."5") then
-                                        wizardLevel = 5;
-                                    end
-                                    if wizardLevel > maxDefenderLevel then
-                                        maxAttackerLevel = wizardLevel;
-                                    end
+                                    cm:callback(function()
+                                        wwl.Logger:Log("Found supported subtype: "..characterSubtype.." with cqi: "..characterCqi);
+                                        wwl:SetSpellsForCharacter(character);
+                                        wwl.Logger:Log_Finished();
+                                    end,
+                                    0.1);
                                 end
                             end
                         end
@@ -203,12 +431,6 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
             local characterSubtype = character:character_subtype_key();
             wwl.Logger:Log("Character subtype: "..characterSubtype.." cqi: "..character:command_queue_index());
             wwl:SetSpellsForCharacter(character, true);
-            -- Clear cache for that subtype, this will be refreshed the next time any of the general lists are opened
-            local faction = character:faction();
-            if WWL_UICache ~= nil and faction:name() == wwl.HumanFaction:name() then
-                local localisedSubtypeName = common.get_localised_string("agent_subtypes_onscreen_name_override_"..characterSubtype);
-                WWL_UICache[localisedSubtypeName] = nil;
-            end
             wwl.Logger:Log_Finished();
         end,
         true
@@ -399,16 +621,9 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
     if numGenerals >= 0 then
         --wwl.Logger:Log("numGenerals > 0: "..numGenerals);
         local playerSubculture = wwl.HumanFaction:subculture();
-        local playerFaction = wwl.HumanFaction;
-        wwl.Logger:Log("Checking for subculture supported subtypes");
-        local supportedSubtypes = wwl:GetSuppportedSubtypesForFaction(playerFaction);
-        if supportedSubtypes == nil then
-            wwl.Logger:Log("No supported subtypes found");
-            return;
-        end
-        wwl.Logger:Log("Got player subculture: "..playerSubculture);
+
+        wwl.Logger:Log("Player subculture: "..playerSubculture);
         local wizardLevelUIText = common.get_localised_string("wwl_wizard_level_ui");
-        --wwl.Logger:Log("Got loc");
         if playerSubculture == "wh_main_sc_dwf_dwarfs" then
             wizardLevelUIText = common.get_localised_string("wwl_rune_level_ui");
         end
@@ -418,127 +633,36 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
         for i = 0, numGenerals do
             wwl.Logger:Log("Checking general: "..i);
             local generalPanel = UIComponent(pathToGenerals:Find(i));
-            local subtypeComponent = find_uicomponent(generalPanel, "info_holder", "details_holder", "dy_subtype");
-            local subtypeComponentText = subtypeComponent:GetStateText();
-            wwl.Logger:Log("General subtype is: "..subtypeComponentText);
-            -- If the text is Legendary Lord then we need to try and find the unique character
-            if subtypeComponentText == "Legendary Lord" then
-                local nameComponent = find_uicomponent(generalPanel, "info_holder", "details_holder", "dy_name");
-                local nameText = nameComponent:GetStateText();
-                if WWL_UICache[subtypeComponentText] == nil then
-                    -- Initiliase cached data structure
-                    WWL_UICache[subtypeComponentText] = {
-                        TrackedWizardNames = {},
+            local contextObject = generalPanel:GetContextObject("CcoCampaignCharacter");
+            local agentSubtypeKey = contextObject:Call("AgentSubtypeRecordContext.Key");
+
+            wwl.Logger:Log("Subtype is: ".. agentSubtypeKey);
+            if wwl:IsSupportedSubtype(agentSubtypeKey) then
+                wwl.Logger:Log("Subtype is supported: ".. agentSubtypeKey);
+                -- Build default and shared cache data
+                if WWL_UICache[agentSubtypeKey] == nil then
+                    local defaultWizardLevelData = wwl:GetDefaultWizardDataForCharacterSubtype(agentSubtypeKey);
+                    local imagePath = wwl:GetImagePathForSubtype(agentSubtypeKey);
+                    local fullImagePath = wwl.Skin..imagePath;
+                    WWL_UICache[agentSubtypeKey] = {
+                        DefaultWizardLevel = defaultWizardLevelData.DefaultWizardLevel,
+                        IconImage = fullImagePath,
                     };
                 end
-                if WWL_UICache[subtypeComponentText] == nil or WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] == nil then
-                    wwl.Logger:Log("Checking for Legendary Lord by name: "..nameText);
-                    local characterWizardLevelUIData = wwl:GetCharacterWizardLevelUIDataWithName(nameText, wwl.HumanFaction, true);
-                    -- If we can't find a Legendary Character by their name then they aren't a wizard or aren't supported
-                    if characterWizardLevelUIData == nil then
-                        wwl.Logger:Log("Could not find supported LL");
-                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = {
-                            WizardLevel = nil,
-                            ImagePath = nil,
-                        };
-                    else
-                        wwl.Logger:Log("Found LL...using detected value: "..characterWizardLevelUIData.WizardLevel);
-                        local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, characterWizardLevelUIData.ImagePath);
-                        SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
-                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevelUIData;
-                    end
-                elseif WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText].WizardLevel ~= nil then
-                    local characterWizardLevelUIData = WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText];
-                    local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, characterWizardLevelUIData.ImagePath);
-                    SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
-                end
-            elseif WWL_UICache[subtypeComponentText] == nil then
-                if subtypeComponentText == "dy_subtype" and buttonContext ~= nil then
-                    subtypeComponentText = common.get_localised_string("agent_subtypes_onscreen_name_override_"..buttonContext);
-                end
-                local foundWizard = false;
-                for subtypeKey, subTypeData in pairs(supportedSubtypes) do
-                    --wwl.Logger:Log("Checking subtype: "..subtypeKey);
-                    local localisedSubtypeName = common.get_localised_string("agent_subtypes_onscreen_name_override_"..subtypeKey);
-                    --wwl.Logger:Log("localisedSubtypeName is: "..localisedSubtypeName);
-                    if localisedSubtypeName == subtypeComponentText then
-                        wwl.Logger:Log("Found match: ".. localisedSubtypeName);
-                        -- Set cached data
-                        local imagePath = wwl:GetImagePathForSubtype(subtypeKey);
-                        local fullImagePath = wwl.Skin..imagePath;
-                        WWL_UICache[subtypeComponentText] = {
-                            DefaultWizardLevel = subTypeData.DefaultWizardLevel,
-                            TrackedWizardNames = {},
-                            IsSupportedWizard = true,
-                            IconImage = fullImagePath,
-                        };
-                        local nameComponent = find_uicomponent(generalPanel, "info_holder", "details_holder", "dy_name");
-                        local nameText = nameComponent:GetStateText();
-                        wwl.Logger:Log("Looking for: "..nameText);
-                        local characterWizardLevelUIData = wwl:GetCharacterWizardLevelUIDataWithName(nameText, wwl.HumanFaction, false);
-                        local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, fullImagePath);
-                        -- If we can't find a character with any active data, then we probably haven't recruited them yet
-                        if characterWizardLevelUIData == nil then
-                            wwl.Logger:Log("Character is not active. Using default values: "..subTypeData.DefaultWizardLevel);
-                            SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, subTypeData.DefaultWizardLevel);
-                            WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = {
-                                WizardLevel = subTypeData.DefaultWizardLevel,
-                                ImagePath = fullImagePath,
-                            };
-                        else
-                            wwl.Logger:Log("Character is active. Using value: "..characterWizardLevelUIData.WizardLevel);
-                            SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
-                            WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevelUIData;
-                        end
-
-                        foundWizard = true;
-                        break;
-                    end
-                end
-                -- If we haven't found a subtype match, then the character probably isn't a wizard
-                -- (Or they are from another mod and aren't supported)
-                if foundWizard == false then
-                    wwl.Logger:Log("Character not found");
-                    WWL_UICache[subtypeComponentText] = {
-                        DefaultWizardLevel = 0,
-                        TrackedWizardNames = {},
-                        IsSupportedWizard = false,
-                    };
-                    subtypeComponent:SetVisible(true);
-                end
-            elseif WWL_UICache[subtypeComponentText].IsSupportedWizard == true then
-                wwl.Logger:Log("Using cached match!");
-                local nameComponent = find_uicomponent(generalPanel, "info_holder", "details_holder", "dy_name");
-                local nameText = nameComponent:GetStateText();
-                local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, WWL_UICache[subtypeComponentText].IconImage);
-
-                local characterWizardLevelUIData = wwl:GetCharacterWizardLevelUIDataWithName(nameText, wwl.HumanFaction, false);
-                if WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] == nil then
-                    wwl.Logger:Log("Wizard is not cached by name");
-                    -- If we can't find a character with any active data, then we probably haven't recruited them yet
-                    if characterWizardLevelUIData == nil then
-                        wwl.Logger:Log("Not recruited");
-                        local defaultWizardLevel = WWL_UICache[subtypeComponentText].DefaultWizardLevel;
-                        SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, defaultWizardLevel);
-                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = {
-                            WizardLevel = defaultWizardLevel,
-                            ImagePath = WWL_UICache[subtypeComponentText].IconImage,
-                        };
-                    else
-                        wwl.Logger:Log("Using recruited data");
-                        SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
-                        WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText] = characterWizardLevelUIData;
-                    end
+                local cqi = contextObject:Call("CQI");
+                local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, WWL_UICache[agentSubtypeKey].IconImage);
+                -- If we can't find a character with any active data, then we haven't recruited them yet.
+                if cqi == 0 then
+                    wwl.Logger:Log("Character is not recruited");
+                    local defaultWizardLevel = WWL_UICache[agentSubtypeKey].DefaultWizardLevel;
+                    SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, defaultWizardLevel);
                 else
-                    wwl.Logger:Log("Found wizard cache by name");
-                    local cachedWizard = WWL_UICache[subtypeComponentText].TrackedWizardNames[nameText];
-                    SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, cachedWizard.WizardLevel);
+                    wwl.Logger:Log("Character has been recruited");
+                    local characterWizardLevelUIData = wwl:GetCharacterWizardLevelUIData(cqi);
+                    if characterWizardLevelUIData ~= nil then
+                        SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
+                    end
                 end
-            else
-                wwl.Logger:Log("Character is unsupported");
-                -- We always show the subtype label.
-                -- No real reason, mostly for consistency.
-                subtypeComponent:SetVisible(true);
             end
             wwl.Logger:Log_Finished();
         end

@@ -12,6 +12,7 @@ function LoadVanillaDBs()
     LoadFile("SkillTreeGenerator/DB/Core/WH3/character_skills_tables_data__.tsv", "character_skills_tables");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/character_skills__.loc.tsv", "character_skills_loc");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/effects_tables_data__.tsv", "effects_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/effects__.loc.tsv", "effects_loc");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/effect_bonus_value_unit_ability_junctions_tables_data__.tsv", "effect_bonus_value_unit_ability_junctions_tables");
     --LoadFile("SkillTreeGenerator/DB/Core/WH2/special_ability_group_parents_tables_data__.tsv", "special_ability_group_parents_tables");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/special_ability_groups_tables_data__.tsv", "special_ability_groups_tables");
@@ -80,6 +81,7 @@ function LoadVanillaDBs()
     --LoadFile("SkillTreeGenerator/DB/Core/All Slann Lores/character_skill_node_sets_tables_obsidian_new_slann.tsv", "character_skill_node_sets_tables");
     --LoadFile("SkillTreeGenerator/DB/Core/Xoudad - Dragon Mage/character_skill_node_sets_tables_xou_hef_dragon_mage.tsv", "character_skill_node_sets_tables");
     --LoadFile("SkillTreeGenerator/DB/Core/Shadewraith/character_skill_node_sets_tables_ab_mixu_shadewraith.tsv", "character_skill_node_sets_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/Ogres/character_skill_node_sets_tables_adv_ogre_lore_data__.tsv", "character_skill_node_sets_tables");
 
     --[[LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_!_ab_mixu_le_override.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_ab_hef_belannaer.tsv", "character_skill_nodes_tables");
@@ -110,6 +112,7 @@ function LoadVanillaDBs()
     --LoadFile("SkillTreeGenerator/DB/Core/Xoudad - Dragon Mage/character_skill_nodes_tables_!xou_hef_dragon_mage.tsv", "character_skill_nodes_tables");
     --LoadFile("SkillTreeGenerator/DB/Core/Shadewraith/character_skill_nodes_tables_mixu_khoskog.tsv", "character_skill_nodes_tables");
     --LoadFile("SkillTreeGenerator/DB/Core/Shadewraith/character_skill_nodes_tables_mixu_tia_drowna.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/Ogres/character_skill_nodes_tables_adv_ogre_lore_data__.tsv", "character_skill_nodes_tables");
     return VanillaDBs;
 end
 

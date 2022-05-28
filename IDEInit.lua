@@ -3,7 +3,8 @@ testCharacter = {
     cqi = function() return 123 end,
     get_forename = function() return "Be'lakor"; end,
     get_surname = function() return ""; end,
-    character_subtype_key = function() return "wh3_main_dae_belakor"; end,
+    character_subtype_key = function() return "wh3_main_dae_daemon_prince"; end,
+    trait_points = function() return 3; end,
     command_queue_index = function() end,
     has_military_force = function() return true end,
     military_force = function() return testMilitaryForce; end,
@@ -552,6 +553,7 @@ require 'script/campaign/mod/z_wwl_cataph_resource_loader'
 require 'script/campaign/mod/z_wwl_deco_resource_loader'
 require 'script/campaign/mod/z_wwl_kislev_resource_loader'
 require 'script/campaign/mod/z_wwl_mixu_resource_loader'
+require 'script/campaign/mod/z_wwl_ogre_lores_resource_loader'
 require 'script/campaign/mod/z_wwl_wez_speshul_resource_loader'
 require 'script/campaign/mod/z_wwl_xoudad'
 require 'script/campaign/mod/z_wondrous_wizard_levels'
@@ -568,7 +570,6 @@ _G.IsIDE = true;
 local supportedSubtypes = WWL:GetSuppportedSubtypesForFaction(humanFaction);
 local imagePath = WWL:GetImagePathForSubtype("wh3_main_tze_iridescent_horror_metal");
 local wizardLevelUIData = WWL:GetCharacterWizardLevelUIDataWithName("Be'lakor", humanFaction, false);
-local nameKeys = WWL:GetLegendaryLordNameKeysForSubculture(humanFaction:subculture());
 
 
 local MockContext_WWL_FactionTurnStart = {
