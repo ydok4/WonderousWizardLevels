@@ -1,0 +1,79 @@
+Wondrous wizard levels is a skill tree overhaul bringing the wizard level mechanic from the tabletop to Total War: Warhammer.
+
+[h2]Introduction[/h2]
+This was an idea that had been floating around in my head for a while. The original goal was to randomise the spells a character has available in order to force me to use spells I normally wouldn’t. When I began fleshing out the design of the mod I realised this would be an effective way to differentiate spellcasters within a faction and provide an incentive to choose the spellcaster variant of lords. 
+
+To achieve this, I have taken the Wizard Level mechanic from table top and made my own twists to it to better fit the style of Total War: Warhammer. So while this is inspired by the same table top mechanic, it is not exactly the same and characters may have different wizard levels than they did on the table top.
+
+Since this system is mostly automatic (aside from upgrades) it works great with the AI since they play by the same rules.
+
+[h2]Features overview[/h2]
+
+[h3]Wizard Levels[/h3]
+Each spellcaster in the vanilla game, as well as some supported by patches (See compatibility section) have a wizard level associated with them. The wizard level is the primary indicator of how powerful a spellcaster a character is. This influences the number of spells you have access to.
+
+[h3]Starting Wizard Level[/h3]
+The skill tree of characters changes depending on their starting wizard level. In general, there are two main types of skill trees.
+
+Hero spellcasters start at level 1 and have all of their level 1 spells (see below) unlocked by default. Skill points need to be spent to unlock a higher wizard level, more spells and improve their existing spells.
+
+Lord spellcasters start at level 3 and have all the level 1 spells and level 3 spells unlocked by default. Skill points can be spent to increase their wizard level or upgrade existing skills.
+
+[img]https://i.imgur.com/clFmhEn.png[/img]
+
+[h3]Spell Level[/h3]
+To better fit with the skill trees in Total War: Warhammer, I’ve divided spells into three categories. This includes:
+-The ‘Signature spell’ of a lore. This is the starting spell a character has in the vanilla game.
+[img]https://i.imgur.com/g5FMc1C.png[/img]
+For the above Light Wizard skill tree, the Signature Spell is Shem’s burning gaze.
+
+-The ‘Level 1’ spells. These are the next 3 lowest spells in the vanilla skill trees.
+[img]https://i.imgur.com/7YN8RHX.png[/img]
+For the same Light Wizard, the highlighted spells are the outlined level 1 spells.
+
+-The ‘Level 3’ spells. Named so because Level 3 wizards have these unlocked by default.
+[img]https://i.imgur.com/DFze1PF.png[/img]
+
+For the Light Wizard, because their starting level is 1. The level 3 spells are locked until they unlock Wizard Level 2 and put skill points into the spells.
+
+[b]Note:[/b] Skill trees may differ between characters due to their starting wizard level or special rules.
+
+[h2]Spell Generation - Standard[/h2]
+Spell generation is the primary feature of the mod. Each turn a character will generate spells depending on their wizard level (exceptions may apply) and their lore(s) of magic. Unlocking a Wizard Level skill will also regenerate spells for that character.
+
+For characters with one lore of magic they will gain:
+1. Their lore attribute, eg for Fire magic, Kindleflame.
+2. Their lore’s signature spell, eg for Fire magic, Fireball
+3. A number of spells equal to their wizard level, that they have unlocked. 
+
+3. Is where it will vary depending on the character type and number of skills unlocked. The best way to explain this is with a couple of examples.
+
+On turn 1, a new hero spellcaster will gain the skills outlined in 1. and 2. receive 1 additional level 1 spell. This is because they only have level 1 spells unlocked by default. Over the course of the campaign, this character will level up and unlock their level 2 wizard level and then will have 2 spells available per turn. Assuming they unlock the level 3 spells in their lore, those spells may be generated each turn.
+[img]https://i.imgur.com/dcJvBCZ.png[/img]
+^ These are the spells generated for a Level 1 Heavens Damsel. You can see they have their lore attribute (Rolling skies), their signature spell (Harmonic convergence) and a randomly chosen level 1 spell (Urannon’s thunderbolt).
+
+On turn 1, a new lord spell caster will gain the skills outlined in 1. and 2. And receive 3 additional spells chosen from the level 1 and level 3 spells. This is because they have all spells unlocked by default. Over the course of the campaign, this character will level up and eventually unlock their level 4 wizard level and then will have 4 spells available per turn. This will increase the number of extra spells available to 4 per turn. 
+[b]Note:[/b] Characters who are level 3 or higher are guaranteed at least 1 level 3 spell.
+[img]https://i.imgur.com/vDK2zpv.png[/img]
+^ These are the spells generated for a Level 3 Life Prophetess. She has a lore attribute (Lifebloom), signature spell (Awakening of the Wood), 2 level 1 spells (life bloom and flesh to stone) and 1 level 3 spell (regrowth).
+
+[b]Important:[/b] The UI may not update immediately. The characters should have the correct spells when they enter battle.
+
+[h1]Further spell generation information[/h1]
+For a full breakdown of how spell generation works, see this [url=https://docs.google.com/document/d/1jtbSqkBLLh892FHZyBe15INKdytEytIOZm1azAPio-Y/edit?usp=sharing]Google Doc[/url] for a more detailed breakdown.
+
+[h2]Compatibility[/h2]
+This mod re-organises all of the skill trees for vanilla spellcasters. Any mod changing these magic skill trees will need a compatibility patch.
+
+Mods adding new spellcasters will not have the new spell generation rules but will otherwise not be impacted.
+
+Current patches include: 
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2446006590]Mixus all in one[/url] (requires LL1, LL2, TTL and Mousillon)
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2446201109]ER: Kislev Reborn[/url]
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2446205262]Cataph and Vandy’s: Return of the Lichemaster[/url]
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2446196290]Cataph’s Dragon Mage[/url]
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2446207220]Cataph’s Southern Realms[/url]
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2446199005]Deco’s Great Bray Shaman (Expanded Beastmen Roster)[/url]
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2446209939]Wez Speshul[/url]
+
+[img]https://i.imgur.com/C6v7SRP.gif[/img]
