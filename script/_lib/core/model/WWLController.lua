@@ -6,7 +6,7 @@ WWLController = {
     -- Data structures
     WizardData = {},
     -- Defaults
-    Skin = "ui/skins/warhammer3/",
+    Skin = "ui/skins/default/",
 }
 
 function WWLController:new (o)

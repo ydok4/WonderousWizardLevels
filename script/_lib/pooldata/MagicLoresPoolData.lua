@@ -98,7 +98,7 @@ function GetMagicLorePoolDataResources()
             SignatureSpell = {"wh2_dlc11_skill_all_magic_deep_01_spiteful_shot",},
             Level1DefaultSpells = {"wh2_dlc11_skill_all_magic_deep_02_tidecall", "wh2_dlc11_skill_all_magic_deep_04_denizens_of_the_deep", "wh2_dlc11_skill_all_magic_deep_05_fog_of_the_damned", },
             Level3DefaultSpells = {"wh2_dlc11_skill_all_magic_deep_09_krakens_pull", "wh2_dlc11_skill_all_magic_deep_10_ghost_ship", },
-            ImagePath = "button_lore_deep_active.png",
+            ImagePath = "button_lore_deeps_active.png",
         },
         wh2_dlc09_lore_nehekhara = {
             InnateSkill = {"wh2_dlc09_skill_tmb_nehekhara_lore_1_passive",},
@@ -243,7 +243,8 @@ function GetMagicLorePoolDataResources()
             SignatureSpell = {"wh_main_skill_all_magic_heavens_01_harmonic_convergence",},
             Level1DefaultSpells = {"wh_main_skill_all_magic_heavens_02_wind_blast", },
             Level3DefaultSpells = {},
-            ImagePath = "button_lore_heavens_active.png",},
+            ImagePath = "button_lore_heavens_active.png",
+        },
         wh2_dlc17_lore_oracle_life = {
             InnateSkill = {"wh_dlc05_skill_magic_life_life_bloom",},
             SignatureSpell = {"wh_dlc05_skill_magic_life_wizard_awakening_of_the_wood", },

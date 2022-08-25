@@ -260,9 +260,10 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             rowIndent = rowIndents[2];
         end
         -- Dwarfs have hidden runes on different lines which trips up the generator
-        if agentKey == "dwf_runesmith"
-        or agentKey == "dlc06_dwf_runelord"
-        or agentKey == "dlc03_bst_malagor" then -- Not actually sure about malagor but he uses the wrong line
+        if agentKey == "wh_main_dwf_runesmith"
+        or agentKey == "wh_dlc06_dwf_runelord"
+        or agentKey == "wh_dlc06_dwf_runesmith_ghost"
+        or agentKey == "wh_dlc03_bst_malagor" then -- Not actually sure about malagor but he uses the wrong line
             rowIndent = rowIndents[2];
         end
         print("Agent: "..agentKey.." Has abilities on multiple rows");
@@ -282,10 +283,11 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     local newAgentLinkSkills = {};
     local clonedMagicLoreSkills = {};
     local baseWizardLevelPrefix = "wwl_skill_wizard_level_0";
-    local defaultWizardLevelCharacterSkill = baseWizardLevelPref;
+    local defaultWizardLevelCharacterSkill = baseWizardLevelPrefix;
     if agentKey == "wh2_dlc17_dwf_thorek"
-    or agentKey == "dlc06_dwf_runelord"
-    or agentKey == "dwf_runesmith" then
+    or agentKey == "wh_dlc06_dwf_runelord"
+    or agentKey == "wh_main_dwf_runesmith"
+    or agentKey == "wh_dlc06_dwf_runesmith_ghost" then
         baseWizardLevelPrefix = "wwl_skill_rune_level_0";
     end
     defaultWizardLevelCharacterSkill = baseWizardLevelPrefix..tostring(agentData.DefaultWizardLevel);
@@ -420,7 +422,7 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
             "REQUIRED");
             table.insert(newAgentLinkSkills, newSkillLink);
-            if agentKey == "vmp_lord" then
+            if agentKey == "wh_main_vmp_lord" then
                 local vmpLordSkillLink = {};
                 -- Link the bonus skill to the final node
                 CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
@@ -431,7 +433,7 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
                 table.insert(newAgentLinkSkills, vmpLordSkillLink);
             end
         end
-        if agentKey == "vmp_lord" then
+        if agentKey == "wh_main_vmp_lord" then
             local level03VmpLord = {};
             startingTier = startingTier + 1;
             CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,
@@ -458,7 +460,7 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     if agentKey == "wh2_main_def_morathi"
     or agentKey == "wh2_dlc11_vmp_bloodline_necrarch"
     or agentKey == "wh2_main_lzd_lord_mazdamundi"
-    or agentKey == "dlc03_bst_malagor"
+    or agentKey == "wh_dlc03_bst_malagor"
     or agentKey == "wh2_dlc16_wef_ariel"
     or agentKey == "wh3_main_tze_kairos"
     or agentKey == "lzd_lord_huinitenuchli"
@@ -467,7 +469,7 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     or string.match(agentKey, "archmage") then
         conduitKey = "wh2_dlc14_skilll_all_magic_all_greater_arcane_conduit";
     elseif agentKey == "wh2_main_hef_teclis" then
-        conduitKey = "wh2_main_skill_hef_teclis_flames_of_the_phoenix";
+        conduitKey = "wh2_dlc14_skilll_all_magic_all_greater_arcane_conduit";
     elseif agentKey == "wh3_main_tze_herald_of_tzeentch_metal"
     or agentKey == "wh3_main_tze_herald_of_tzeentch_tzeentch"
     or agentKey == "wh3_main_tze_iridescent_horror_metal"
@@ -488,8 +490,9 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             "wh_main_skill_all_magic_all_08_power_drain",
         };
     elseif agentKey == "wh2_dlc17_dwf_thorek"
-    or agentKey == "dlc06_dwf_runelord"
-    or agentKey == "dwf_runesmith" then
+    or agentKey == "wh_dlc06_dwf_runelord"
+    or agentKey == "wh_main_dwf_runesmith"
+    or agentKey == "wh_dlc06_dwf_runesmith_ghost" then
         conduitKey = "wh_main_skill_dwf_runesmith_self_strike_the_runes";
         bonusSkills = {
             "wh_main_skill_dwf_runesmith_self_forgefire",
@@ -536,7 +539,7 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         );
         table.insert(newAgentSkills, newBonusSkillRow);
     end
-    if agentKey == "vmp_lord" then
+    if agentKey == "wh_main_vmp_lord" then
         local level04VmpLord = {};
         startingTier = startingTier + 1;
         CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,

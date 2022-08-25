@@ -110,7 +110,7 @@ function GetVanillaWizardsPoolDataResources()
         wh_main_sc_chs_chaos = {
             wh_main_chs_archaon = {
                 DefaultWizardLevel = 2,
-                Lore = "wh_main_lore_fire",
+                Lore = { "wh_main_lore_fire", "wh_main_lore_death", "wh_main_lore_metal", "wh_dlc05_lore_shadows", "wh3_main_lore_tzeentch", },
             },
             wh_main_chs_chaos_sorcerer_death = {
                 DefaultWizardLevel = 1,
@@ -147,6 +147,67 @@ function GetVanillaWizardsPoolDataResources()
             wh_main_chs_lord_of_change = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_metal",
+            },
+            -- WH3
+            wh3_dlc20_nur_festus = {
+                DefaultWizardLevel = 2,
+                Lore = "wh3_main_lore_nurgle",
+            },
+            wh3_dlc20_sla_azazel = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_main_lore_slaanesh",
+            },
+            wh3_dlc20_tze_vilitch = {
+                DefaultWizardLevel = 4,
+                Lore = "wh3_main_lore_tzeentch",
+            },
+            wh3_dlc20_chs_daemon_prince_nurgle = {
+                DefaultWizardLevel = 3,
+                Lore = { "wh3_main_lore_nurgle", "wh_main_lore_death", },
+            },
+            wh3_dlc20_chs_daemon_prince_slaanesh = {
+                DefaultWizardLevel = 2,
+                Lore = { "wh3_main_lore_slaanesh", "wh_dlc05_lore_shadows", },
+            },
+            wh3_dlc20_chs_daemon_prince_tzeentch = {
+                DefaultWizardLevel = 4,
+                Lore = { "wh3_main_lore_tzeentch", "wh3_main_lore_tzeentch", },
+            },
+            wh3_dlc20_chs_daemon_prince_undivided = {
+                DefaultWizardLevel = 1,
+                Lore = { "wh_main_lore_fire", "wh_main_lore_death", "wh_dlc05_lore_shadows", "wh_main_lore_metal", },
+            },
+            wh3_dlc20_chs_sorcerer_lord_death_mnur = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_death",
+            },
+            wh3_dlc20_chs_sorcerer_lord_metal_mtze = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_metal",
+            },
+            wh3_dlc20_chs_sorcerer_lord_nurgle_mnur = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_main_lore_nurgle",
+            },
+            wh3_dlc20_chs_sorcerer_lord_tzeentch_mtze = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_main_lore_tzeentch",
+            },
+            wh3_dlc20_chs_sorcerer_metal_mtze = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_metal",
+            },
+            wh3_dlc20_chs_sorcerer_shadows_msla = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc05_lore_shadows",
+            },
+            wh3_dlc20_chs_sorcerer_slaanesh_msla = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_main_lore_slaanesh",
+            },
+            wh3_dlc20_chs_sorcerer_tzeentch_mtze = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_main_lore_tzeentch",
             },
         },
         -- Daemons of Chaos
@@ -315,6 +376,10 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 1,
                 Lore = "wh2_dlc17_lore_rune",
             },
+            wh_dlc06_dwf_runesmith_ghost = {
+                DefaultWizardLevel = 1,
+                Lore = "wh2_dlc17_lore_rune",
+            },
         },
         -- Empire
         wh_main_sc_emp_empire = {
@@ -437,6 +502,7 @@ function GetVanillaWizardsPoolDataResources()
             wh2_main_hef_teclis = {
                 DefaultWizardLevel = 4,
                 Lore = { "wh2_main_lore_high_magic", "wh2_dlc15_lore_beasts_eagle", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", },
+                HasAccessToFragements = true,
             },
             wh2_dlc10_hef_alarielle = {
                 DefaultWizardLevel = 4,
@@ -628,6 +694,18 @@ function GetVanillaWizardsPoolDataResources()
                 IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_metal",
+            },
+            wh3_main_ie_nor_burplesmirk_spewpit = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_main_lore_nurgle",
+            },
+            wh_dlc08_nor_arzik = {
+                DefaultWizardLevel = 4,
+                Lore = "wh3_main_lore_tzeentch",
+            },
+            wh_dlc08_nor_kihar = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_main_lore_slaanesh",
             },
         },
         -- Nurgle
@@ -953,11 +1031,19 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_vampires",
             },
+            wh_dlc04_vmp_vlad_von_carstein_hero = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_vampires",
+            },
             wh_dlc05_vmp_red_duke = {
                 DefaultWizardLevel = 2,
                 Lore = "wh_main_lore_vampires",
             },
             wh_pro02_vmp_isabella_von_carstein = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_vampires",
+            },
+            wh_pro02_vmp_isabella_von_carstein_hero = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_vampires",
             },

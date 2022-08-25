@@ -705,6 +705,13 @@ function InitialiseClonedRankComponent(wwl, generalPanel, loreIconPath)
 		wizardLevelComponent:SetTooltipText("", true);
         wizardLevelComponent:SetImagePath(loreIconPath, 0, true);
         cm:callback(function()
+            local useHorizontalPositioning = false;
+            -- If we aren't looking at a WH3 faction, then we need to use different offsets for positioning the icon
+            -- This is for WH3 factions and Warriors of Chaos at this stage
+            if not string.match(wwl.HumanFaction:subculture(), "wh3")
+            and wwl.HumanFaction:subculture() ~= "wh_main_sc_chs_chaos" then
+                useHorizontalPositioning = true;
+            end
             -- We need to adjust the icon to ensure it is positioned and scaled
             -- apropriately
             local scale = 0.75;
@@ -714,12 +721,25 @@ function InitialiseClonedRankComponent(wwl, generalPanel, loreIconPath)
             local new_yPos = height * ((1 - scale) / 2);
             local base_xPos = 2;
             local base_yPos = rankComponent:Height() - 10;
+            -- When using horizontal positioning the offsets differ for the image icon and the text
+            if useHorizontalPositioning == true then
+                new_xPos = 40;
+                base_yPos = 0;
+                base_xPos = 0;
+            end
             wizardLevelComponent:SetDockOffset(new_xPos, new_yPos - base_yPos);
             -- Reize the state image and keep the aspect ratio
             local img_w, img_h = wizardLevelComponent:GetCurrentStateImageDimensions(0);
             local new_width = width * scale;
             local new_height = new_width * img_h / img_w;
             wizardLevelComponent:ResizeCurrentStateImage(0, new_width, new_height);
+            -- When using horizontal positioning the offsets differ for the image icon and the text
+            if useHorizontalPositioning == true then
+                new_xPos = 3;
+                new_yPos = 5;
+                base_xPos = 0;
+                base_yPos = 0;
+            end
             -- Finally adjust the position of the number so it is centred
             wizardLevelText:SetDockOffset(new_xPos - base_xPos - new_width/4, new_yPos - new_height/4 - 2);
         end,
