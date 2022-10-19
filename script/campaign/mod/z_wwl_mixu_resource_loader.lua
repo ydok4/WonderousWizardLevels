@@ -6,5 +6,4 @@ require 'script/_lib/pooldata/MixuLegendaryLordNameKeys'
 -- This is separate so I can use this in other mods
 if _G.WWLResources then
     _G.WWLResources:AddAdditionalDataResources("WizardData", GetMixuWizardsPoolData());
-    _G.WWLResources:AddAdditionalDataResources("LegendaryLordNameKeys", GetMixuLegendaryLordNameKeys());
 end

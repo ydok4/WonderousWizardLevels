@@ -633,34 +633,36 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
         for i = 0, numGenerals do
             wwl.Logger:Log("Checking general: "..i);
             local generalPanel = UIComponent(pathToGenerals:Find(i));
-            local contextObject = generalPanel:GetContextObject("CcoCampaignCharacter");
-            local agentSubtypeKey = contextObject:Call("AgentSubtypeRecordContext.Key");
-
-            wwl.Logger:Log("Subtype is: ".. agentSubtypeKey);
-            if wwl:IsSupportedSubtype(agentSubtypeKey) then
-                wwl.Logger:Log("Subtype is supported: ".. agentSubtypeKey);
-                -- Build default and shared cache data
-                if WWL_UICache[agentSubtypeKey] == nil then
-                    local defaultWizardLevelData = wwl:GetDefaultWizardDataForCharacterSubtype(agentSubtypeKey);
-                    local imagePath = wwl:GetImagePathForSubtype(agentSubtypeKey);
-                    local fullImagePath = wwl.Skin..imagePath;
-                    WWL_UICache[agentSubtypeKey] = {
-                        DefaultWizardLevel = defaultWizardLevelData.DefaultWizardLevel,
-                        IconImage = fullImagePath,
-                    };
-                end
-                local cqi = contextObject:Call("CQI");
-                local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, WWL_UICache[agentSubtypeKey].IconImage);
-                -- If we can't find a character with any active data, then we haven't recruited them yet.
-                if cqi == 0 then
-                    wwl.Logger:Log("Character is not recruited");
-                    local defaultWizardLevel = WWL_UICache[agentSubtypeKey].DefaultWizardLevel;
-                    SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, defaultWizardLevel);
-                else
-                    wwl.Logger:Log("Character has been recruited");
-                    local characterWizardLevelUIData = wwl:GetCharacterWizardLevelUIData(cqi);
-                    if characterWizardLevelUIData ~= nil then
-                        SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
+            local generalSubtype = find_uicomponent(generalPanel, "dy_subtype");
+            local contextObject = generalSubtype:GetContextObject("CcoCampaignCharacter");
+            if contextObject ~= nil then
+                local agentSubtypeKey = contextObject:Call("AgentSubtypeRecordContext.Key");
+                wwl.Logger:Log("Subtype is: ".. agentSubtypeKey);
+                if wwl:IsSupportedSubtype(agentSubtypeKey) then
+                    wwl.Logger:Log("Subtype is supported: ".. agentSubtypeKey);
+                    -- Build default and shared cache data
+                    if WWL_UICache[agentSubtypeKey] == nil then
+                        local defaultWizardLevelData = wwl:GetDefaultWizardDataForCharacterSubtype(agentSubtypeKey);
+                        local imagePath = wwl:GetImagePathForSubtype(agentSubtypeKey);
+                        local fullImagePath = wwl.Skin..imagePath;
+                        WWL_UICache[agentSubtypeKey] = {
+                            DefaultWizardLevel = defaultWizardLevelData.DefaultWizardLevel,
+                            IconImage = fullImagePath,
+                        };
+                    end
+                    local cqi = contextObject:Call("CQI");
+                    local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, WWL_UICache[agentSubtypeKey].IconImage);
+                    -- If we can't find a character with any active data, then we haven't recruited them yet.
+                    if cqi == 0 then
+                        wwl.Logger:Log("Character is not recruited");
+                        local defaultWizardLevel = WWL_UICache[agentSubtypeKey].DefaultWizardLevel;
+                        SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, defaultWizardLevel);
+                    else
+                        wwl.Logger:Log("Character has been recruited");
+                        local characterWizardLevelUIData = wwl:GetCharacterWizardLevelUIData(cqi);
+                        if characterWizardLevelUIData ~= nil then
+                            SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
+                        end
                     end
                 end
             end
@@ -690,10 +692,21 @@ function InitialiseClonedSubTypeComponent(wwl, generalPanel, subtypeComponent, t
 end
 
 function InitialiseClonedRankComponent(wwl, generalPanel, loreIconPath)
-    local existingRank = find_uicomponent(generalPanel, "info_holder", "wizard_level");
+    local generalId = generalPanel:Id();
+    local existingRank = nil;
+    if string.match(generalId, "_bloodline") then
+        existingRank = find_uicomponent(generalPanel, "wizard_level");
+    else
+        existingRank = find_uicomponent(generalPanel, "info_holder", "wizard_level");
+    end
     if not existingRank then
         --wwl.Logger:Log("Cloning Component");
-        local rankComponent = find_uicomponent(generalPanel, "info_holder", "rank");
+        local rankComponent = nil;
+        if string.match(generalId, "_bloodline") then
+            rankComponent = find_uicomponent(generalPanel, "rank");
+        else
+            rankComponent = find_uicomponent(generalPanel, "info_holder", "rank");
+        end
 		-- Clone components
         local wizardLevelComponent = UIComponent(rankComponent:CopyComponent("wizard_level"));
 		local dyRankComponent = find_uicomponent(wizardLevelComponent, "dy_rank");
@@ -708,8 +721,11 @@ function InitialiseClonedRankComponent(wwl, generalPanel, loreIconPath)
             local useHorizontalPositioning = false;
             -- If we aren't looking at a WH3 faction, then we need to use different offsets for positioning the icon
             -- This is for WH3 factions and Warriors of Chaos at this stage
-            if not string.match(wwl.HumanFaction:subculture(), "wh3")
-            and wwl.HumanFaction:subculture() ~= "wh_main_sc_chs_chaos" then
+            -- Legacy condition
+            --[[if not string.match(wwl.HumanFaction:subculture(), "wh3")
+            and wwl.HumanFaction:subculture() ~= "wh_main_sc_chs_chaos" then--]]
+            -- New (and only remaining condition)
+            if string.match(generalId, "_bloodline") then
                 useHorizontalPositioning = true;
             end
             -- We need to adjust the icon to ensure it is positioned and scaled
@@ -724,6 +740,10 @@ function InitialiseClonedRankComponent(wwl, generalPanel, loreIconPath)
             -- When using horizontal positioning the offsets differ for the image icon and the text
             if useHorizontalPositioning == true then
                 new_xPos = 40;
+                if string.match(generalId, "_bloodline") then
+                    new_xPos = 32;
+                    new_yPos = 100;
+                end
                 base_yPos = 0;
                 base_xPos = 0;
             end

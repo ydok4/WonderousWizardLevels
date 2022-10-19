@@ -84,7 +84,7 @@ function GetMagicLorePoolDataResources()
             SignatureSpell = {"wh2_main_skill_all_magic_high_02_apotheosis", },
             Level1DefaultSpells = {"wh2_main_skill_all_magic_high_04_hand_of_glory", "wh2_main_skill_all_magic_high_01_soul_quench", "wh2_main_skill_all_magic_high_05_tempest",},
             Level3DefaultSpells = {"wh2_main_skill_all_magic_high_09_arcane_unforging", "wh2_main_skill_all_magic_high_10_fiery_convocation"},
-            ImagePath = "button_lore_high_active.png",
+            ImagePath = "button_lore_high_magic_active.png",
         },
         wh2_main_lore_dark_magic = {
             InnateSkill = {"wh2_main_skill_magic_dark_lore_attribute",},

@@ -154,7 +154,7 @@ function GetVanillaWizardsPoolDataResources()
                 Lore = "wh3_main_lore_nurgle",
             },
             wh3_dlc20_sla_azazel = {
-                DefaultWizardLevel = 1,
+                DefaultWizardLevel = 2,
                 Lore = "wh3_main_lore_slaanesh",
             },
             wh3_dlc20_tze_vilitch = {

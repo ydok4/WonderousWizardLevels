@@ -476,9 +476,14 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     or agentKey == "wh3_main_tze_iridescent_horror_tzeentch"
     or agentKey == "wh3_main_tze_exalted_lord_of_change_metal"
     or agentKey == "wh3_main_tze_exalted_lord_of_change_tzeentch"
-    or agentKey == "wh3_main_tze_cultist" then
+    or agentKey == "wh3_main_tze_cultist"
+    or agentKey == "tze_melekh_the_changer"
+    or agentKey == "chs_malofex_the_storm_chaser"
+    or agentKey == "chs_egrimm_van_horstmann"
+    or agentKey == "chs_azubhor_clawhand" then
         if agentKey == "wh3_main_tze_exalted_lord_of_change_metal"
-        or agentKey == "wh3_main_tze_exalted_lord_of_change_tzeentch" then
+        or agentKey == "wh3_main_tze_exalted_lord_of_change_tzeentch"
+        or agentKey == "chs_malofex_the_storm_chaser" then
             conduitKey = "wh2_dlc14_skilll_all_magic_all_greater_arcane_conduit";
         else
             conduitKey = "wh_main_skill_all_magic_all_11_arcane_conduit";
