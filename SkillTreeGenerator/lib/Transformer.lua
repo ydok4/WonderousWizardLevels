@@ -480,10 +480,12 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     or agentKey == "tze_melekh_the_changer"
     or agentKey == "chs_malofex_the_storm_chaser"
     or agentKey == "chs_egrimm_van_horstmann"
-    or agentKey == "chs_azubhor_clawhand" then
+    or agentKey == "chs_azubhor_clawhand"
+    or agentKey == "wh3_dlc20_chs_daemon_prince_tzeentch" then
         if agentKey == "wh3_main_tze_exalted_lord_of_change_metal"
         or agentKey == "wh3_main_tze_exalted_lord_of_change_tzeentch"
-        or agentKey == "chs_malofex_the_storm_chaser" then
+        or agentKey == "chs_malofex_the_storm_chaser"
+        or agentKey == "wh3_dlc20_chs_daemon_prince_tzeentch" then
             conduitKey = "wh2_dlc14_skilll_all_magic_all_greater_arcane_conduit";
         else
             conduitKey = "wh_main_skill_all_magic_all_11_arcane_conduit";
@@ -564,6 +566,31 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         newSkillLink,
         "wwl_character_skill_node_"..agentKey.."_"..conduitKey,
         "wwl_character_skill_node_"..agentKey.."_wwl_skill_wizard_level_04",
+        "REQUIRED");
+        table.insert(newAgentLinkSkills, newSkillLink);
+    elseif agentKey == "wh3_dlc20_chs_daemon_prince_nurgle"
+    or agentKey == "wh3_dlc20_chs_daemon_prince_slaanesh"
+    or agentKey == "wh3_dlc20_chs_daemon_prince_tzeentch"
+    or agentKey == "wh3_dlc20_chs_daemon_prince_undivided" then
+        local level04DaemonPrince = {};
+        startingTier = startingTier + 1;
+        CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,
+        level04DaemonPrince,
+            "wwl_character_skill_node_"..agentKey.."_wwl_skill_wizard_level_03",
+            "wwl_skill_wizard_level_03",
+            agentSkillSetKey,
+            rowIndent,
+            startingTier,
+            0,
+            1
+        );
+        table.insert(newAgentSkills, level04DaemonPrince);
+        local newSkillLink = {};
+        -- Link the bonus skill to the final node
+        CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
+        newSkillLink,
+        "wwl_character_skill_node_"..agentKey.."_"..conduitKey,
+        "wwl_character_skill_node_"..agentKey.."_wwl_skill_wizard_level_03",
         "REQUIRED");
         table.insert(newAgentLinkSkills, newSkillLink);
     end

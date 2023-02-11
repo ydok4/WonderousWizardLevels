@@ -221,24 +221,36 @@ end
 
 function WWLController:GetWizardLevel(character)
     local characterSubtype = character:character_subtype_key();
+    local defaultWizardData = nil;
     -- Daemon Prince has unique level criteria
     if characterSubtype == "wh3_main_dae_daemon_prince" then
-        local wizardData = self:GetDaemonPrinceSpells(character);
-        if wizardData == nil then
+        defaultWizardData = self:GetDanielDaemonPrinceSpells(character);
+        if defaultWizardData == nil then
             return nil;
         else
-            return wizardData.DefaultWizardLevel;
+            return defaultWizardData.DefaultWizardLevel;
         end
+    elseif characterSubtype == "wh3_dlc20_chs_daemon_prince_nurgle"
+    or characterSubtype == "wh3_dlc20_chs_daemon_prince_slaanesh"
+    or characterSubtype == "wh3_dlc20_chs_daemon_prince_tzeentch"
+    or characterSubtype == "wh3_dlc20_chs_daemon_prince_undivided" then
+        defaultWizardData = self:GetDaemonPrinceSpells(character);
     end
     local characterSubculture = character:faction():subculture();
-    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(character:character_subtype_key());
+    if defaultWizardData == nil then
+        defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(character:character_subtype_key());
+    end
     if defaultWizardData == nil then
         return nil;
     end
     local defaultWizardLevelToCheck = defaultWizardData.DefaultWizardLevel + 1;
     local maxLevelToCheck = defaultWizardData.DefaultWizardLevel + 1;
-    if characterSubtype == "vmp_lord" then
-            maxLevelToCheck = 4;
+    if characterSubtype == "wh_main_vmp_lord"
+    or characterSubtype == "wh3_dlc20_chs_daemon_prince_nurgle"
+    or characterSubtype == "wh3_dlc20_chs_daemon_prince_slaanesh"
+    or characterSubtype == "wh3_dlc20_chs_daemon_prince_tzeentch"
+    or characterSubtype == "wh3_dlc20_chs_daemon_prince_undivided" then
+        maxLevelToCheck = 4;
     end
     local wizardLevelPrefix = "wwl_skill_wizard_level_0";
     if characterSubculture == "wh_main_sc_dwf_dwarfs" then
@@ -393,13 +405,18 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         customEffectBundle:set_duration(1);
         self.Logger:Log("Found multi lore character: "..characterSubtype);
         if characterSubtype == "wh3_main_dae_daemon_prince" then
-            defaultWizardData = self:GetDaemonPrinceSpells(character);
+            defaultWizardData = self:GetDanielDaemonPrinceSpells(character);
             -- If this comes back nil then either they're a demon of Khorne
             -- or something has gone horribly wrong
             if defaultWizardData == nil then
                 cm:apply_custom_effect_bundle_to_character(customEffectBundle, character);
                 return;
             end
+        elseif characterSubtype == "wh3_dlc20_chs_daemon_prince_nurgle"
+        or characterSubtype == "wh3_dlc20_chs_daemon_prince_slaanesh"
+        or characterSubtype == "wh3_dlc20_chs_daemon_prince_tzeentch"
+        or characterSubtype == "wh3_dlc20_chs_daemon_prince_undivided" then
+            defaultWizardData = self:GetDaemonPrinceSpells(character);
         end
         self.Logger:Log("Default wizard level is: "..defaultWizardData.DefaultWizardLevel);
         -- Grab the magic lore data for each lore and deep copy them
@@ -683,7 +700,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
     self.Logger:Log_Finished();
 end
 
-function WWLController:GetDaemonPrinceSpells(daemonPrince)
+function WWLController:GetDanielDaemonPrinceSpells(daemonPrince)
     if daemonPrince:trait_points("wwl_trait_daemon_prince_undivided") > 0 then
         return {
             DefaultWizardLevel = daemonPrince:trait_points("wwl_trait_daemon_prince_undivided") - 2,
@@ -708,6 +725,51 @@ function WWLController:GetDaemonPrinceSpells(daemonPrince)
         };
     end
     return nil;
+end
+
+function WWLController:GetDaemonPrinceSpells(daemonPrince)
+    -- Nurgle Sorcerer
+    if daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_lord_death_to_death_mnur") > 0
+    or daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_lord_nurgle_nur_to_daemon_prince") > 0
+    or daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_lord_death_nur_to_daemon_prince") > 0 then
+        return {
+            DefaultWizardLevel = 2,
+            Lore = { "wh3_main_lore_nurgle", "wh_main_lore_death", },
+        };
+    -- Slaanesh Sorcerer
+    elseif daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_shadows_to_shadows_msla") > 0
+    or daemonPrince:trait_points("wwl_trait_generic_daemon_prince_shadows") > 0 then
+        return {
+            DefaultWizardLevel = 2,
+            Lore = { "wh3_main_lore_slaanesh", "wh_dlc05_lore_shadows", },
+        };
+    -- Tzeentch Sorcerer
+    elseif daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_metal_to_metal_mtze") > 0
+    or daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_lord_metal_tze_to_daemon_prince") > 0
+    or daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_lord_tzeentch_tze_to_daemon_prince") > 0 then
+        return {
+            DefaultWizardLevel = 3,
+            Lore = { "wh3_main_lore_tzeentch", "wh_main_lore_metal", },
+        };
+    -- Undivided Sorcerer
+    elseif daemonPrince:trait_points("wwl_trait_generic_daemon_prince_fire") > 0
+    or daemonPrince:trait_points("wwl_trait_generic_daemon_prince_death") > 0
+    or daemonPrince:trait_points("wwl_trait_generic_daemon_prince_metal") > 0
+    or daemonPrince:trait_points("wwl_trait_generic_daemon_prince_shadows") > 0
+    or daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_fire") > 0
+    or daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_metal") > 0
+    or daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_death") > 0
+    or daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_shadows") > 0
+    or daemonPrince:trait_points("wh3_dlc20_legacy_trait_sorcerer_lord_fire_to_daemon_prince") > 0 then
+        return {
+            DefaultWizardLevel = 2,
+            Lore = { "wh_main_lore_fire", "wh_main_lore_death", "wh_dlc05_lore_shadows", "wh_main_lore_metal", },
+        };
+    end
+    -- Defaults for non-sorcer's
+    local characterSubtype = daemonPrince:character_subtype_key();
+    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype);
+    return defaultWizardData;
 end
 
 function WWLController:IsValidCharacterSkillKey(skillKey)

@@ -9,8 +9,13 @@ function GetCataphWizardsPoolData()
             },
         },
         -- TEB
-        -- Note: TEB does have it's own subculture (wh_main_sc_teb_teb)
-        -- but in vanilla they reuse empire data.
+        -- Note: TEB now has several subcultures, potentially:
+        -- mixer_teb_southern_realms
+        -- wh2_main_emp_new_world_colonies_CB
+        -- wh_main_sc_teb_teb
+        -- wh_main_teb_border_princes_CB
+        -- wh_main_teb_estalia_CB
+        -- wh_main_teb_tilea_CB
         -- Rather than trying to detect this, I just lump this with Empire.
         wh_main_sc_emp_empire = {
             teb_gashnag = {

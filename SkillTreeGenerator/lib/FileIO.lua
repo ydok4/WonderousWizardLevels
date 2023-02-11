@@ -84,6 +84,8 @@ function LoadVanillaDBs()
     LoadFile("SkillTreeGenerator/DB/Core/WH3/Ogres/character_skill_node_sets_tables_adv_ogre_lore_data__.tsv", "character_skill_node_sets_tables");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuLL/character_skill_node_sets_tables_mixu_legendary_lords.tsv", "character_skill_node_sets_tables");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuGnoblars/character_skill_node_sets_tables_gnob.tsv", "character_skill_node_sets_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/TEB/character_skill_node_sets_tables_AK_teb.tsv", "character_skill_node_sets_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/Xoudad/character_skill_node_sets_tables_dead_xou_gold.tsv", "character_skill_node_sets_tables");
 
     --[[LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_!_ab_mixu_le_override.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_ab_hef_belannaer.tsv", "character_skill_nodes_tables");
@@ -116,6 +118,11 @@ function LoadVanillaDBs()
     --LoadFile("SkillTreeGenerator/DB/Core/Shadewraith/character_skill_nodes_tables_mixu_tia_drowna.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/Ogres/character_skill_nodes_tables_adv_ogre_lore_data__.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuGnoblars/character_skill_nodes_tables_gnob_generic.tsv", "character_skill_nodes_tables");
+
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/TEB/character_skill_nodes_tables_AK_teb_LL_gashnag.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/TEB/character_skill_nodes_tables_AK_teb_LL_lucrezzia.tsv", "character_skill_nodes_tables");
+    
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/Xoudad/character_skill_nodes_tables_dead_xou_gold.tsv", "character_skill_nodes_tables");
 
     LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuLL/character_skill_nodes_tables_mixu_ll_beastmen.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuLL/character_skill_nodes_tables_mixu_ll_bretonnia.tsv", "character_skill_nodes_tables");

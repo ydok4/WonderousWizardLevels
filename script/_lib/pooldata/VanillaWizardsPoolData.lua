@@ -161,17 +161,20 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 4,
                 Lore = "wh3_main_lore_tzeentch",
             },
+            -- Note: Daemon Prince default Wizard Levels will change depending on
+            -- how they ascended. Typically Wizard lords will increase the default
+            -- level by 1.
             wh3_dlc20_chs_daemon_prince_nurgle = {
-                DefaultWizardLevel = 3,
+                DefaultWizardLevel = 1,
                 Lore = { "wh3_main_lore_nurgle", "wh_main_lore_death", },
             },
             wh3_dlc20_chs_daemon_prince_slaanesh = {
-                DefaultWizardLevel = 2,
+                DefaultWizardLevel = 1,
                 Lore = { "wh3_main_lore_slaanesh", "wh_dlc05_lore_shadows", },
             },
             wh3_dlc20_chs_daemon_prince_tzeentch = {
-                DefaultWizardLevel = 4,
-                Lore = { "wh3_main_lore_tzeentch", "wh3_main_lore_tzeentch", },
+                DefaultWizardLevel = 1,
+                Lore = { "wh3_main_lore_tzeentch", "wh_main_lore_metal", },
             },
             wh3_dlc20_chs_daemon_prince_undivided = {
                 DefaultWizardLevel = 1,
