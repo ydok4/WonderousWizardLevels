@@ -403,7 +403,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         local enableSpells = false;
         local customEffectBundle = cm:create_new_custom_effect_bundle("wwl_character_spells_effect_bundle");
         customEffectBundle:set_duration(1);
-        self.Logger:Log("Found multi lore character: "..characterSubtype);
+        self.Logger:Log("Found multi lore character: "..characterSubtype.." cqi: "..character:command_queue_index());
         if characterSubtype == "wh3_main_dae_daemon_prince" then
             defaultWizardData = self:GetDanielDaemonPrinceSpells(character);
             -- If this comes back nil then either they're a demon of Khorne
@@ -558,8 +558,13 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         end
 
         local currentWizardLevel = defaultWizardData.DefaultWizardLevel;
-        if character:has_skill(wizardLevelPrefix..tostring(defaultWizardData.DefaultWizardLevel + 1)) and _G.IsIDE == false then
+        local wizardLevelSkillKey = wizardLevelPrefix..tostring(defaultWizardData.DefaultWizardLevel + 1);
+        if character:has_skill(wizardLevelSkillKey)
+        and not _G.IsIDE then
+            self.Logger:Log("Character has wizard level skill: "..wizardLevelSkillKey);
             currentWizardLevel = defaultWizardData.DefaultWizardLevel + 1;
+        else
+            self.Logger:Log("Character does not have wizard level skill: "..wizardLevelSkillKey);
         end
         local spellAmounts = {
             [4] = {

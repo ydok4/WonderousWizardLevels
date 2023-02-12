@@ -428,7 +428,7 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
                 CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
                 vmpLordSkillLink,
                 "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
-                "wwl_character_skill_node_"..agentKey..baseWizardLevelPrefix.."_3",
+                "wwl_character_skill_node_"..agentKey.."_"..baseWizardLevelPrefix.."3",
                 "REQUIRED");
                 table.insert(newAgentLinkSkills, vmpLordSkillLink);
             end
