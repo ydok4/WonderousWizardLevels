@@ -508,6 +508,13 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         };
     elseif agentKey == "wh2_dlc17_lzd_skink_oracle_troglodon" then
         conduitKey = "wh2_dlc17_skill_lzd_skink_oracle_telepathic_link";
+    elseif agentKey == "wef_shadowdancer" then
+        conduitKey = "mixu_wef_shadowdancer_ability_loecs_blessing";
+        bonusSkills = {
+            "mixu_wef_shadowdancer_special_loecs_shroud",
+            "wh_main_skill_all_magic_all_07_earthing",
+            "wh_main_skill_all_magic_all_08_power_drain",
+        };
     else
         conduitKey = "wh_main_skill_all_magic_all_11_arcane_conduit";
     end

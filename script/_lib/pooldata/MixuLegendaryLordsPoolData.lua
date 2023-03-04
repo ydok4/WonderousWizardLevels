@@ -1,4 +1,4 @@
-function GetMixuWizardsPoolData()
+function GetMixuLegendaryLordsPoolData()
     return {
         -- Beastmen
         wh_dlc03_sc_bst_beastmen = {
@@ -201,11 +201,6 @@ function GetMixuWizardsPoolData()
         },
         -- Wood Elves
         wh_dlc05_sc_wef_wood_elves = {
-            -- TTL
-            --[[wef_shadowdancer = {
-                DefaultWizardLevel = 1,
-                Lore = "wh_dlc05_lore_shadows",
-            },--]]
             -- LL2
             wef_naieth_the_prophetess = {
                 DefaultWizardLevel = 4,

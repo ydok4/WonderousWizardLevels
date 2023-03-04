@@ -245,12 +245,13 @@ function WWLController:GetWizardLevel(character)
     end
     local defaultWizardLevelToCheck = defaultWizardData.DefaultWizardLevel + 1;
     local maxLevelToCheck = defaultWizardData.DefaultWizardLevel + 1;
-    if characterSubtype == "wh_main_vmp_lord"
-    or characterSubtype == "wh3_dlc20_chs_daemon_prince_nurgle"
+    if characterSubtype == "wh_main_vmp_lord" then
+        maxLevelToCheck = 4;
+    elseif characterSubtype == "wh3_dlc20_chs_daemon_prince_nurgle"
     or characterSubtype == "wh3_dlc20_chs_daemon_prince_slaanesh"
     or characterSubtype == "wh3_dlc20_chs_daemon_prince_tzeentch"
-    or characterSubtype == "wh3_dlc20_chs_daemon_prince_undivided" then
-        maxLevelToCheck = 4;
+    or characterSubtype == "wh3_dlc20_chs_daemon_prince_undivided" then 
+        maxLevelToCheck = 3;
     end
     local wizardLevelPrefix = "wwl_skill_wizard_level_0";
     if characterSubculture == "wh_main_sc_dwf_dwarfs" then
@@ -418,7 +419,8 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         or characterSubtype == "wh3_dlc20_chs_daemon_prince_undivided" then
             defaultWizardData = self:GetDaemonPrinceSpells(character);
         end
-        self.Logger:Log("Default wizard level is: "..defaultWizardData.DefaultWizardLevel);
+        local wizardLevel = self:GetWizardLevel(character);
+        self.Logger:Log("Wizard level is: "..wizardLevel);
         -- Grab the magic lore data for each lore and deep copy them
         local magicLoresData = {};
         local innateSkills = {};
@@ -475,11 +477,11 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         local selectedSpells = {};
         -- Setup the innate skills
         local numberOfMagicLores = #magicLoresData;
-        if numberOfMagicLores > defaultWizardData.DefaultWizardLevel then
+        if numberOfMagicLores > wizardLevel then
             local disabledSkills = {};
             local numberOfSkillsToProcess = 0;
             if enableSpells == true then
-                numberOfSkillsToProcess = defaultWizardData.DefaultWizardLevel - 1;
+                numberOfSkillsToProcess = wizardLevel - 1;
                 -- Wizard level 0 will cause no innates to be generated,
                 -- we still want at least 1.
                 if numberOfSkillsToProcess < 0 then
@@ -490,10 +492,10 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             else
                 -- Wizard level 0 will cause no innates to be generated,
                 -- we still want at least 1.
-                if defaultWizardData.DefaultWizardLevel == 0 then
-                    numberOfSkillsToProcess = numberOfMagicLores - defaultWizardData.DefaultWizardLevel - 2;
+                if wizardLevel == 0 then
+                    numberOfSkillsToProcess = numberOfMagicLores - wizardLevel - 2;
                 else
-                    numberOfSkillsToProcess = numberOfMagicLores - defaultWizardData.DefaultWizardLevel - 1;
+                    numberOfSkillsToProcess = numberOfMagicLores - wizardLevel - 1;
                 end
             end
 
@@ -522,7 +524,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
         local numberOfLevel1Spells = 0;
         local numberOfLevel3Spells = 0;
         local generateSignatureSpell = true;
-        if defaultWizardData.DefaultWizardLevel == 0 then
+        if wizardLevel == 0 then
             -- 1 in 6 chance of receiving the only spell as the signature spell
             if Roll100(16) then
                 numberOfLevel1Spells = numberOfLevel1Spells - 1;
@@ -557,15 +559,7 @@ function WWLController:PerformSpecialSpellGeneration(defaultWizardData, characte
             customEffectBundle:add_effect(selectedSignatureSpell.."_enabled", "character_to_character_own", 1);
         end
 
-        local currentWizardLevel = defaultWizardData.DefaultWizardLevel;
-        local wizardLevelSkillKey = wizardLevelPrefix..tostring(defaultWizardData.DefaultWizardLevel + 1);
-        if character:has_skill(wizardLevelSkillKey)
-        and not _G.IsIDE then
-            self.Logger:Log("Character has wizard level skill: "..wizardLevelSkillKey);
-            currentWizardLevel = defaultWizardData.DefaultWizardLevel + 1;
-        else
-            self.Logger:Log("Character does not have wizard level skill: "..wizardLevelSkillKey);
-        end
+        local currentWizardLevel = wizardLevel;
         local spellAmounts = {
             [4] = {
                 Level3Spells = 1,
