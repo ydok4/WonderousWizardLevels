@@ -4,20 +4,21 @@ local VanillaDBs = {};
 function LoadVanillaDBs()
     print("\n\nLoading supported db files");
     -- Load the core vanilla files
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/character_skill_level_to_effects_junctions_tables_data__.tsv", "character_skill_level_to_effects_junctions_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/db/character_skill_level_to_effects_junctions_tables/data__.tsv", "character_skill_level_to_effects_junctions_tables");
 
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/character_skill_node_links_tables_data__.tsv", "character_skill_node_links_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/character_skill_node_sets_tables_data__.tsv", "character_skill_node_sets_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/character_skill_nodes_tables_data__.tsv", "character_skill_nodes_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/character_skills_tables_data__.tsv", "character_skills_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/character_skills__.loc.tsv", "character_skills_loc");
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/effects_tables_data__.tsv", "effects_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/effects__.loc.tsv", "effects_loc");
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/effect_bonus_value_unit_ability_junctions_tables_data__.tsv", "effect_bonus_value_unit_ability_junctions_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/db/character_skill_node_links_tables/data__.tsv", "character_skill_node_links_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/db/character_skill_node_sets_tables/data__.tsv", "character_skill_node_sets_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/db/character_skill_nodes_tables/data__.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/db/character_skills_tables/data__.tsv", "character_skills_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/db/effects_tables/data__.tsv", "effects_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/db/effect_bonus_value_unit_ability_junctions_tables/data__.tsv", "effect_bonus_value_unit_ability_junctions_tables");
     --LoadFile("SkillTreeGenerator/DB/Core/WH2/special_ability_group_parents_tables_data__.tsv", "special_ability_group_parents_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/special_ability_groups_tables_data__.tsv", "special_ability_groups_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/special_ability_groups_to_unit_abilities_junctions_tables_data__.tsv", "special_ability_groups_to_unit_abilities_junctions_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/WH3/unit_abilities_tables_data__.tsv", "unit_abilities_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/db/special_ability_groups_tables/data__.tsv", "special_ability_groups_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/db/special_ability_groups_to_unit_abilities_junctions_tables/data__.tsv", "special_ability_groups_to_unit_abilities_junctions_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/db/unit_abilities_tables/data__.tsv", "unit_abilities_tables");
+
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/text/db/effects__.loc.tsv", "effects_loc");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/text/db/character_skills__.loc.tsv", "character_skills_loc");
 
     -- Kislev - Bonus Lores
     --[[LoadFile("SkillTreeGenerator/DB/Core/Kislev/character_skill_level_to_effects_junctions_tables_mixu_ice_magic.tsv", "character_skill_level_to_effects_junctions_tables");
@@ -147,7 +148,7 @@ function LoadFile(fileName, addToFileName)
     print("Loading: "..fileName);
     local lineNumber = 1;
     local file = assert(io.open(fileName, "r"));
-    local columnHeadingIndexes = {};
+
     local fileKey = fileName;
     if addToFileName ~= nil then
         fileKey = addToFileName;
@@ -155,6 +156,7 @@ function LoadFile(fileName, addToFileName)
     -- We track the first line to ensure compatibility
     -- with both the old and new RPFM formats
     local firstLine = "";
+    local newTable = false;
     for line in file:lines() do
         local fields = Split(line, "\t");
         if lineNumber == 1
@@ -166,24 +168,26 @@ function LoadFile(fileName, addToFileName)
             });
             VanillaDBs[fileKey]:AddToHeader(fields);
             firstLine = line;
+            newTable = true;
         elseif lineNumber == 1 then
-            firstLine = line;
+            firstLine = line; 
+            newTable = false;
         elseif lineNumber == 2 then
             -- If the table didn't split and the first record has a #
             -- This indicates it using the newer RPFM format
-            if string.match(fields[1], "#") then
-                -- Split the line into via semicolons and then
-                -- split the last chunk by /
-                fields = Split(firstLine, "\t");
-                VanillaDBs[fileKey]:SetMetadata(line);
+            if newTable == true then
+                if string.match(fields[1], "#") then
+                    -- Split the line into via semicolons and then
+                    -- split the last chunk by /
+                    fields = Split(firstLine, "\t");
+                    VanillaDBs[fileKey]:SetMetadata(line);
+                end
+                local columnHeadingIndexes = {};
+                for index, columnKey in pairs(fields) do
+                    columnHeadingIndexes[columnKey] = index;
+                end
+                VanillaDBs[fileKey]:AddColumns(columnHeadingIndexes);
             end
-            for index, columnKey in pairs(fields) do
-                columnHeadingIndexes[columnKey] = index;
-            end
-            --[[if #VanillaDBs[fileKey].Header == 1 then
-                VanillaDBs[fileKey]:AddToHeader(fields);
-            end--]]
-            VanillaDBs[fileKey]:AddColumns(columnHeadingIndexes);
         elseif lineNumber > 2 then
             VanillaDBs[fileKey]:AddRows(fields);
         end

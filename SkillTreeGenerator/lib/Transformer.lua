@@ -255,8 +255,8 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         end
     end
     if #rowIndents > 1 then
-        if rowIndents[1] == '1.0'
-        or rowIndents[1] == '0.0' then
+        if rowIndents[1] == '1.0000'
+        or rowIndents[1] == '0.0000' then
             rowIndent = rowIndents[2];
         end
         -- Dwarfs have hidden runes on different lines which trips up the generator
@@ -457,8 +457,7 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         "wh_main_skill_all_magic_all_07_earthing",
         "wh_main_skill_all_magic_all_08_power_drain",
     };
-    if agentKey == "wh2_main_def_morathi"
-    or agentKey == "wh2_dlc11_vmp_bloodline_necrarch"
+    if agentKey == "wh2_dlc11_vmp_bloodline_necrarch"
     or agentKey == "wh2_main_lzd_lord_mazdamundi"
     or agentKey == "wh_dlc03_bst_malagor"
     or agentKey == "wh2_dlc16_wef_ariel"
@@ -512,6 +511,29 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         conduitKey = "mixu_wef_shadowdancer_ability_loecs_blessing";
         bonusSkills = {
             "mixu_wef_shadowdancer_special_loecs_shroud",
+            "wh_main_skill_all_magic_all_07_earthing",
+            "wh_main_skill_all_magic_all_08_power_drain",
+        };
+    elseif agentKey == "wh2_main_def_morathi" then
+        conduitKey = "wh2_dlc14_skilll_all_magic_all_greater_arcane_conduit";
+        bonusSkills = {
+            "wh2_main_skill_def_generic_hekartis_blessing_morathi",
+            "wh_main_skill_all_magic_all_07_earthing",
+            "wh_main_skill_all_magic_all_08_power_drain",
+        };
+    elseif agentKey == "wh2_dlc10_def_supreme_sorceress_beasts"
+    or agentKey == "wh2_dlc10_def_supreme_sorceress_dark"
+    or agentKey == "wh2_dlc10_def_supreme_sorceress_death"
+    or agentKey == "wh2_dlc10_def_supreme_sorceress_fire"
+    or agentKey == "wh2_dlc10_def_supreme_sorceress_shadow"
+    or agentKey == "wh2_main_def_sorceress_dark"
+    or agentKey == "wh2_main_def_sorceress_fire"
+    or agentKey == "wh2_main_def_sorceress_shadow"
+    or agentKey == "wh2_dlc10_def_sorceress_beasts"
+    or agentKey == "wh2_dlc10_def_sorceress_death" then
+        conduitKey = "wh_main_skill_all_magic_all_11_arcane_conduit";
+        bonusSkills = {
+            "wh2_main_skill_def_generic_hekartis_blessing",
             "wh_main_skill_all_magic_all_07_earthing",
             "wh_main_skill_all_magic_all_08_power_drain",
         };
@@ -637,14 +659,11 @@ end
 -- The prefix/suffix adds a the value to the beginning or end of
 -- the output file name
 -- keepDataExtension will not remove _data__ from the output filename.
-function OutputToFile(modifiedDBs, prefix, suffix, keepDataExtension)
+function OutputToFile(modifiedDBs, prefix, dataTableName, keepDataExtension)
     print("\n\nStarting file output...");
     for fileName, file in pairs(modifiedDBs) do
         if prefix ~= nil then
             fileName = prefix..fileName;
-        end
-        if suffix ~= nil then
-            fileName = fileName..suffix;
         end
         if keepDataExtension ~= true then
             fileName = fileName:gsub('_data__', '');
@@ -652,11 +671,23 @@ function OutputToFile(modifiedDBs, prefix, suffix, keepDataExtension)
         local iostream = assert(io.open("SkillTreeGenerator\\out\\"..fileName..".tsv", "w+"));
         print("Writing "..fileName.." to disk");
         for rowKey, row in pairs(file) do
-            for columnKey, column in pairs(row) do
-                if columnKey == #row then
-                    iostream:write(column.."\n");
+            if rowKey == 2 then
+                local rowString = row[1];
+                local tableDefinitionRow = "";
+                if string.match(rowString, "text/db/") then
+                    local locName = fileName:gsub("@", '');
+                    tableDefinitionRow = "#Loc;1;text/db/"..dataTableName.."_"..locName..".loc";
                 else
-                    iostream:write(column.."\t");
+                    tableDefinitionRow = rowString:gsub('/data__', '/'..dataTableName);
+                end
+                iostream:write(tableDefinitionRow.."\n");
+            else
+                for columnKey, column in pairs(row) do
+                    if columnKey == #row then
+                        iostream:write(column.."\n");
+                    else
+                        iostream:write(column.."\t");
+                    end
                 end
             end
         end

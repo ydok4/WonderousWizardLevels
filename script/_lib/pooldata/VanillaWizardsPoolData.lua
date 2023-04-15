@@ -213,6 +213,50 @@ function GetVanillaWizardsPoolDataResources()
                 Lore = "wh3_main_lore_tzeentch",
             },
         },
+        -- Chaos Dwarfs 
+        wh3_dlc23_sc_chd_chaos_dwarfs = {
+            wh3_dlc23_chd_astragoth = {
+                DefaultWizardLevel = 3,
+                Lore = { "wh3_dlc23_lore_hashut", "wh_main_lore_fire", },
+            },
+            wh3_dlc23_chd_drazhoath = {
+                DefaultWizardLevel = 4,
+                Lore = "wh3_dlc23_lore_hashut",
+            },
+            wh3_dlc23_chd_sorcerer_prophet_death = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_death",
+            },
+            wh3_dlc23_chd_sorcerer_prophet_fire = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_fire",
+            },
+            wh3_dlc23_chd_sorcerer_prophet_hashut = {
+                DefaultWizardLevel = 3,
+                Lore = "wh3_dlc23_lore_hashut",
+            },
+            wh3_dlc23_chd_sorcerer_prophet_metal = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_metal",
+            },
+
+            wh3_dlc23_chd_daemonsmith_sorcerer_death = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_death",
+            },
+            wh3_dlc23_chd_daemonsmith_sorcerer_fire = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_fire",
+            },
+            wh3_dlc23_chd_daemonsmith_sorcerer_hashut = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_dlc23_lore_hashut",
+            },
+            wh3_dlc23_chd_daemonsmith_sorcerer_metal = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_metal",
+            },
+        },
         -- Daemons of Chaos
         wh3_main_sc_dae_daemons = {
             wh3_main_dae_daemon_prince = {
@@ -357,7 +401,7 @@ function GetVanillaWizardsPoolDataResources()
             wh2_main_def_morathi = {
                 DefaultWizardLevel = 4,
                 IsLoremaster = true,
-                LoremasterCharacterSkillKey = "wh2_main_def_morathi_loremaster_lore_of_dark_magic",
+                LoremasterCharacterSkillKey = "wh2_main_skill_def_morathi_unique_4",
                 Lore = {"wh2_main_lore_dark_magic", "wh_main_lore_death", "wh_dlc05_lore_shadows",},
             },
             wh2_main_def_malekith = {
@@ -575,6 +619,11 @@ function GetVanillaWizardsPoolDataResources()
             wh3_main_ksl_katarin = {
                 DefaultWizardLevel = 4,
                 Lore = "wh3_main_lore_of_ice",
+            },
+            -- Also in Empire
+            wh3_dlc23_neu_ulrika = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc05_lore_shadows",
             },
         },
         -- Khorne
