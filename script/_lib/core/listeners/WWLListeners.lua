@@ -257,7 +257,8 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
         function(context)
             local faction = context:faction();
             return faction:is_human() == true
-            and wwl:IsExcludedFaction(faction) == false;
+            and wwl:IsExcludedFaction(faction) == false
+            and not cm:is_new_game();
         end,
         function(context)
             local faction = context:faction();
@@ -301,7 +302,8 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
         function(context)
             local character = context:character();
             local isSupportedCharacter = wwl:IsSupportedCharacter(character);
-            return isSupportedCharacter;
+            return isSupportedCharacter
+            and not cm:is_new_game();
         end,
         function(context)
             local character = context:character();
@@ -421,8 +423,14 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
         "CharacterSkillPointAllocated",
         function(context)
             local character = context:character();
+            local faction = character:faction();
+            if not faction:is_human() then
+                return false;
+            end
             local isSupportedCharacter = wwl:IsSupportedCharacter(character);
-            return isSupportedCharacter and wwl:IsValidCharacterSkillKey(context:skill_point_spent_on());
+            return isSupportedCharacter
+            and wwl:IsValidCharacterSkillKey(context:skill_point_spent_on())
+            and not cm:is_new_game();
         end,
         function(context)
             local characterSkillKey = context:skill_point_spent_on();
@@ -638,19 +646,25 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
             if contextObject ~= nil then
                 local agentSubtypeKey = contextObject:Call("AgentSubtypeRecordContext.Key");
                 wwl.Logger:Log("Subtype is: ".. agentSubtypeKey);
-                if wwl:IsSupportedSubtype(agentSubtypeKey) then
+                local cqi = contextObject:Call("CQI");
+                local character = nil;
+                if cqi ~= 0 then
+                    character = cm:get_character_by_cqi(cqi);
+                end
+                if wwl:IsSupportedSubtype(character, agentSubtypeKey) then
                     wwl.Logger:Log("Subtype is supported: ".. agentSubtypeKey);
                     -- Build default and shared cache data
                     if WWL_UICache[agentSubtypeKey] == nil then
-                        local defaultWizardLevelData = wwl:GetDefaultWizardDataForCharacterSubtype(agentSubtypeKey);
-                        local imagePath = wwl:GetImagePathForSubtype(agentSubtypeKey);
+
+                        local defaultWizardLevelData = wwl:GetDefaultWizardDataForCharacterSubtype(agentSubtypeKey, character);
+                        local imagePath = wwl:GetImagePathForSubtype(agentSubtypeKey, defaultWizardLevelData);
                         local fullImagePath = wwl.Skin..imagePath;
                         WWL_UICache[agentSubtypeKey] = {
                             DefaultWizardLevel = defaultWizardLevelData.DefaultWizardLevel,
                             IconImage = fullImagePath,
                         };
                     end
-                    local cqi = contextObject:Call("CQI");
+
                     local wizardLevelComponent = InitialiseClonedRankComponent(wwl, generalPanel, WWL_UICache[agentSubtypeKey].IconImage);
                     -- If we can't find a character with any active data, then we haven't recruited them yet.
                     if cqi == 0 then
@@ -659,7 +673,7 @@ function SetWizardLevelUI(wwl, pathToGenerals, buttonContext)
                         SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, defaultWizardLevel);
                     else
                         wwl.Logger:Log("Character has been recruited");
-                        local characterWizardLevelUIData = wwl:GetCharacterWizardLevelUIData(cqi);
+                        local characterWizardLevelUIData = wwl:GetCharacterWizardLevelUIData(character);
                         if characterWizardLevelUIData ~= nil then
                             SetTextForWizardLevelComponent(wizardLevelComponent, wizardLevelUIText, characterWizardLevelUIData.WizardLevel);
                         end

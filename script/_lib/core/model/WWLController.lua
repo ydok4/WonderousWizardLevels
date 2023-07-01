@@ -57,12 +57,30 @@ function WWLController:IsSupportedCharacter(character)
     if character:character_type("colonel") == true then
         return false;
     end
-    local characterSubtype = character:character_subtype_key();
-    return self:IsSupportedSubtype(characterSubtype);
+    return self:IsSupportedSubtype(character);
 end
 
-function WWLController:IsSupportedSubtype(subtypeKey)
-    return _G.WWLResources.WizardData[subtypeKey] ~= nil;
+function WWLController:IsSupportedSubtype(character, characterSubtype)
+    local characterSubtypeKey = "";
+    if characterSubtype ~= nil then
+        characterSubtypeKey = characterSubtype;
+    else
+        characterSubtypeKey = character:character_subtype_key();
+    end
+    local wizardData = _G.WWLResources.WizardData[characterSubtypeKey];
+    if wizardData == nil then
+        return false;
+    elseif wizardData.RequiredTraits == nil then
+        return true;
+    end
+    if character ~= nil then
+        for traitKey, traitData in pairs(wizardData.RequiredTraits) do
+            if character:trait_points(traitKey) > 0 then
+                return true;
+            end
+        end
+    end
+    return false;
 end
 
 function WWLController:SetupNewWizard(character)
@@ -111,30 +129,47 @@ function WWLController:GetSuppportedSubtypesForFaction(faction)
     return wizardData;
 end
 
-function WWLController:GetDefaultWizardDataForCharacterSubtype(characterSubtype)
-    return _G.WWLResources.WizardData[characterSubtype];
+function WWLController:GetDefaultWizardDataForCharacterSubtype(characterSubtypeKey, character)
+    local wizardData = _G.WWLResources.WizardData[characterSubtypeKey];
+    if wizardData == nil then
+        return nil;
+    elseif character == nil
+    and _G.WWLResources.WizardData[characterSubtypeKey] ~= nil then
+        return _G.WWLResources.WizardData[characterSubtypeKey];
+    elseif wizardData.RequiredTraits == nil then
+        return _G.WWLResources.WizardData[characterSubtypeKey];
+    end
+    if character ~= nil
+    and wizardData.RequiredTraits ~= nil then
+        for traitKey, traitData in pairs(wizardData.RequiredTraits) do
+            if character:trait_points(traitKey) > 0 then
+                return traitData;
+            end
+        end
+    end
+    return nil;
 end
 
-function WWLController:GetImagePathForSubtype(characterSubtype)
-    local wizardData = _G.WWLResources.WizardData[characterSubtype];
-    if wizardData.ImagePathOverwrite == nil then
-        local loreKey = "";
-        -- Grab the first one by default if multiple are specified
-        -- If we need a particular one then use the overwrite
-        if type(wizardData.Lore) == "table" then
-            loreKey = wizardData.Lore[1];
-        else
-            loreKey = wizardData.Lore;
-        end
-        local magicLore = self:GetMagicLoreData(loreKey);
-        -- This breaks the tests because the Daemon
-        -- Prince doesn't have any default lores defined
-        if magicLore == nil then
-            return "";
-        end
-        return magicLore.ImagePath;
+function WWLController:GetImagePathForSubtype(characterSubtype, defaultWizardData)
+    local wizardData = defaultWizardData;
+    if wizardData == nil then
+        wizardData = _G.WWLResources.WizardData[characterSubtype];
     end
-    return wizardData.ImagePathOverwrite;
+    local loreKey = "";
+    -- Grab the first one by default if multiple are specified
+    -- If we need a particular one then use the overwrite
+    if type(wizardData.Lore) == "table" then
+        loreKey = wizardData.Lore[1];
+    else
+        loreKey = wizardData.Lore;
+    end
+    local magicLore = self:GetMagicLoreData(loreKey);
+    -- This breaks the tests because the Daemon
+    -- Prince doesn't have any default lores defined
+    if magicLore == nil then
+        return "";
+    end
+    return magicLore.ImagePath;
 end
 
 function WWLController:GetEquivalentSubculture(subculture)
@@ -196,14 +231,15 @@ function WWLController:GetDefaultSpellsForWizard(wizardData)
     return defaultSpells;
 end
 
-function WWLController:GetSpellsForCharacter(character, lore, includeSignatureSpell)
+function WWLController:GetSpellsForCharacter(character, lore, includeSignatureSpell, skipSkillCheck)
     local magicLoreData = self:GetMagicLoreData(lore);
     local spellsForCharacterLore = {};
     ConcatTable(spellsForCharacterLore, magicLoreData.Level1DefaultSpells);
     ConcatTable(spellsForCharacterLore, magicLoreData.Level3DefaultSpells);
     local unlockedSpells = {};
     for index, spellKey in pairs(spellsForCharacterLore) do
-        if character:has_skill(spellKey) then
+        if skipSkillCheck == true
+        or character:has_skill(spellKey) then
             --self.Logger:Log("Character has spell: "..spellKey);
             --cm:remove_effect_bundle_from_character(spellKey.."_disabled", character);
             table.insert(unlockedSpells, spellKey);
@@ -220,6 +256,12 @@ function WWLController:GetSpellsForCharacter(character, lore, includeSignatureSp
 end
 
 function WWLController:GetWizardLevel(character)
+    if not character
+    or not character.is_null_interface
+    or character:is_null_interface() then
+        self.Logger:Log("ERROR: Invalid character object");
+        return;
+    end
     local characterSubtype = character:character_subtype_key();
     local defaultWizardData = nil;
     -- Daemon Prince has unique level criteria
@@ -236,7 +278,8 @@ function WWLController:GetWizardLevel(character)
     or characterSubtype == "wh3_dlc20_chs_daemon_prince_undivided" then
         defaultWizardData = self:GetDaemonPrinceSpells(character);
     end
-    local characterSubculture = character:faction():subculture();
+    local characterFaction = character:faction();
+    local characterSubculture = characterFaction:subculture();
     if defaultWizardData == nil then
         defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(character:character_subtype_key());
     end
@@ -245,7 +288,8 @@ function WWLController:GetWizardLevel(character)
     end
     local defaultWizardLevelToCheck = defaultWizardData.DefaultWizardLevel + 1;
     local maxLevelToCheck = defaultWizardData.DefaultWizardLevel + 1;
-    if characterSubtype == "wh_main_vmp_lord" then
+    if characterSubtype == "wh_main_vmp_lord"
+    or characterSubtype == "msl_lord" then
         maxLevelToCheck = 4;
     elseif characterSubtype == "wh3_dlc20_chs_daemon_prince_nurgle"
     or characterSubtype == "wh3_dlc20_chs_daemon_prince_slaanesh"
@@ -282,8 +326,11 @@ function WWLController:SetSpellsForCharacter(character, forceGeneration)
     local characterCqi = character:command_queue_index();
     local characterSubtype = character:character_subtype_key();
     self.Logger:Log("Character subtype: ".. characterSubtype.." character cqi: "..characterCqi);
-    local characterSubculture = character:faction():subculture();
-    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype);
+    --local characterSubculture = character:faction():subculture();
+    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(characterSubtype, character);
+    if defaultWizardData == nil then
+        return;
+    end
     if self:HasSpecialSpellGenerationRules(defaultWizardData) then
         local specialCallbackTimeout = 0.3;
         --[[if characterSubtype == "wh2_main_hef_loremaster_of_hoeth" then
@@ -326,7 +373,12 @@ function WWLController:SetSpellsForCharacter(character, forceGeneration)
             includeSignatureSpell = true;
             wizardLevel = 1;
         end
-        local unlockedSpells = self:GetSpellsForCharacter(character, defaultWizardData.Lore, includeSignatureSpell);
+        local unlockedSpells = {};
+        if defaultWizardData.OverwriteNumberOfSpells == true then
+            unlockedSpells = self:GetSpellsForCharacter(character, defaultWizardData.Lore, includeSignatureSpell, true);
+        else
+            unlockedSpells = self:GetSpellsForCharacter(character, defaultWizardData.Lore, includeSignatureSpell);
+        end
         local numberOfSpells = wizardLevel;
         self.Logger:Log("unlockedSpells is: "..#unlockedSpells);
         -- Then we disable spells required for our wizard level
@@ -799,69 +851,11 @@ function WWLController:IsValidCharacterSkillKey(skillKey)
     return false;
 end
 
-function WWLController:GetCharacterWizardLevelUIDataWithName(nameText, faction, checkForLLNameKeys)
-    self.Logger:Log("Checking for existing wizards");
-    -- First we check if we can find the character alive in the faction
-    local character_list = faction:character_list();
-    for i = 0, character_list:num_items() - 1 do
-        local character = character_list:item_at(i);
-        if character:is_null_interface() == false
-        and not character:character_type("colonel") then
-            if character:military_force():is_null_interface() or character:military_force():is_armed_citizenry() == false then
-                local forename = common.get_localised_string(character:get_forename());
-                local surname = common.get_localised_string(character:get_surname());
-                local subtype = character:character_subtype_key();
-                self.Logger:Log("Checking: "..forename.." "..surname.." subtype: "..subtype);
-                if (forename ~= "" or surname ~= "")
-                and string.match(nameText, forename.." "..surname)
-                or _G.IsIDE == true then
-                    self.Logger:Log("Found match!");
-                    local wizardLevel = self:GetWizardLevel(character);
-                    if wizardLevel == nil then
-                        return nil;
-                    end
-                    local imagePath = self:GetImagePathForSubtype(subtype);
-                    local wizardLevelUIData = {
-                        WizardLevel = wizardLevel,
-                        ImagePath = self.Skin..imagePath,
-                    };
-                    return wizardLevelUIData;
-                end
-            end
-        end
-    end
-    if checkForLLNameKeys == true then
-        -- If we can't find it alive then we try and identify the character by the name keys
-        local subcultureKey = faction:subculture();
-        local llNameKeys = self:GetLegendaryLordNameKeysForSubculture(subcultureKey);
-        for llForeNameKey, llNameKeyData in pairs(llNameKeys) do
-            local forename = common.get_localised_string(llForeNameKey);
-            if string.match(nameText, forename) then
-                self.Logger:Log("Found matching LL by forename key!");
-                local surname = common.get_localised_string(llNameKeyData.Surname);
-                if llNameKeyData.Surname == "" or string.match(nameText, surname) then
-                    self.Logger:Log("Found matching LL by name key(s)! Subtype is: "..llNameKeyData.Subtype);
-                    local defaultWizardData = self:GetDefaultWizardDataForCharacterSubtype(llNameKeyData.Subtype);
-                    local imagePath = self:GetImagePathForSubtype(llNameKeyData.Subtype);
-                    local wizardLevelUIData = {
-                        WizardLevel = defaultWizardData.DefaultWizardLevel,
-                        ImagePath = self.Skin..imagePath,
-                    };
-                    return wizardLevelUIData;
-                end
-            end
-        end
-    end
-    -- If we still can't find them, then they aren't supported or aren't recruited
-    return nil;
-end
-
-function WWLController:GetCharacterWizardLevelUIData(cqi)
-    self.Logger:Log("Checking for existing by CQI: "..cqi);
-    local character = cm:get_character_by_cqi(cqi);
+function WWLController:GetCharacterWizardLevelUIData(character)
     local wizardLevel = self:GetWizardLevel(character);
     local subtype = character:character_subtype_key();
-    local imagePath = self:GetImagePathForSubtype(subtype);
+    local defaultWizardLevelData = self:GetDefaultWizardDataForCharacterSubtype(subtype, character);
+    local imagePath = self:GetImagePathForSubtype(subtype, defaultWizardLevelData);
     local wizardLevelUIData = {
         WizardLevel = wizardLevel,
         ImagePath = self.Skin..imagePath,

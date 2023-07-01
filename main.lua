@@ -4,7 +4,7 @@ require 'SkillTreeGenerator/lib/Transformer'
 -- Mighty campaigns
 _G.IsIDE = true;
 _G.IdTracker = 2765600000;
-_G.IgnoreVanillaWizards = false;
+_G.IgnoreVanillaWizards = true;
 --_G.IdTracker = 2865500000;
 
 VanillaDBs = {};
@@ -20,11 +20,12 @@ require 'script/campaign/mod/a_wwl_core_resource_loader'
 --require 'script/campaign/mod/z_wwl_kislev_resource_loader'
 --require 'script/campaign/mod/z_wwl_mixu_legendary_lords_resource_loader'
 -- "@wwl_mixu_ll"
+--require 'script/campaign/mod/z_wwl_mixu_mousillon_resource_loader'
 --require 'script/campaign/mod/z_wwl_mixu_gnoblars_resource_loader'
 --require 'script/campaign/mod/z_wwl_mixu_shadowdancer_resource_loader'
 --require 'script/campaign/mod/z_wwl_mixu_shadewraith_resource_loader'
 --require 'script/campaign/mod/z_wwl_ogre_lores_resource_loader'
---require 'script/campaign/mod/z_wwl_wez_speshul_resource_loader'
+require 'script/campaign/mod/z_wwl_wez_speshul_resource_loader'
 --require 'script/campaign/mod/z_wwl_xoudad'
 
 -- Generate the output db

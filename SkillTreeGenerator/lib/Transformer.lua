@@ -422,7 +422,8 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
             "REQUIRED");
             table.insert(newAgentLinkSkills, newSkillLink);
-            if agentKey == "wh_main_vmp_lord" then
+            if agentKey == "wh_main_vmp_lord"
+            or agentKey == "msl_lord" then
                 local vmpLordSkillLink = {};
                 -- Link the bonus skill to the final node
                 CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
@@ -433,7 +434,8 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
                 table.insert(newAgentLinkSkills, vmpLordSkillLink);
             end
         end
-        if agentKey == "wh_main_vmp_lord" then
+        if agentKey == "wh_main_vmp_lord"
+        or agentKey == "msl_lord" then
             local level03VmpLord = {};
             startingTier = startingTier + 1;
             CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,
@@ -575,7 +577,8 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         );
         table.insert(newAgentSkills, newBonusSkillRow);
     end
-    if agentKey == "wh_main_vmp_lord" then
+    if agentKey == "wh_main_vmp_lord"
+    or agentKey == "msl_lord" then
         local level04VmpLord = {};
         startingTier = startingTier + 1;
         CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,
@@ -699,7 +702,7 @@ function GenerateWWLEffects(databaseData)
     local effectBonusValuesToExport = {};
     local effectLocToExport = {};
     local effectTables = databaseData["effects_tables"];
-    local effectsLoc = databaseData["effects_loc"];
+    local effectsLocTables = databaseData["effects_loc"];
     local specialAbilityGroupsTable = databaseData["special_ability_groups_tables"];
     for specialAbilityGroupIndex, specialAbilityGroupData in pairs(specialAbilityGroupsTable.Data) do
         local groupKey = specialAbilityGroupsTable:GetColumnValueForIndex(specialAbilityGroupIndex, "ability_group");
@@ -788,8 +791,8 @@ function GenerateWWLEffects(databaseData)
                             global_effects_cache[spellKey.."_enabled_overcharge"] = true;
                         end
 
-                        local effectLoc = effectsLoc:GetRowsMatchingColumnValues("key", { "effects_description_"..matchingSpellOriginalKey, });
-                        local clonedEffectLoc = effectsLoc:CloneRow(1, effectLoc);
+                        local effectLoc = effectsLocTables:GetRowsMatchingColumnValues("key", { "effects_description_"..matchingSpellOriginalKey, });
+                        local clonedEffectLoc = effectsLocTables:CloneRow(1, effectLoc);
                         local effectDescription = clonedEffectLoc[2];
                         if effectDescription ~= nil then
                             local primaryKey = spellKey:gsub('wh3_main_skill_', "");
@@ -798,9 +801,9 @@ function GenerateWWLEffects(databaseData)
                             effectDescription = effectDescription:gsub('Overcast spell', "Spell");
                             effectDescription = effectDescription:gsub('Overcast ', "");
                             effectDescription = effectDescription:gsub(' Upgraded', "");
-                            effectsLoc:SetColumnValue(clonedEffectLoc, 'key', "effects_description_"..primaryKey.."_enabled_visible");
-                            effectsLoc:SetColumnValue(clonedEffectLoc, 'text', effectDescription);
-                            effectsLoc:SetColumnValue(clonedEffectLoc, 'tooltip', 'true');
+                            effectsLocTables:SetColumnValue(clonedEffectLoc, 'key', "effects_description_"..primaryKey.."_enabled_visible");
+                            effectsLocTables:SetColumnValue(clonedEffectLoc, 'text', effectDescription);
+                            effectsLocTables:SetColumnValue(clonedEffectLoc, 'tooltip', 'true');
                             table.insert(effectLocToExport, clonedEffectLoc);
 
                             local newEnabledEffectLocRow = {};
@@ -824,7 +827,7 @@ function GenerateWWLEffects(databaseData)
         end
     end
     local finalisedEffects = effectTables:PrepareRowsForOutput(effectsToExport);
-    local finalisedEffectsLoc = effectsLoc:PrepareRowsForOutput(effectLocToExport);
+    local finalisedEffectsLoc = effectsLocTables:PrepareRowsForOutput(effectLocToExport);
     local effectBonusValuesTables = databaseData["effect_bonus_value_unit_ability_junctions_tables"];
     local finalisedEffectBonusValues = effectBonusValuesTables:PrepareRowsForOutput(effectBonusValuesToExport);
     return {
@@ -846,13 +849,16 @@ function GenerateMultiLoreCharacterSkills(databaseData)
         end
     --end
     local effectsToExport = {};
+    local effectsLocToExport = {};
     local effectBonusValuesToExport = {};
     local characterSkillsToExport = {};
     local characterSkillsToEffectsToExport = {};
     local characterSkillNodesToExport = {};
     local characterSkillNodeLinksToExport = {};
     local characterSkillLocToExport = {};
-    local locToExport = {};
+
+    local effectsLocTables = databaseData["effects_loc"];
+
     for agentKey, agentData in pairs(multiLoreCasters) do
         print("Generating multi lore for: "..agentKey);
         local characterSkillEffects = {};
@@ -963,6 +969,11 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                                 effectsTable:SetColumnValue(clonedEffect, 'priority', '0');
                                 effectsTable:SetColumnValue(clonedEffect, 'icon', '');
                                 effectsTable:SetColumnValue(clonedEffect, 'icon_negative', '');
+                            else
+                                local originalEffectLoc = effectsLocTables:GetRowsMatchingColumnValues("key", { "effects_description_"..oldEffectKey, });
+                                local newEffectNameLoc = effectsLocTables:CloneRow(1, originalEffectLoc);
+                                effectsLocTables:SetColumnValue(newEffectNameLoc, 'key', "effects_description_"..newEffectKey);
+                                table.insert(effectsLocToExport, newEffectNameLoc);
                             end--]]
                             effectsTable:SetColumnValue(clonedEffect, 'priority', '0');
                             effectsTable:SetColumnValue(clonedEffect, 'icon', '');
@@ -1042,6 +1053,11 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                                         effectsTable:SetColumnValue(clonedEffect, 'priority', '0');
                                         effectsTable:SetColumnValue(clonedEffect, 'icon', '');
                                         effectsTable:SetColumnValue(clonedEffect, 'icon_negative', '');
+                                    else
+                                        local originalEffectLoc = effectsLocTables:GetRowsMatchingColumnValues("key", { "effects_description_"..oldEffectKey, });
+                                        local newEffectNameLoc = effectsLocTables:CloneRow(1, originalEffectLoc);
+                                        effectsLocTables:SetColumnValue(newEffectNameLoc, 'key', "effects_description_"..newEffectKey);
+                                        table.insert(effectsLocToExport, newEffectNameLoc);
                                     end--]]
                                     effectsTable:SetColumnValue(clonedEffect, 'priority', '0');
                                     effectsTable:SetColumnValue(clonedEffect, 'icon', '');
@@ -1135,6 +1151,7 @@ function GenerateMultiLoreCharacterSkills(databaseData)
 
     local effectTables = databaseData["effects_tables"];
     local finalisedEffects = effectTables:PrepareRowsForOutput(effectsToExport);
+    local finalisedEffectsLoc = effectsLocTables:PrepareRowsForOutput(effectsLocToExport);
     local effectBonusValuesTables = databaseData["effect_bonus_value_unit_ability_junctions_tables"];
     local finalisedEffectBonusValues = effectBonusValuesTables:PrepareRowsForOutput(effectBonusValuesToExport);
     local characterSkillsTable = databaseData["character_skills_tables"];
@@ -1149,6 +1166,7 @@ function GenerateMultiLoreCharacterSkills(databaseData)
     local finalisedCharacterSkillLoc = characterSkillLocTable:PrepareRowsForOutput(characterSkillLocToExport);
     return {
         effects_tables = finalisedEffects,
+        effects_loc = finalisedEffectsLoc,
         effect_bonus_value_unit_ability_junctions_tables = finalisedEffectBonusValues,
         character_skills_tables = finalisedCharacterSkills,
         character_skill_nodes_tables = finalisedCharacterSkillNodes,

@@ -50,24 +50,23 @@ function LoadVanillaDBs()
     LoadFile("SkillTreeGenerator/DB/Core/Kislev/unit_abilities_tables_mixu_katarin.tsv", "unit_abilities_tables");--]]
 
     -- Wez Speshul - Bonus Lores
-    --[[LoadFile("SkillTreeGenerator/DB/Core/WezSpeshul/character_skill_level_to_effects_junctions_tables_ws_.tsv", "character_skill_level_to_effects_junctions_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/db/character_skill_level_to_effects_junctions_tables/ws_.tsv", "character_skill_level_to_effects_junctions_tables");
 
-    LoadFile("SkillTreeGenerator/DB/Core/WezSpeshul/effects_tables_ws_.tsv", "effects_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/WezSpeshul/ws_effects__.loc.tsv", "character_skills_loc");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/db/effects_tables/ws_.tsv", "effects_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/text/db/ws_effects__.loc.tsv", "effects_loc");
 
-    LoadFile("SkillTreeGenerator/DB/Core/WezSpeshul/effect_bonus_value_unit_ability_junctions_tables_ws_.tsv", "effect_bonus_value_unit_ability_junctions_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/db/effect_bonus_value_unit_ability_junctions_tables/ws_.tsv", "effect_bonus_value_unit_ability_junctions_tables");
 
-    LoadFile("SkillTreeGenerator/DB/Core/WezSpeshul/character_skills_tables_ws_.tsv", "character_skills_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/WezSpeshul/ws_character_skills__.loc.tsv", "character_skills_loc");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/db/character_skills_tables/ws_.tsv", "character_skills_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/text/db/ws_character_skills__.loc.tsv", "character_skills_loc");
 
-    LoadFile("SkillTreeGenerator/DB/Core/WezSpeshul/special_ability_groups_tables_ws_.tsv", "special_ability_groups_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/db/special_ability_groups_tables/ws_.tsv", "special_ability_groups_tables");
 
-    LoadFile("SkillTreeGenerator/DB/Core/WezSpeshul/special_ability_groups_to_unit_abilities_junctions_tables_ws_.tsv", "special_ability_groups_to_unit_abilities_junctions_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/db/special_ability_groups_to_unit_abilities_junctions_tables/ws_.tsv", "special_ability_groups_to_unit_abilities_junctions_tables");
 
-    LoadFile("SkillTreeGenerator/DB/Core/WezSpeshul/special_ability_groups_to_units_junctions_tables_ws_.tsv", "special_ability_groups_to_units_junctions_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/db/special_ability_groups_to_units_junctions_tables/ws_.tsv", "special_ability_groups_to_units_junctions_tables");
 
-    LoadFile("SkillTreeGenerator/DB/Core/WezSpeshul/unit_abilities_tables_ws_.tsv", "unit_abilities_tables");
-    LoadFile("SkillTreeGenerator/DB/Core/WezSpeshul/ws_unit_abilities__.loc.tsv", "character_skills_loc");--]]
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/db/unit_abilities_tables/ws_.tsv", "unit_abilities_tables");
 
     -- Load the additional supported mod files
     --LoadFile("SkillTreeGenerator/DB/Core/character_skill_node_sets_tables_aa_mixu_ll_I_redux.tsv", "character_skill_node_sets_tables");
@@ -88,7 +87,8 @@ function LoadVanillaDBs()
     LoadFile("SkillTreeGenerator/DB/Core/WH3/TEB/character_skill_node_sets_tables_AK_teb.tsv", "character_skill_node_sets_tables");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/Xoudad/character_skill_node_sets_tables_dead_xou_gold.tsv", "character_skill_node_sets_tables");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuShadowdancer/character_skill_node_sets_tables_ab_mixu_shadowdancer.tsv", "character_skill_node_sets_tables");
-
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuMoussilon/ab_mixu_mousillon_new.tsv", "character_skill_node_sets_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/db/character_skill_node_sets_tables/ws_.tsv", "character_skill_node_sets_tables");
     --[[LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_!_ab_mixu_le_override.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_ab_hef_belannaer.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/character_skill_nodes_tables_mixu_bst_slugtongue.tsv", "character_skill_nodes_tables");
@@ -141,6 +141,13 @@ function LoadVanillaDBs()
     LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuLL/character_skill_nodes_tables_mixu_ll_vampire_coast.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuLL/character_skill_nodes_tables_mixu_ll_wood_elves.tsv", "character_skill_nodes_tables");
     LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuLL/character_skill_nodes_tables_mixu_ll_ze_test_chamber.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuMoussilon/ab_mixus_mousillon_vanilla.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuMoussilon/mixu_mousillon_characters.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuMoussilon/mixu_mousillon_heroes.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuMoussilon/mixu_mousillon_knights_of_mallobaude.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuMoussilon/mixu_mousillon_lords.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/MixuMoussilon/mixu_mousillon_mallobaude.tsv", "character_skill_nodes_tables");
+    LoadFile("SkillTreeGenerator/DB/Core/WH3/WezSpeshul/db/character_skill_nodes_tables/ws_.tsv", "character_skill_nodes_tables");
     return VanillaDBs;
 end
 

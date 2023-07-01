@@ -339,6 +339,11 @@ function GetVanillaWizardsPoolDataResources()
                     wh3_main_dae_cha_daemon_prince_wings_corpulent_05 = true,
                     wh3_main_dae_cha_daemon_prince_wings_sensuous_01 = true,
                     wh3_main_dae_cha_daemon_prince_wings_sensuous_02 = true,
+                    wh3_pro10_mom_trial_dae_cha_daemon_prince_arm_l_0 = true,
+                    wh3_pro10_mom_trial_dae_cha_daemon_prince_arm_r_0 = true,
+                    wh3_pro10_mom_trial_dae_cha_daemon_prince_head_0 = true,
+                    wh3_pro10_mom_trial_dae_cha_daemon_prince_torso_0 = true,
+                    wh3_pro10_mom_trial_dae_cha_daemon_prince_wings_0 = true,
                 },
                 DefaultWizardLevel = 0,
                 -- The prince won't actually use yang but when doing the UI it will lookup the Yang icon
@@ -431,42 +436,34 @@ function GetVanillaWizardsPoolDataResources()
         -- Empire
         wh_main_sc_emp_empire = {
             wh_dlc05_emp_grey_wizard = {
-                IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_shadows",
             },
             wh_dlc05_emp_jade_wizard = {
-                IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc05_lore_life",
             },
             wh_main_emp_bright_wizard = {
-                IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_fire",
             },
             wh_main_emp_celestial_wizard = {
-                IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_heavens",
             },
             wh2_pro07_emp_amethyst_wizard = {
-                IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_death",
             },
             wh_dlc03_emp_amber_wizard = {
-                IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_dlc03_lore_beasts",
             },
             wh_main_emp_light_wizard = {
-                IsLord = false,
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_light",
             },
             wh_main_emp_balthasar_gelt = {
-                IsLord = true,
                 IsLoremaster = true,
                 LoremasterCharacterSkillKey = "wh_main_skill_emp_lord_unique_balthasar_loremaster_lore_of_metal",
                 DefaultWizardLevel = 4,
@@ -1005,6 +1002,16 @@ function GetVanillaWizardsPoolDataResources()
                 IsLord = true,
                 DefaultWizardLevel = 2,
                 Lore = "wh2_dlc11_lore_deep",
+            },
+            wh2_dlc11_cst_harkon = {
+                DefaultWizardLevel = 3,
+                RequiredTraits = {
+                    wh2_dlc11_trait_harkon_personality_restored = {
+                        DefaultWizardLevel = 3,
+                        Lore = "wh2_dlc11_lore_deep",
+                        OverwriteNumberOfSpells = true,
+                    },
+                },
             },
             wh2_dlc11_cst_noctilus = {
                 IsLord = true,

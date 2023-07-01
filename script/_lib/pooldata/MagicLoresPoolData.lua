@@ -375,13 +375,15 @@ function GetMagicLorePoolDataResources()
             Level1DefaultSpells = {"wh_main_skill_grn_magic_little_waaagh_02_vindictive_glare", "wh_main_skill_grn_magic_little_waaagh_04_itchy_nuisance", "wh_main_skill_grn_magic_little_waaagh_05_gorkll_fix_it", },
             Level3DefaultSpells = {"wh_main_skill_grn_magic_little_waaagh_09_night_shroud", "wh_main_skill_grn_magic_little_waaagh_10_curse_of_da_bad_moon", },
             ImagePath = "button_lore_plague_active",
+            IsCustomLore = true,
         },
         ws_lore_spider = {
             InnateSkill = {"ws_skill_magic_spider_crazy_legz",},
             SignatureSpell = {"ws_skill_magic_spider_sneaky_distraction",},
             Level1DefaultSpells = {"ws_skill_magic_spider_venomous_sneeze", "ws_skill_magic_spider_great_green_spite", "ws_skill_magic_spider_nasty_webbin", },
             Level3DefaultSpells = {"ws_skill_magic_spider_gift_of_the_spider_god", "ws_skill_magic_spider_itzy_bitzy_spiderz",},
-            ImagePath = "button_lore_wild_active.png",
+            ImagePath = "button_lore_ws_spider_active.png",
+            IsCustomLore = true,
         },
     };
 end

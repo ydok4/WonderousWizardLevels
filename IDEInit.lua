@@ -570,8 +570,6 @@ _G.IsIDE = true;
 
 local supportedSubtypes = WWL:GetSuppportedSubtypesForFaction(humanFaction);
 local imagePath = WWL:GetImagePathForSubtype("wh3_main_tze_iridescent_horror_metal");
-local wizardLevelUIData = WWL:GetCharacterWizardLevelUIDataWithName("Be'lakor", humanFaction, false);
-
 
 local MockContext_WWL_FactionTurnStart = {
     Key = "WWL_FactionTurnStart",
