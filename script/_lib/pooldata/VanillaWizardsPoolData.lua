@@ -42,7 +42,7 @@ function GetVanillaWizardsPoolDataResources()
             },
             wh_dlc03_bst_malagor = {
                 DefaultWizardLevel = 4,
-                Lore = {"wh_dlc03_lore_wild", "wh_main_lore_death", "wh_dlc05_lore_shadows", "wh_dlc03_lore_beasts", },
+                Lore = { "wh_dlc03_lore_wild", "wh_main_lore_death", "wh_dlc05_lore_shadows", "wh_dlc03_lore_beasts", },
             },
         },
         -- Bretonnia
@@ -105,6 +105,10 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 4,
                 Lore = { "wh_main_lore_metal", "wh3_main_lore_of_yang", },
             },
+            wh3_dlc24_cth_yuan_bo = {
+                DefaultWizardLevel = 4,
+                Lore = { "wh_main_lore_heavens", "wh3_main_lore_of_yin", },
+            },
         },
         -- Chaos
         wh_main_sc_chs_chaos = {
@@ -144,10 +148,11 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 3,
                 Lore = "wh_dlc05_lore_shadows",
             },
-            wh_main_chs_lord_of_change = {
+            -- Removed?
+            --[[wh_main_chs_lord_of_change = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_metal",
-            },
+            },--]]
             -- WH3
             wh3_dlc20_nur_festus = {
                 DefaultWizardLevel = 2,
@@ -211,6 +216,14 @@ function GetVanillaWizardsPoolDataResources()
             wh3_dlc20_chs_sorcerer_tzeentch_mtze = {
                 DefaultWizardLevel = 1,
                 Lore = "wh3_main_lore_tzeentch",
+            },
+            wh3_dlc25_chs_sorcerer_death_mnur = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_death",
+            },
+            wh3_dlc25_chs_sorcerer_nurgle_mnur = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_main_lore_nurgle",
             },
         },
         -- Chaos Dwarfs 
@@ -451,6 +464,10 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_heavens",
             },
+            wh3_dlc25_emp_gold_wizard = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_metal",
+            },
             wh2_pro07_emp_amethyst_wizard = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_death",
@@ -469,6 +486,11 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 4,
                 Lore = "wh_main_lore_metal",
             },
+            wh3_dlc25_emp_elspeth_von_draken = {
+                DefaultWizardLevel = 4,
+                Lore = "wh_main_lore_death",
+            },
+
         },
         -- Greenskins
         wh_main_sc_grn_greenskins = {
@@ -617,6 +639,27 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 4,
                 Lore = "wh3_main_lore_of_ice",
             },
+            wh3_dlc24_ksl_mother_ostankya = {
+                DefaultWizardLevel = 4,
+                Lore =  "wh3_dlc24_lore_hag",
+            },
+            wh3_dlc24_ksl_hag_witch_beasts = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc03_lore_beasts",
+            },
+            wh3_dlc24_ksl_hag_witch_death = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_death",
+            },
+            wh3_dlc24_ksl_hag_witch_shadows = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc05_lore_shadows",
+            },
+            wh3_dlc24_ksl_hag_witch_hag = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_dlc24_lore_hag",
+            },
+            
             -- Also in Empire
             wh3_dlc23_neu_ulrika = {
                 DefaultWizardLevel = 1,
@@ -665,6 +708,22 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 5,
                 Lore = "wh_main_lore_light",
             },
+            wh2_dlc13_lzd_slann_mage_priest_beasts = {
+                DefaultWizardLevel = 5,
+                Lore = "wh_dlc03_lore_beasts",
+            },
+            wh2_dlc13_lzd_slann_mage_priest_beasts_horde = {
+                DefaultWizardLevel = 5,
+                Lore = "wh_dlc03_lore_beasts",
+            },
+            wh2_dlc13_lzd_slann_mage_priest_death = {
+                DefaultWizardLevel = 5,
+                Lore = "wh_main_lore_death",
+            },
+            wh2_dlc13_lzd_slann_mage_priest_death_horde = {
+                DefaultWizardLevel = 5,
+                Lore = "wh_main_lore_death",
+            },
             wh2_dlc13_lzd_slann_mage_priest_fire = {
                 DefaultWizardLevel = 5,
                 Lore = "wh_main_lore_fire",
@@ -672,6 +731,14 @@ function GetVanillaWizardsPoolDataResources()
             wh2_dlc13_lzd_slann_mage_priest_fire_horde = {
                 DefaultWizardLevel = 5,
                 Lore = "wh_main_lore_fire",
+            },
+            wh2_dlc13_lzd_slann_mage_priest_heavens = {
+                DefaultWizardLevel = 5,
+                Lore = "wh_main_lore_heavens",
+            },
+            wh2_dlc13_lzd_slann_mage_priest_heavens_horde = {
+                DefaultWizardLevel = 5,
+                Lore = "wh_main_lore_heavens",
             },
             wh2_dlc13_lzd_slann_mage_priest_high = {
                 DefaultWizardLevel = 5,
@@ -688,6 +755,22 @@ function GetVanillaWizardsPoolDataResources()
             wh2_dlc13_lzd_slann_mage_priest_life_horde = {
                 DefaultWizardLevel = 5,
                 Lore = "wh_dlc05_lore_life",
+            },
+            wh2_dlc13_lzd_slann_mage_priest_metal = {
+                DefaultWizardLevel = 5,
+                Lore = "wh_main_lore_metal",
+            },
+            wh2_dlc13_lzd_slann_mage_priest_metal_horde = {
+                DefaultWizardLevel = 5,
+                Lore = "wh_main_lore_metal",
+            },
+            wh2_dlc13_lzd_slann_mage_priest_shadows = {
+                DefaultWizardLevel = 5,
+                Lore = "wh_dlc05_lore_shadows",
+            },
+            wh2_dlc13_lzd_slann_mage_priest_shadows_horde = {
+                DefaultWizardLevel = 5,
+                Lore = "wh_dlc05_lore_shadows",
             },
         },
         -- Ogre Kingdoms
@@ -786,6 +869,14 @@ function GetVanillaWizardsPoolDataResources()
             wh3_main_nur_kugath = {
                 DefaultWizardLevel = 2,
                 Lore = "wh3_main_lore_nurgle",
+            },
+            wh3_dlc25_nur_bray_shaman_wild_chieftain = {
+                DefaultWizardLevel = 2,
+                Lore = { "wh_dlc03_lore_wild", "wh3_main_lore_nurgle", },
+            },
+            wh3_dlc25_nur_fimir_balefiend_shadow_chieftain = {
+                DefaultWizardLevel = 2,
+                Lore = { "wh_dlc05_lore_shadows", "wh3_main_lore_nurgle", },
             },
         },
         -- Skaven
@@ -926,7 +1017,15 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 4,
                 Lore = "wh_main_lore_metal",
             },
+            wh3_dlc24_tze_exalted_lord_of_change_metal_locked_army = {
+                DefaultWizardLevel = 4,
+                Lore = "wh_main_lore_metal",
+            },
             wh3_main_tze_exalted_lord_of_change_tzeentch = {
+                DefaultWizardLevel = 4,
+                Lore = "wh3_main_lore_tzeentch",
+            },
+            wh3_dlc24_tze_exalted_lord_of_change_tzeentch_locked_army = {
                 DefaultWizardLevel = 4,
                 Lore = "wh3_main_lore_tzeentch",
             },
@@ -935,6 +1034,11 @@ function GetVanillaWizardsPoolDataResources()
                 Lore = { "wh3_main_lore_tzeentch", "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", },
                 HasAccessToFragements = true,
             },
+            wh3_dlc24_tze_the_changeling = {
+                DefaultWizardLevel = 1,
+                Lore = "wh3_main_lore_tzeentch",
+            },
+            
         },
         -- Vampire Coast
         wh2_dlc11_sc_cst_vampire_coast = {
@@ -1082,7 +1186,7 @@ function GetVanillaWizardsPoolDataResources()
             },
             wh_main_vmp_heinrich_kemmler = {
                 IsLoremaster = true,
-                LoremasterCharacterSkillKey = "wh_main_skill_vmp_lord_unique_loremaster_lore_of_vampires",
+                LoremasterCharacterSkillKey = "wh2_dlc17_skill_vmp_lord_unique_loremaster_lore_of_vampires_heinrich",
                 DefaultWizardLevel = 4,
                 Lore = "wh_main_lore_vampires",
             },

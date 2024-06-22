@@ -312,6 +312,13 @@ function GetMagicLorePoolDataResources()
             Level3DefaultSpells = { "wh3_main_skill_ksl_magic_tempest_07_hawks_of_miska", "wh3_main_skill_ksl_magic_tempest_07_blizzard", },
             ImagePath = "button_lore_tempest_active.png",
         },
+        wh3_dlc24_lore_hag = {
+            InnateSkill = { "wh3_dlc24_skill_ksl_magic_hag_07_fate_of_interlopers", },
+            SignatureSpell = { "wh3_dlc24_skill_ksl_magic_hag_01_witchbrew", },
+            Level1DefaultSpells = { "wh3_dlc24_skill_ksl_magic_hag_02_the_forbidden_fens", "wh3_dlc24_skill_ksl_magic_hag_03_curse_of_the_ancient_witch", "wh3_dlc24_skill_ksl_magic_hag_04_vengeance_of_spirits", },
+            Level3DefaultSpells = { "wh3_dlc24_skill_ksl_magic_hag_05_cursed_cauldron", "wh3_dlc24_skill_ksl_magic_hag_06_malediction_of_madness_lord", },
+            ImagePath = "button_lore_hag_active.png",
+        },
         -- Chaos Dwarfs Lore
         wh3_dlc23_lore_hashut = {
             InnateSkill = { "wh3_dlc23_skill_chd_magic_hashut_03_killing_fire", },
@@ -369,7 +376,8 @@ function GetMagicLorePoolDataResources()
             Level3DefaultSpells = {"wh_main_skill_all_magic_fire_09_piercing_bolts_of_burning", "wh_main_skill_all_magic_fire_10_flame_storm",},
             ImagePath = "button_lore_fire_active.png",
         },
-        ws_lore_lil_waaagh_forest_goblins = {
+        -- Wez speshul has removed spider lore
+        --[[ws_lore_lil_waaagh_forest_goblins = {
             InnateSkill = {"wh_main_skill_grn_magic_little_waaagh_03_sneaky_stealin", },
             SignatureSpell = {"wh_main_skill_grn_magic_little_waaagh_01_sneaky_stabbin",},
             Level1DefaultSpells = {"wh_main_skill_grn_magic_little_waaagh_02_vindictive_glare", "wh_main_skill_grn_magic_little_waaagh_04_itchy_nuisance", "wh_main_skill_grn_magic_little_waaagh_05_gorkll_fix_it", },
@@ -384,6 +392,6 @@ function GetMagicLorePoolDataResources()
             Level3DefaultSpells = {"ws_skill_magic_spider_gift_of_the_spider_god", "ws_skill_magic_spider_itzy_bitzy_spiderz",},
             ImagePath = "button_lore_ws_spider_active.png",
             IsCustomLore = true,
-        },
+        },--]]
     };
 end

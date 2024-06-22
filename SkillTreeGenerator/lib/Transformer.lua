@@ -1,4 +1,5 @@
 local global_character_skill_cache = {};
+local global_character_skill_node_set_items_cache = {};
 local global_effects_cache = {};
 local global_effect_bonus_values_cache = {};
 
@@ -153,6 +154,7 @@ end
 
 function GenerateWWLSkillTrees(databaseData)
     local characterSkillNodesToExport = {};
+    local characterSkillNodeSetItemsToExport = {};
     local characterSkillNodeLinksToExport = {};
     local characterSkillLevelToEffectsToExport = {};
     local specialAbilityGroupsTable = databaseData["special_ability_groups_tables"];
@@ -213,18 +215,22 @@ function GenerateWWLSkillTrees(databaseData)
             local magicLoreData = _G.WWLResources.MagicLores[groupKey];
             local characterSkillsAndLinks = GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentData, characterSkillKeys);
             ConcatTable(characterSkillNodesToExport, characterSkillsAndLinks["character_skill_nodes_tables"]);
+            ConcatTable(characterSkillNodeSetItemsToExport, characterSkillsAndLinks["character_skill_node_set_items_tables"]);
             ConcatTable(characterSkillNodeLinksToExport, characterSkillsAndLinks["character_skill_node_links_tables"]);
             ConcatTable(characterSkillLevelToEffectsToExport, characterSkillsAndLinks["character_skill_level_to_effects_junctions_tables"]);
         end
     end
     local characterSkillNodesTable = databaseData["character_skill_nodes_tables"];
     local finalisedCharacterSkillNodes = characterSkillNodesTable:PrepareRowsForOutput(characterSkillNodesToExport);
+    local finalisedCharacterSkillNodeSetItemsTable = databaseData["character_skill_node_set_items_tables"];
+    local finalisedCharacterSkillNodeSetItems = finalisedCharacterSkillNodeSetItemsTable:PrepareRowsForOutput(characterSkillNodeSetItemsToExport);
     local characterSkillNodeLinksTable = databaseData["character_skill_node_links_tables"];
     local finalisedCharacterSkillNodeLinks = characterSkillNodeLinksTable:PrepareRowsForOutput(characterSkillNodeLinksToExport);
     local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
     local finalisedCharacterSkillLevelToEffects = characterSkillLevelToEffectsTable:PrepareRowsForOutput(characterSkillLevelToEffectsToExport);
     return {
         character_skill_nodes_tables = finalisedCharacterSkillNodes,
+        character_skill_node_set_items_tables = finalisedCharacterSkillNodeSetItems,
         character_skill_node_links_tables = finalisedCharacterSkillNodeLinks,
         character_skill_level_to_effects_junctions_tables = finalisedCharacterSkillLevelToEffects,
     };
@@ -234,11 +240,14 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     local characterSkillNodesLinksTable = databaseData["character_skill_node_links_tables"];
     local characterSkillSetsTable = databaseData["character_skill_node_sets_tables"];
     local characterSkillNodesTable = databaseData["character_skill_nodes_tables"];
+    local characterSkillSetItemsTable = databaseData["character_skill_node_set_items_tables"];
     local agentSkillSet = characterSkillSetsTable:GetRowsMatchingColumnValues("agent_subtype_key", { agentKey, });
     local agentSkillSetKeys = characterSkillSetsTable:GetColumnValuesForRows("key", agentSkillSet);
-    local allSkillNodesForCharacter = characterSkillNodesTable:GetRowsMatchingColumnValues("character_skill_node_set_key", agentSkillSetKeys);
-    local knownAgentSkillNodes = characterSkillNodesTable:GetRowsMatchingColumnValues("character_skill_key", characterSkillKeys, allSkillNodesForCharacter);
-    local rowIndents = characterSkillNodesTable:GetUniqueColumnValuesForRows("indent", knownAgentSkillNodes);
+    local allSkillNodesForCharacter = characterSkillSetItemsTable:GetRowsMatchingColumnValues("set", agentSkillSetKeys);
+    local allSkillNodeKeysForCharacter = characterSkillSetItemsTable:GetColumnValuesForRows("item", allSkillNodesForCharacter);
+    local knownAgentSkillNodes = characterSkillNodesTable:GetRowsMatchingColumnValues("key", allSkillNodeKeysForCharacter);
+    local knownAgentSpellSkills = characterSkillNodesTable:GetRowsMatchingColumnValues("character_skill_key", characterSkillKeys, knownAgentSkillNodes);
+    local rowIndents = characterSkillNodesTable:GetUniqueColumnValuesForRows("indent", knownAgentSpellSkills);
     local rowIndent = rowIndents[1];
     if rowIndent == nil then
         -- If for some reason the lore of magic is completely different then we need
@@ -256,7 +265,9 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     end
     if #rowIndents > 1 then
         if rowIndents[1] == '1.0000'
-        or rowIndents[1] == '0.0000' then
+        or rowIndents[1] == '1'
+        or rowIndents[1] == '0.0000'
+        or rowIndents[1] == '0' then
             rowIndent = rowIndents[2];
         end
         -- Dwarfs have hidden runes on different lines which trips up the generator
@@ -268,18 +279,24 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         end
         print("Agent: "..agentKey.." Has abilities on multiple rows");
     end
+
+    local agentSkillSetKey = agentSkillSetKeys[1];
     local newAgentSkills = {};
-    local agentSkillNodesOnRow = characterSkillNodesTable:GetRowsMatchingColumnValues("indent", {rowIndent, }, allSkillNodesForCharacter);
+    local newAgentSkillSetItems = {};
+    local agentSkillNodesOnRow = characterSkillNodesTable:GetRowsMatchingColumnValues("indent", {rowIndent, }, knownAgentSkillNodes);
     -- First we disable all the vanilla skills
     for skillNodeIndex, skillNodeRow in pairs(agentSkillNodesOnRow) do
-        local clonedRow = characterSkillNodesTable:CloneRow(skillNodeIndex, agentSkillNodesOnRow);
+        --[[local clonedRow = characterSkillNodesTable:CloneRow(skillNodeIndex, agentSkillNodesOnRow);
         characterSkillNodesTable:SetColumnValue(clonedRow, 'character_skill_key', 'wwl_disable_dummy');
         characterSkillNodesTable:SetColumnValue(clonedRow, 'tier', '99');
         characterSkillNodesTable:SetColumnValue(clonedRow, 'visible_in_ui', 'false');
-        table.insert(newAgentSkills, clonedRow);
+        table.insert(newAgentSkills, clonedRow);--]]
+        local skillNodeKey = skillNodeRow[1];
+        local existingSkillItemSet = {};
+        CreateWWLCharacterSkillNodeSetItemRow(characterSkillSetItemsTable, existingSkillItemSet, agentSkillSetKey, skillNodeKey, 'true');
+        table.insert(newAgentSkillSetItems, existingSkillItemSet);
     end
     -- Then we create new skills
-    local agentSkillSetKey = agentSkillSetKeys[1];
     local newAgentLinkSkills = {};
     local clonedMagicLoreSkills = {};
     local baseWizardLevelPrefix = "wwl_skill_wizard_level_0";
@@ -287,7 +304,8 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     if agentKey == "wh2_dlc17_dwf_thorek"
     or agentKey == "wh_dlc06_dwf_runelord"
     or agentKey == "wh_main_dwf_runesmith"
-    or agentKey == "wh_dlc06_dwf_runesmith_ghost" then
+    or agentKey == "wh_dlc06_dwf_runesmith_ghost"
+    or agentKey == "dwf_kragg_the_grim" then
         baseWizardLevelPrefix = "wwl_skill_rune_level_0";
     end
     defaultWizardLevelCharacterSkill = baseWizardLevelPrefix..tostring(agentData.DefaultWizardLevel);
@@ -323,14 +341,19 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     -- Perform filtering for the upgrade skills
     if agentData.LoremasterCharacterSkillKey ~= nil then
         upgradedSkillKey = agentData.LoremasterCharacterSkillKey;
-        local originalLoreMasterSkill = characterSkillNodesTable:GetRowsMatchingColumnValues("character_skill_key", {agentData.LoremasterCharacterSkillKey}, allSkillNodesForCharacter);
+        local originalLoreMasterSkill = characterSkillNodesTable:GetRowsMatchingColumnValues("character_skill_key", {agentData.LoremasterCharacterSkillKey}, knownAgentSkillNodes);
         -- If this is a vanilla skill, hide it
         if next(originalLoreMasterSkill) then
-            local clonedLoremasterSkillRow = characterSkillNodesTable:CloneRow(1, originalLoreMasterSkill);
+            --[[local clonedLoremasterSkillRow = characterSkillNodesTable:CloneRow(1, originalLoreMasterSkill);
             characterSkillNodesTable:SetColumnValue(clonedLoremasterSkillRow, 'character_skill_key', 'wwl_disable_dummy');
             characterSkillNodesTable:SetColumnValue(clonedLoremasterSkillRow, 'tier', 99);
             characterSkillNodesTable:SetColumnValue(clonedLoremasterSkillRow, 'visible_in_ui', 'false');
-            table.insert(newAgentSkills, clonedLoremasterSkillRow);
+            table.insert(newAgentSkills, clonedLoremasterSkillRow);--]]
+            local loremasterSkillItemSet = {};
+            CreateWWLCharacterSkillNodeSetItemRow(characterSkillSetItemsTable, loremasterSkillItemSet, agentSkillSetKey, originalLoreMasterSkill[1][1], 'true');
+            --local clonedLoremasterSkillRow = characterSkillSetItemsTable:CloneRow(1, originalLoreMasterSkill);
+            --characterSkillSetItemsTable:SetColumnValue(clonedLoremasterSkillRow, 'mod_disabled', 'true');
+            table.insert(newAgentSkillSetItems, loremasterSkillItemSet);
         end
         local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
         local dummyEffect = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("effect_key", { "wh_main_effect_agent_action_success_chance_skill", });
@@ -344,17 +367,21 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     else
         if agentData.DefaultWizardLevel > 3 then
             upgradedSkillKey = "wh_main_skill_all_magic_all_11_diviner";
+            if agentKey == "dwf_kragg_the_grim" then
+                upgradedSkillKey = "wh_main_skill_dwf_runesmith_self_strike_the_runes";
+            end
         else
             upgradedSkillKey = baseWizardLevelPrefix..tostring(agentData.DefaultWizardLevel + 1);
         end
     end
     -- Common skill arrangement for everyone
     for characterSkillIndex, characterSkillKey in pairs(clonedMagicLoreSkills) do
+        local skillNodeSpellKey = "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey;
         local newCharacterSkillNodeRow = {};
         startingTier = startingTier + 1;
         CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,
-        newCharacterSkillNodeRow,
-            "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
+            newCharacterSkillNodeRow,
+            skillNodeSpellKey,
             characterSkillKey,
             agentSkillSetKey,
             rowIndent,
@@ -364,31 +391,36 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         );
         table.insert(newAgentSkills, newCharacterSkillNodeRow);
 
+        local newCharacterSkillNodeSetItemRow = {};
+        CreateWWLCharacterSkillNodeSetItemRow(characterSkillSetItemsTable, newCharacterSkillNodeSetItemRow, agentSkillSetKey, skillNodeSpellKey, 'false');
+        table.insert(newAgentSkillSetItems, newCharacterSkillNodeSetItemRow);
+
         if characterSkillKey ~= defaultWizardLevelCharacterSkill then
             -- Link the current skill to the default node
             local newCharacterSkillLinkNodeRowDefault = {};
             CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
             newCharacterSkillLinkNodeRowDefault,
             "wwl_character_skill_node_"..agentKey.."_"..defaultWizardLevelCharacterSkill,
-            "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
+            skillNodeSpellKey,
             "REQUIRED");
             table.insert(newAgentLinkSkills, newCharacterSkillLinkNodeRowDefault);
             -- Link the current skill to the upgraded node
             local newCharacterSkillLinkNodeRowUpgraded = {};
             CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
             newCharacterSkillLinkNodeRowUpgraded,
-            "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
+            skillNodeSpellKey,
             "wwl_character_skill_node_"..agentKey.."_"..upgradedSkillKey,
             "SUBSET_REQUIRED");
             table.insert(newAgentLinkSkills, newCharacterSkillLinkNodeRowUpgraded);
         end
     end
     -- Upgraded wizard level
+    local upgradedWizardLevelNodeKey = "wwl_character_skill_node_"..agentKey.."_"..upgradedSkillKey;
     local upgradedWizardLevel = {};
     startingTier = startingTier + 1;
     CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,
             upgradedWizardLevel,
-            "wwl_character_skill_node_"..agentKey.."_"..upgradedSkillKey,
+            upgradedWizardLevelNodeKey,
             upgradedSkillKey,
             agentSkillSetKey,
             rowIndent,
@@ -397,15 +429,21 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             requiredParentsForUpgrade
         );
     table.insert(newAgentSkills, upgradedWizardLevel);
+
+    local upgradedWizardLevelSkillNodeSetItemRow = {};
+    CreateWWLCharacterSkillNodeSetItemRow(characterSkillSetItemsTable, upgradedWizardLevelSkillNodeSetItemRow, agentSkillSetKey, upgradedWizardLevelNodeKey, 'false');
+    table.insert(newAgentSkillSetItems, upgradedWizardLevelSkillNodeSetItemRow);
+
     if agentData.DefaultWizardLevel < 3
     and magicLoreData ~= nil then
         -- Level 3 skills
         for characterSkillIndex, characterSkillKey in pairs(magicLoreData.Level3DefaultSpells) do
+            local wizardLevel3SkillNodeKey = "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey;
             local newRow = {};
             startingTier = startingTier + 1;
             CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,
                 newRow,
-                "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
+                wizardLevel3SkillNodeKey,
                 characterSkillKey,
                 agentSkillSetKey,
                 rowIndent,
@@ -414,12 +452,15 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
                 0
             );
             table.insert(newAgentSkills, newRow);
+            local wizardLevel3SkillNodeSetItemRow = {};
+            CreateWWLCharacterSkillNodeSetItemRow(characterSkillSetItemsTable, wizardLevel3SkillNodeSetItemRow, agentSkillSetKey, wizardLevel3SkillNodeKey, 'false');
+            table.insert(newAgentSkillSetItems, wizardLevel3SkillNodeSetItemRow);
             -- Add the upgraded skill as the parent of the level 3 skills
             local newSkillLink = {};
             CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
             newSkillLink,
             "wwl_character_skill_node_"..agentKey.."_"..upgradedSkillKey,
-            "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
+            wizardLevel3SkillNodeKey,
             "REQUIRED");
             table.insert(newAgentLinkSkills, newSkillLink);
             if agentKey == "wh_main_vmp_lord"
@@ -428,7 +469,7 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
                 -- Link the bonus skill to the final node
                 CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
                 vmpLordSkillLink,
-                "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
+                wizardLevel3SkillNodeKey,
                 "wwl_character_skill_node_"..agentKey.."_"..baseWizardLevelPrefix.."3",
                 "REQUIRED");
                 table.insert(newAgentLinkSkills, vmpLordSkillLink);
@@ -436,11 +477,12 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
         end
         if agentKey == "wh_main_vmp_lord"
         or agentKey == "msl_lord" then
+            local level03VampireLordSkillNodeKey = "wwl_character_skill_node_"..agentKey.."_wwl_skill_wizard_level_03";
             local level03VmpLord = {};
             startingTier = startingTier + 1;
             CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,
                 level03VmpLord,
-                "wwl_character_skill_node_"..agentKey.."_wwl_skill_wizard_level_03",
+                level03VampireLordSkillNodeKey,
                 "wwl_skill_wizard_level_03",
                 agentSkillSetKey,
                 rowIndent,
@@ -450,6 +492,10 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             );
             upgradedSkillKey = "wwl_skill_wizard_level_03";
             table.insert(newAgentSkills, level03VmpLord);
+
+            local vampireLordWizardLevel3SkillNodeSetItemRow = {};
+            CreateWWLCharacterSkillNodeSetItemRow(characterSkillSetItemsTable, vampireLordWizardLevel3SkillNodeSetItemRow, agentSkillSetKey, level03VampireLordSkillNodeKey, 'false');
+            table.insert(newAgentSkillSetItems, vampireLordWizardLevel3SkillNodeSetItemRow);
         end
     end
     -- Bonus skills
@@ -476,15 +522,20 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     or agentKey == "wh3_main_tze_iridescent_horror_metal"
     or agentKey == "wh3_main_tze_iridescent_horror_tzeentch"
     or agentKey == "wh3_main_tze_exalted_lord_of_change_metal"
+    or agentKey == "wh3_dlc24_tze_exalted_lord_of_change_metal_locked_army"
     or agentKey == "wh3_main_tze_exalted_lord_of_change_tzeentch"
+    or agentKey == "wh3_dlc24_tze_exalted_lord_of_change_tzeentch_locked_army"
     or agentKey == "wh3_main_tze_cultist"
     or agentKey == "tze_melekh_the_changer"
     or agentKey == "chs_malofex_the_storm_chaser"
     or agentKey == "chs_egrimm_van_horstmann"
     or agentKey == "chs_azubhor_clawhand"
+    or agentKey == "wh3_dlc24_tze_the_changeling"
     or agentKey == "wh3_dlc20_chs_daemon_prince_tzeentch" then
         if agentKey == "wh3_main_tze_exalted_lord_of_change_metal"
+        or agentKey == "wh3_dlc24_tze_exalted_lord_of_change_metal_locked_army"
         or agentKey == "wh3_main_tze_exalted_lord_of_change_tzeentch"
+        or agentKey == "wh3_dlc24_tze_exalted_lord_of_change_tzeentch_locked_army"
         or agentKey == "chs_malofex_the_storm_chaser"
         or agentKey == "wh3_dlc20_chs_daemon_prince_tzeentch" then
             conduitKey = "wh2_dlc14_skilll_all_magic_all_greater_arcane_conduit";
@@ -502,6 +553,13 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     or agentKey == "wh_main_dwf_runesmith"
     or agentKey == "wh_dlc06_dwf_runesmith_ghost" then
         conduitKey = "wh_main_skill_dwf_runesmith_self_strike_the_runes";
+        bonusSkills = {
+            "wh_main_skill_dwf_runesmith_self_forgefire",
+            "wh_main_skill_dwf_runesmith_self_rune_of_hearth_&_home",
+            "wh2_dlc17_skill_dwf_runesmith_self_wardbreaker",
+        };
+    elseif agentKey == "dwf_kragg_the_grim" then
+        conduitKey = "mixu_LL_dwf_rune_abilities_master_rune_of_kragg";
         bonusSkills = {
             "wh_main_skill_dwf_runesmith_self_forgefire",
             "wh_main_skill_dwf_runesmith_self_rune_of_hearth_&_home",
@@ -539,11 +597,27 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             "wh_main_skill_all_magic_all_07_earthing",
             "wh_main_skill_all_magic_all_08_power_drain",
         };
+    elseif agentKey == "adv_butcher_death"
+    or agentKey == "adv_butcher_heav"
+    or agentKey == "wh3_main_ogr_butcher_beasts"
+    or agentKey == "wh3_main_ogr_butcher_great_maw"
+    or agentKey == "adv_slaught_death"
+    or agentKey == "adv_slaught_heav"
+    or agentKey == "wh3_main_ogr_slaughtermaster_beasts"
+    or agentKey == "wh3_main_ogr_slaughtermaster_great_maw"
+    or agentKey == "wh3_main_ogr_skrag_the_slaughterer" then
+        conduitKey = "wh3_main_skill_ogr_magic_all_11_extra_ingredients";
+        bonusSkills = {
+            "wh3_main_skill_ogr_magic_meat_cleaver",
+            "wh_main_skill_all_magic_all_07_earthing",
+            "wh3_main_skill_ogr_magic_meat_reserves",
+        };
     else
         conduitKey = "wh_main_skill_all_magic_all_11_arcane_conduit";
     end
     table.insert(bonusSkills, conduitKey);
     for characterSkillIndex, characterSkillKey in pairs(bonusSkills) do
+        local bonusSkillKey = "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey;
         local newBonusSkillRow = {};
         local newSkillLink = {};
         startingTier = startingTier + 1;
@@ -553,21 +627,24 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
             newSkillLink,
             "wwl_character_skill_node_"..agentKey.."_"..upgradedSkillKey,
-            "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
+            bonusSkillKey,
             "REQUIRED");
             table.insert(newAgentLinkSkills, newSkillLink);
             newSkillLink = {};
             -- Link the bonus skill to the final node
             CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
             newSkillLink,
-            "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
+            bonusSkillKey,
             "wwl_character_skill_node_"..agentKey.."_"..conduitKey,
             "REQUIRED");
             table.insert(newAgentLinkSkills, newSkillLink);
+        else
+            -- Arcane Conduit / Capstone
+            bonusSkillNumberOfParents = 3;
         end
         CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,
-        newBonusSkillRow,
-            "wwl_character_skill_node_"..agentKey.."_"..characterSkillKey,
+            newBonusSkillRow,
+            bonusSkillKey,
             characterSkillKey,
             agentSkillSetKey,
             rowIndent,
@@ -576,14 +653,18 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             bonusSkillNumberOfParents
         );
         table.insert(newAgentSkills, newBonusSkillRow);
+        local bonusSkillNodeSetItemRow = {};
+        CreateWWLCharacterSkillNodeSetItemRow(characterSkillSetItemsTable, bonusSkillNodeSetItemRow, agentSkillSetKey, bonusSkillKey, 'false');
+        table.insert(newAgentSkillSetItems, bonusSkillNodeSetItemRow);
     end
     if agentKey == "wh_main_vmp_lord"
     or agentKey == "msl_lord" then
+        local vampireLordLevel04SkillNodeKey = "wwl_character_skill_node_"..agentKey.."_wwl_skill_wizard_level_04";
         local level04VmpLord = {};
         startingTier = startingTier + 1;
         CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,
             level04VmpLord,
-            "wwl_character_skill_node_"..agentKey.."_wwl_skill_wizard_level_04",
+            vampireLordLevel04SkillNodeKey,
             "wwl_skill_wizard_level_04",
             agentSkillSetKey,
             rowIndent,
@@ -592,6 +673,9 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             1
         );
         table.insert(newAgentSkills, level04VmpLord);
+        local vampireLord04SkillNodeSetItemRow = {};
+        CreateWWLCharacterSkillNodeSetItemRow(characterSkillSetItemsTable, vampireLord04SkillNodeSetItemRow, agentSkillSetKey, vampireLordLevel04SkillNodeKey, 'false');
+        table.insert(newAgentSkillSetItems, vampireLord04SkillNodeSetItemRow);
         local newSkillLink = {};
         -- Link the bonus skill to the final node
         CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
@@ -604,11 +688,12 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
     or agentKey == "wh3_dlc20_chs_daemon_prince_slaanesh"
     or agentKey == "wh3_dlc20_chs_daemon_prince_tzeentch"
     or agentKey == "wh3_dlc20_chs_daemon_prince_undivided" then
+        local level04DaemonPrinceSkillNodeKey = "wwl_character_skill_node_"..agentKey.."_wwl_skill_wizard_level_03";
         local level04DaemonPrince = {};
         startingTier = startingTier + 1;
         CreateWWLCharacterSkillNodeRow(characterSkillNodesTable,
-        level04DaemonPrince,
-            "wwl_character_skill_node_"..agentKey.."_wwl_skill_wizard_level_03",
+            level04DaemonPrince,
+            level04DaemonPrinceSkillNodeKey,
             "wwl_skill_wizard_level_03",
             agentSkillSetKey,
             rowIndent,
@@ -617,17 +702,21 @@ function GenerateSkillTreeForAgent(databaseData, magicLoreData, agentKey, agentD
             1
         );
         table.insert(newAgentSkills, level04DaemonPrince);
+        local vampireLord04SkillNodeSetItemRow = {};
+        CreateWWLCharacterSkillNodeSetItemRow(characterSkillSetItemsTable, vampireLord04SkillNodeSetItemRow, agentSkillSetKey, level04DaemonPrinceSkillNodeKey, 'false');
+        table.insert(newAgentSkillSetItems, vampireLord04SkillNodeSetItemRow);
         local newSkillLink = {};
         -- Link the bonus skill to the final node
         CreateWWLCharacterSkillNodeLinkRow(characterSkillNodesLinksTable,
         newSkillLink,
         "wwl_character_skill_node_"..agentKey.."_"..conduitKey,
-        "wwl_character_skill_node_"..agentKey.."_wwl_skill_wizard_level_03",
+        level04DaemonPrinceSkillNodeKey,
         "REQUIRED");
         table.insert(newAgentLinkSkills, newSkillLink);
     end
     return {
         character_skill_nodes_tables = newAgentSkills,
+        character_skill_node_set_items_tables = newAgentSkillSetItems,
         character_skill_node_links_tables = newAgentLinkSkills,
         character_skill_level_to_effects_junctions_tables = newCharacterSkillLevelToEffects,
     };
@@ -636,7 +725,7 @@ end
 function CreateWWLCharacterSkillNodeRow(table, row, key, characterSkillKey, agentSkillSetKey, indent, tier, pointsOnCreation, numParents)
     table:SetColumnValue(row, 'campaign_key', '');
     table:SetColumnValue(row, 'character_skill_key', characterSkillKey);
-    table:SetColumnValue(row, 'character_skill_node_set_key', agentSkillSetKey);
+    --table:SetColumnValue(row, 'character_skill_node_set_key', agentSkillSetKey);
     table:SetColumnValue(row, 'faction_key', '');
     table:SetColumnValue(row, 'indent', indent);
     table:SetColumnValue(row, 'key', key);
@@ -645,6 +734,16 @@ function CreateWWLCharacterSkillNodeRow(table, row, key, characterSkillKey, agen
     table:SetColumnValue(row, 'points_on_creation', pointsOnCreation);
     table:SetColumnValue(row, 'required_num_parents', numParents);
     table:SetColumnValue(row, 'visible_in_ui', 'true');
+end
+
+function CreateWWLCharacterSkillNodeSetItemRow(table, row, set, itemKey, isDisabled)
+    local uniqueKey = set..itemKey..isDisabled;
+    if not global_character_skill_node_set_items_cache[uniqueKey] then
+        table:SetColumnValue(row, 'set', set);
+        table:SetColumnValue(row, 'item', itemKey);
+        table:SetColumnValue(row, 'mod_disabled', isDisabled);
+        global_character_skill_node_set_items_cache[uniqueKey] = true;
+    end
 end
 
 function CreateWWLCharacterSkillNodeLinkRow(table, row, parentKey, childKey, linkType)
@@ -854,6 +953,7 @@ function GenerateMultiLoreCharacterSkills(databaseData)
     local characterSkillsToExport = {};
     local characterSkillsToEffectsToExport = {};
     local characterSkillNodesToExport = {};
+    local characterSkillNodeSetItemsToExport = {};
     local characterSkillNodeLinksToExport = {};
     local characterSkillLocToExport = {};
 
@@ -1141,8 +1241,9 @@ function GenerateMultiLoreCharacterSkills(databaseData)
                 characterSkillLoc:SetColumnValue(newCharacterSkillsLoc[i * 2 - 1], 'text', textForSkill);
             end
         end
-        local characterSkillsAndLinks = GenerateSkillTreeForAgent(databaseData, nil, agentKey, agentData, { "wh_main_skill_all_magic_all_06_evasion", "wh_main_skill_all_magic_all_07_earthing", "wh_main_skill_all_magic_all_08_power_drain", "wh_main_skill_all_magic_all_11_arcane_conduit", "wh2_main_skill_magic_dark_flock_of_doom_teclis", "wh2_main_skill_all_magic_high_09_arcane_unforging_lord", "wh3_main_skill_tze_all_magic_prismatic_plurality", });
+        local characterSkillsAndLinks = GenerateSkillTreeForAgent(databaseData, nil, agentKey, agentData, { "wh_main_skill_all_magic_all_06_evasion", "wh_main_skill_all_magic_all_07_earthing", "wh_main_skill_all_magic_all_08_power_drain",  "wh_dlc06_skill_dwf_runelord_self_rune_of_hearth_&_home", "wh_main_skill_all_magic_all_11_arcane_conduit", "wh2_main_skill_magic_dark_flock_of_doom_teclis", "wh2_main_skill_all_magic_high_09_arcane_unforging_lord", "wh3_main_skill_tze_all_magic_prismatic_plurality", });
         ConcatTable(characterSkillNodesToExport, characterSkillsAndLinks["character_skill_nodes_tables"]);
+        ConcatTable(characterSkillNodeSetItemsToExport, characterSkillsAndLinks["character_skill_node_set_items_tables"]);
         ConcatTable(characterSkillNodeLinksToExport, characterSkillsAndLinks["character_skill_node_links_tables"]);
         ConcatTable(characterSkillsToEffectsToExport, characterSkillsAndLinks["character_skill_level_to_effects_junctions_tables"]);
         ConcatTable(characterSkillsToExport, newCharacterSkills);
@@ -1158,6 +1259,8 @@ function GenerateMultiLoreCharacterSkills(databaseData)
     local finalisedCharacterSkills = characterSkillsTable:PrepareRowsForOutput(characterSkillsToExport);
     local characterSkillNodesTable = databaseData["character_skill_nodes_tables"];
     local finalisedCharacterSkillNodes = characterSkillNodesTable:PrepareRowsForOutput(characterSkillNodesToExport);
+    local characterSkillNodeSetItemsTable = databaseData["character_skill_node_set_items_tables"];
+    local finalisedCharacterSkillNodeSetItems = characterSkillNodeSetItemsTable:PrepareRowsForOutput(characterSkillNodeSetItemsToExport);
     local characterSkillEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
     local finalisedcharacterSkillEffects = characterSkillEffectsTable:PrepareRowsForOutput(characterSkillsToEffectsToExport);
     local characterSkillNodeLinksTable = databaseData["character_skill_node_links_tables"];
@@ -1170,6 +1273,7 @@ function GenerateMultiLoreCharacterSkills(databaseData)
         effect_bonus_value_unit_ability_junctions_tables = finalisedEffectBonusValues,
         character_skills_tables = finalisedCharacterSkills,
         character_skill_nodes_tables = finalisedCharacterSkillNodes,
+        character_skill_node_set_items_tables = finalisedCharacterSkillNodeSetItems,
         character_skill_node_links_tables = finalisedCharacterSkillNodeLinks,
         character_skill_level_to_effects_junctions_tables = finalisedcharacterSkillEffects,
         character_skills_loc = finalisedCharacterSkillLoc,

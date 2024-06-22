@@ -10,14 +10,15 @@ function GetMixuLegendaryLordsPoolData()
 
         -- Chaos
         wh_main_sc_chs_chaos = {
-            chs_azubhor_clawhand = {
+            -- Removed
+            --[[chs_azubhor_clawhand = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_metal",
             },
             chs_malofex_the_storm_chaser = {
                 DefaultWizardLevel = 4,
                 Lore = { "wh_dlc05_lore_shadows", "wh_dlc03_lore_beasts", "wh_main_lore_heavens", },
-            },
+            },--]]
             chs_egrimm_van_horstmann = {
                 DefaultWizardLevel = 4,
                 Lore = "wh_main_lore_light",
@@ -74,12 +75,13 @@ function GetMixuLegendaryLordsPoolData()
                 Lore = "wh_dlc05_lore_shadows",
             },--]]
             -- LL1
-            emp_elspeth = {
+            -- Deprecated
+            --[[emp_elspeth = {
                 DefaultWizardLevel = 4,
                 IsLoremaster = true,
                 LoremasterCharacterSkillKey = "wh_main_skill_vmp_lord_unique_mannfred_loremaster_lore_of_death",
                 Lore = "wh_main_lore_death",
-            },
+            },--]]
         },
         -- Greenskins
         wh_main_sc_grn_greenskins = {
@@ -112,6 +114,25 @@ function GetMixuLegendaryLordsPoolData()
                 Lore = { "wh2_main_lore_high_magic", "wh_dlc03_lore_beasts", "wh_main_lore_death", "wh_main_lore_fire", "wh_main_lore_heavens", "wh_dlc05_lore_life", "wh_main_lore_light", "wh_main_lore_metal", "wh_dlc05_lore_shadows", },
             },
         },
+        -- Manaan's Blade
+        mixer_emp_van_der_kraal = {
+            mixu_emp_witch_doctor_deep = {
+                DefaultWizardLevel = 1,
+                Lore = "wh2_dlc11_lore_deep",
+            },
+            mixu_emp_witch_doctor_beasts = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_dlc03_lore_beasts",
+            },
+            mixu_emp_witch_doctor_fire = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_fire",
+            },
+            mixu_emp_witch_doctor_death = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_death",
+            },
+        },
         -- Norsca
         wh_main_sc_nor_norsca = {
             -- TTL
@@ -130,10 +151,10 @@ function GetMixuLegendaryLordsPoolData()
         },
         -- Skaven
         wh2_main_sc_skv_skaven = {
-            skv_grey_seer_death = {
+            --[[skv_grey_seer_death = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_death",
-            },
+            },--]]
         },
         -- Tomb Kings
         wh2_dlc09_sc_tmb_tomb_kings = {

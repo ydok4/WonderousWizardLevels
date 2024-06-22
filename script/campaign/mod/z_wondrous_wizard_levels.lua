@@ -14,11 +14,11 @@ function z_wondrous_wizard_levels()
     WWL = WWLController:new({
         WizardData = WWL.WizardData,
     });
-    local enableLogging = true;
-    --[[if __write_output_to_logfile then
+    local enableLogging = false;
+    if __write_output_to_logfile then
         enableLogging = true;
-    end--]]
-    WWL:Initialise(enableLogging, effect);
+    end
+    WWL:Initialise(enableLogging);
     WWL.Logger:Log("Initialised");
     WWL_SetupPostUIListeners(WWL, core, find_uicomponent, UIComponent);
     WWL.Logger:Log_Finished();
