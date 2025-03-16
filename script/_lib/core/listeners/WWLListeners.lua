@@ -543,6 +543,29 @@ function WWL_SetupPostUIListeners(wwl, core, find_uicomponent_function, uicompon
     );
 
     core:add_listener(
+        "WWL_ClickedFormlessHorrorButton",
+        "ComponentLClickUp",
+        function(context)
+            return context.string == "button_shapeshift";
+        end,
+        function(context)
+            local stringContext = context.string;
+            cm:callback(function()
+                if lockUISetup == false then
+                    lockUISetup = true;
+                    wwl.Logger:Log("WWL_ClickedFormlessHorrorButton: "..stringContext);
+                    local unitName = find_uicomponent(core:get_ui_root(), "formless_horror_subpanel", "dlc24_formless_horror", "content_container", "section_right_selected_option", "preview_holder", "preview_holder", "holder_stats", "dy_unit_name");
+                    SetWizardLevelUI(wwl, generalsList);
+                    lockUISetup = false;
+                    wwl.Logger:Log_Finished();
+                end
+            end,
+            0.1);
+        end,
+        true
+    );
+
+    core:add_listener(
         "WWL_SettlementSelected",
         "SettlementSelected",
         function(context)

@@ -1,6 +1,6 @@
 --[[require 'script/_lib/pooldata/DecoWizardsPoolData'
 
---out("WWL: Loading Wez Spesul Data");
+-- LEGACY
 -- Load the name resources
 -- This is separate so I can use this in other mods
 if _G.WWLResources then

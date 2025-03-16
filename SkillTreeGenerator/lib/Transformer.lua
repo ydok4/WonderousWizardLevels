@@ -6,7 +6,10 @@ local global_effect_bonus_values_cache = {};
 function CreateDBData(databaseData)
     print("\n\nCreating DB Data...");
     -- Load our existing resources based on the files specified
-    local signatureSkills = GenerateWWLSignatureSkills(databaseData);
+    local signatureSkills = {};
+    if not _G.IgnoreVanillaWizards then
+        signatureSkills = GenerateWWLSignatureSkills(databaseData);
+    end
     local skills = GenerateWWLSkillTrees(databaseData);
     local effects = GenerateWWLEffects(databaseData);
     local multiLoreSkillsAndEffects = GenerateMultiLoreCharacterSkills(databaseData);
@@ -195,10 +198,14 @@ function GenerateWWLSkillTrees(databaseData)
         --for subcultureKey, subcultureAgents in pairs(_G.WWLResources.WizardData) do
             for agentKey, agentData in pairs(_G.WWLResources.WizardData) do
                 if type(agentData.Lore) == "string"
-                and groupKey == agentData.Lore then
-                    print("Found agent: "..agentKey.." for Lore: "..groupKey);
+                and (groupKey == agentData.Lore
+                or groupKey == agentData.BaseLore) then
                     agentsWithMatchingLore[agentKey] = agentData;
                     table.insert(agentKeysWithMatchingLore, agentKey);
+                    if groupKey == agentData.BaseLore then
+                        groupKey = agentData.Lore;
+                    end
+                    print("Found agent: "..agentKey.." for Lore: "..groupKey);
                 end
             end
         --end
@@ -797,12 +804,17 @@ function OutputToFile(modifiedDBs, prefix, dataTableName, keepDataExtension)
 end
 
 function GenerateWWLEffects(databaseData)
+    print("GenerateWWLEffects");
     local effectsToExport = {};
     local effectBonusValuesToExport = {};
     local effectLocToExport = {};
+    local unitSpecialAbilityToExport = {};
+
     local effectTables = databaseData["effects_tables"];
     local effectsLocTables = databaseData["effects_loc"];
     local specialAbilityGroupsTable = databaseData["special_ability_groups_tables"];
+    local unitSpecialAbilitiesTables = databaseData["unit_special_abilities_tables"];
+
     for specialAbilityGroupIndex, specialAbilityGroupData in pairs(specialAbilityGroupsTable.Data) do
         local groupKey = specialAbilityGroupsTable:GetColumnValueForIndex(specialAbilityGroupIndex, "ability_group");
         -- Now we match the lore of magic to the corresponding unit abilities
@@ -923,17 +935,79 @@ function GenerateWWLEffects(databaseData)
                     end
                 end
             end
+
+            local loresWithWWLTransformationBehaviour = {
+                wh_dlc05_lore_life = true,
+                wh_main_lore_metal = true,
+                wh_main_lore_heavens = true,
+                wh3_main_lore_of_yang = true,
+                wh3_main_lore_of_yin = true,
+            };
+            if loresWithWWLTransformationBehaviour[groupKey] ~= nil then
+                print("Clong unit special abilities for lore: "..groupKey)
+                for spellIndex, spellKey in pairs(magicLoreData.SignatureSpell) do
+                    CloneSpecialAbilityForTransformation(databaseData, effectBonusValueAbilityJunctionsTable, unitSpecialAbilitiesTables, unitSpecialAbilityToExport, spellKey, 'true');
+                end
+                for spellIndex, spellKey in pairs(magicLoreData.Level1DefaultSpells) do
+                    CloneSpecialAbilityForTransformation(databaseData, effectBonusValueAbilityJunctionsTable, unitSpecialAbilitiesTables, unitSpecialAbilityToExport, spellKey, 'true');
+                end
+                for spellIndex, spellKey in pairs(magicLoreData.Level3DefaultSpells) do
+                    CloneSpecialAbilityForTransformation(databaseData, effectBonusValueAbilityJunctionsTable, unitSpecialAbilitiesTables, unitSpecialAbilityToExport, spellKey, 'false');
+                end
+            end
         end
     end
     local finalisedEffects = effectTables:PrepareRowsForOutput(effectsToExport);
     local finalisedEffectsLoc = effectsLocTables:PrepareRowsForOutput(effectLocToExport);
     local effectBonusValuesTables = databaseData["effect_bonus_value_unit_ability_junctions_tables"];
     local finalisedEffectBonusValues = effectBonusValuesTables:PrepareRowsForOutput(effectBonusValuesToExport);
+    local finalisedUnitSpecialAbilityToExport = unitSpecialAbilitiesTables:PrepareRowsForOutput(unitSpecialAbilityToExport);
+
+    print("Finished GenerateWWLEffects");
     return {
         effects_tables = finalisedEffects,
         effect_bonus_value_unit_ability_junctions_tables = finalisedEffectBonusValues,
         effectsLoc = finalisedEffectsLoc,
+        unit_special_abilities_tables = finalisedUnitSpecialAbilityToExport,
     };
+end
+
+function CloneSpecialAbilityForTransformation(databaseData, effectBonusValueAbilityJunctionsTable, unitSpecialAbilitiesTables, unitSpecialAbilityToExport, spellKey, canBeCopied)
+    if spellKey ~= "wh_main_skill_dwf_runesmith_self_damping" then -- Need to hardcode the exception for dwarfs
+        if global_effects_cache[spellKey.."_enabled"] ~= nil then
+            local characterSkillLevelToEffectsTable = databaseData["character_skill_level_to_effects_junctions_tables"];
+            local effectsMatchingCharacterSkill = characterSkillLevelToEffectsTable:GetRowsMatchingColumnValues("character_skill_key", {spellKey});
+            local effectKeysMatchingCharacterSkill = characterSkillLevelToEffectsTable:GetColumnValuesForRows("effect_key", effectsMatchingCharacterSkill);
+            local effectsMatchingSpellBonusValues = effectBonusValueAbilityJunctionsTable:GetRowsMatchingColumnValues("effect", effectKeysMatchingCharacterSkill);
+            local enableBonusValuesForSpell = effectBonusValueAbilityJunctionsTable:GetRowsMatchingColumnValues("bonus_value_id", { "enable" }, effectsMatchingSpellBonusValues);
+            local matchingSpellAbilityKey = "";
+            local matchingSpellOriginalKey = "";
+            if next(enableBonusValuesForSpell) then
+                matchingSpellOriginalKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'effect', enableBonusValuesForSpell);
+                matchingSpellAbilityKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'unit_ability', enableBonusValuesForSpell);
+            else
+                matchingSpellAbilityKey = effectBonusValueAbilityJunctionsTable:GetColumnValueForIndex(1, 'unit_ability', effectsMatchingSpellBonusValues);
+            end
+
+            if matchingSpellAbilityKey ~= nil then
+                local unitSpecialAbility = unitSpecialAbilitiesTables:GetRowsMatchingColumnValues("key", { matchingSpellAbilityKey });
+                if unitSpecialAbility and next(unitSpecialAbility) then
+                    local clonedUnitSpecialAbility = unitSpecialAbilitiesTables:CloneRow(1, unitSpecialAbility);
+                    unitSpecialAbilitiesTables:SetColumnValue(clonedUnitSpecialAbility, 'can_be_copied_to_transformation_unit', canBeCopied);
+                    table.insert(unitSpecialAbilityToExport, clonedUnitSpecialAbility);
+                    local unitSpecialAbilityKey = unitSpecialAbilitiesTables:GetColumnValueForRow(clonedUnitSpecialAbility, "key");
+                    local upgradedUnitSpecialAbilityKey = unitSpecialAbilityKey.."_upgraded";
+                    local upgradedUnitSpecialAbility = unitSpecialAbilitiesTables:GetRowsMatchingColumnValues("key", { upgradedUnitSpecialAbilityKey });
+                    if upgradedUnitSpecialAbility ~= nil and next(upgradedUnitSpecialAbility) then
+                        local clonedUpgradedUnitSpecialAbility = unitSpecialAbilitiesTables:CloneRow(1, upgradedUnitSpecialAbility);
+                        unitSpecialAbilitiesTables:SetColumnValue(clonedUpgradedUnitSpecialAbility, 'can_be_copied_to_transformation_unit', canBeCopied);
+                        table.insert(unitSpecialAbilityToExport, clonedUpgradedUnitSpecialAbility);
+                    end
+                end
+            end
+        end
+    end
+    return;
 end
 
 function GenerateMultiLoreCharacterSkills(databaseData)

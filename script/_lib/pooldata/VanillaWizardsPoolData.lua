@@ -363,11 +363,11 @@ function GetVanillaWizardsPoolDataResources()
                 -- which I do want to use.
                 Lore = { "wh3_main_lore_of_yang", },
             },
-            -- Belakor isn't exclusive to any faction but needs to be defined somewhere
-            -- Because he will always exist when he is spawned, it doesn't matter what subculture he is in
             -- Keeping him in Undivided Daemons because he is one
             wh3_main_dae_belakor = {
                 DefaultWizardLevel = 4,
+                IsLoremaster = true,
+                LoremasterCharacterSkillKey = "wwl_skill_loremaster_lore_shadow_magic",
                 Lore = "wh_dlc05_lore_shadows",
             },
             -- Also draws from Khorne, Nurgle, Slaanesh and Tzeentch
@@ -505,6 +505,10 @@ function GetVanillaWizardsPoolDataResources()
             wh_main_grn_goblin_great_shaman = {
                 DefaultWizardLevel = 3,
                 Lore = "wh_main_lore_lil_waaagh",
+            },
+            wh3_dlc26_grn_savage_orc_great_shaman = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_big_waaagh",
             },
             wh2_dlc15_grn_goblin_great_shaman_raknik = {
                 DefaultWizardLevel = 4,
@@ -783,6 +787,14 @@ function GetVanillaWizardsPoolDataResources()
                 DefaultWizardLevel = 1,
                 Lore = "wh3_main_lore_of_great_maw",
             },
+            wh3_dlc26_ogr_cha_butcher_death = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_death",
+            },
+            wh3_dlc26_ogr_cha_butcher_heavens = {
+                DefaultWizardLevel = 1,
+                Lore = "wh_main_lore_heavens",
+            },
             wh3_main_ogr_firebelly = {
                 DefaultWizardLevel = 1,
                 Lore = "wh_main_lore_fire",
@@ -794,6 +806,14 @@ function GetVanillaWizardsPoolDataResources()
             wh3_main_ogr_slaughtermaster_great_maw = {
                 DefaultWizardLevel = 3,
                 Lore = "wh3_main_lore_of_great_maw",
+            },
+            wh3_dlc26_ogr_cha_slaughtermaster_death = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_death",
+            },
+            wh3_dlc26_ogr_cha_slaughtermaster_heavens = {
+                DefaultWizardLevel = 3,
+                Lore = "wh_main_lore_heavens",
             },
             wh3_main_ogr_skrag_the_slaughterer = {
                 DefaultWizardLevel = 4,
